@@ -96,6 +96,10 @@ public class ListAdapterDrawer extends BaseAdapter
             //Sacamos el ancho de la pantalla para acomodar los items que van de 2
             int width = display_metrics.widthPixels / 2;
 
+            //Sacamos el alto de la pantalla para ajustar el ListView a la altura de la
+            //pantalla.
+            int height = display_metrics.heightPixels / 3;
+
 			//Implementaci�n layout simple.
 			if(tipo == 0)
 			{
@@ -107,6 +111,9 @@ public class ListAdapterDrawer extends BaseAdapter
 				
 				//Colocamos la imagen.
 				view.icono.setBackgroundResource(item.getIcono());
+
+                //Colocamos la altura de la imagen.
+                view.icono.getLayoutParams().height = height;
 			}
 			//Implementaci�n del layout doble.
 			else
@@ -121,6 +128,9 @@ public class ListAdapterDrawer extends BaseAdapter
 
                 //Establecemos ancho y alto de la imagen.
                 view.icono.getLayoutParams().width = width;
+
+                //Colocamos la altura de la imagen.
+                view.icono.getLayoutParams().height = height;
 
 				view.icono.setBackgroundResource(item.getIcono());
 				
@@ -148,8 +158,11 @@ public class ListAdapterDrawer extends BaseAdapter
 				//�cono 2.
 				view.icono2 = (TextView) convertView.findViewById(R.id.icono2);
 
-                //Establecemos ancho y alto de la imagen.
+                //Establecemos ancho de la imagen.
 				view.icono2.getLayoutParams().width = width;
+
+                //Colocamos la altura de la imagen.
+                view.icono2.getLayoutParams().height = height;
 
 				view.icono2.setBackgroundResource(item.getIcono2());
 				
