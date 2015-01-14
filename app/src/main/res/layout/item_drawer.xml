@@ -6,7 +6,7 @@
     <TextView 
         android:id="@+id/icono"
         android:layout_width="match_parent"
-        android:layout_height="225dp"
+        android:layout_height="204dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"/>
     

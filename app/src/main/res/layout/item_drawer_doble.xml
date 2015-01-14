@@ -6,14 +6,14 @@
     <TextView
         android:id="@+id/icono"
         android:layout_width="135dp"
-        android:layout_height="225dp"
+        android:layout_height="203dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"/>
     
     <TextView
         android:id="@+id/icono2"
         android:layout_width="135dp"
-        android:layout_height="225dp"
+        android:layout_height="203dp"
         android:layout_alignParentRight="true"/>
 
 </RelativeLayout>
