@@ -1,13 +1,13 @@
 package com.example.ruben.filarmonica;
 
-import java.util.ArrayList;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import java.util.ArrayList;
 
 public class ConexionBD extends SQLiteOpenHelper{
 	private static String DATABASE_NAME = "prueba";
@@ -115,7 +115,7 @@ public class ConexionBD extends SQLiteOpenHelper{
 				eventos.get(contadorEvento).addFecha(fecha_f);
 				resFecha.moveToNext();
 			}
-			//Terminan las consultas de fechas
+			//Terminan las consultas de fechas.
 			
 			res.moveToNext();
 			contadorEvento ++;

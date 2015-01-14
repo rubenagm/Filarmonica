@@ -1,45 +1,38 @@
 package com.example.ruben.filarmonica;
 
-import org.apache.http.NameValuePair;
-
-
-        import java.io.IOException;
-        import java.util.ArrayList;
-        import java.util.List;
-        import java.util.concurrent.ExecutionException;
-
-        import org.apache.http.HttpEntity;
-        import org.apache.http.HttpResponse;
-        import org.apache.http.NameValuePair;
-        import org.apache.http.client.HttpClient;
-        import org.apache.http.client.entity.UrlEncodedFormEntity;
-        import org.apache.http.client.methods.HttpPost;
-        import org.apache.http.impl.client.DefaultHttpClient;
-        import org.apache.http.message.BasicNameValuePair;
-        import org.apache.http.util.EntityUtils;
-        import org.json.JSONArray;
-        import org.json.JSONException;
-        import org.json.JSONObject;
-
-        import android.app.Activity;
-        import android.content.Context;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
-        import android.os.AsyncTask;
-        import android.os.Bundle;
-        import android.util.DisplayMetrics;
-        import android.util.Log;
-        import android.view.View;
-        import android.widget.AdapterView;
-        import android.widget.AdapterView.OnItemClickListener;
-        import android.widget.ListView;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.ruben.filarmonica.ItemDrawer;
-import com.example.ruben.filarmonica.ListAdapterDrawer;
-import com.example.ruben.filarmonica.ParserFecha;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends Activity
 {
@@ -130,7 +123,7 @@ public class MainActivity extends Activity
                 {
                     case 0:
                     {
-                        Toast.makeText(contexto, "Has presionado conciertos", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(contexto, "Has presionado conciertos cambio", Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(MainActivity.this,ListaEventos.class);
                         startActivity(i);
                         finish();
