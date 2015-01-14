@@ -12,6 +12,9 @@ import java.util.ArrayList;
 public class ConexionBD extends SQLiteOpenHelper{
 	private static String DATABASE_NAME = "prueba";
 	private static int DATABASE_VERSION = 1;
+    private static String SQL_SELECT_TABLA_LOCALIDAD_EVENTO = "SELECT nombre,costo FROM localidad_evento WHERE evento_id = ";
+    private static String SQL_CREATE_TABLA_LOCALIDAD = "CREATE TABLE localidad (id INTEGER PRIMARY KEY, nombre TEXT , costo TEXT,sede_id INTEGER)";
+    private static String SQL_CREATE_TABLA_LOCALIDAD_EVENTO = "CREATE TABLE localidad_evento (id INTEGER PRIMARY KEY, nombre TEXT, costo TEXT,evento_id INTEGER , FOREIGN KEY (evento_id) REFERENCES evento (id))";
 	private static String SQL_CREATE_TABLA_EVENTO = "CREATE TABLE evento (id integer PRIMARY KEY, programa text, programa_en text, titulo text, titulo_en text, descripcion text, descripcion_en text, estado text, temporada_id integer);";
 	private static String SQL_CREATE_TABLA_FECHA = "CREATE TABLE fecha (id integer PRIMARY KEY, fecha date, hora text,minuto text,evento_id integer, FOREIGN KEY (evento_id) REFERENCES evento (id));";
     private static String SQL_SELECT_EVENTO = "SELECT E.id ,E.programa,E.programa_en,E.titulo,E.titulo_en,E.descripcion,E.descripcion_en,E.estado,E.temporada_id FROM evento AS E JOIN fecha AS F ON F.evento_id = E.id GROUP BY E.id ORDER BY E.id desc ";
@@ -26,6 +29,8 @@ public class ConexionBD extends SQLiteOpenHelper{
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(SQL_CREATE_TABLA_EVENTO);
 		db.execSQL(SQL_CREATE_TABLA_FECHA);
+        db.execSQL(SQL_CREATE_TABLA_LOCALIDAD);
+        db.execSQL(SQL_CREATE_TABLA_LOCALIDAD_EVENTO);
 	}
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -63,6 +68,31 @@ public class ConexionBD extends SQLiteOpenHelper{
 		Log.i("Insert DB", "Se ha insertado una fecha");
 		return true;
 	}
+
+    //INSERTAR UNA LOCALIDAD
+    public boolean insertLocalidad(int id,String nombre , String costo,int id_sede){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("id",id);
+        contentValues.put("nombre",nombre);
+        contentValues.put("costo",costo);
+        contentValues.put("sede_id",id_sede);
+        db.insert("localidad",null,contentValues);
+        Log.i("Insert DB","Localidad insertada");
+        return true;
+    }
+
+    public boolean insertLocalidadEvento(int id , String nombre, String costo, int id_evento){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("id",id);
+        contentValues.put("nombre",nombre);
+        contentValues.put("costo",costo);
+        contentValues.put("evento_id",id_evento);
+        db.insert("localidad_evento",null,contentValues);
+        Log.i("Insert DB","Localidad_evento Insertado");
+        return true;
+    }
 	
 	//LIMPIA LA BASE DE DATOS PARA VOLVER A SINCRONIZAR LOS DATOS
 	public boolean limpiarDB(){
@@ -172,6 +202,18 @@ public class ConexionBD extends SQLiteOpenHelper{
                 resFecha.moveToNext();
             }
             //Terminan las consultas de fechas
+
+            //CONSULTAR LOCALIDADES Y COSTOS
+            Cursor resLocalidades = db.rawQuery(SQL_SELECT_TABLA_LOCALIDAD_EVENTO + id, null);
+            resLocalidades.moveToFirst();
+            while (resLocalidades.isAfterLast() == false){
+                String nombre = resLocalidades.getString(resLocalidades.getColumnIndex("nombre"));
+                String costo = resLocalidades.getString(resLocalidades.getColumnIndex("costo"));
+                evento.get(contadorEvento).addLocalidad(nombre);
+                evento.get(contadorEvento).addCosto(costo);
+                resLocalidades.moveToNext();
+            }
+            //SE TERMINA DE CONSULTAR LOCALIDADES Y COSTOS
 
             res.moveToNext();
             contadorEvento ++;
