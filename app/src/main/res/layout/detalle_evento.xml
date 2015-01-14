@@ -1,0 +1,169 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.ruben.filarmonica.DetalleEvento">
+
+    <ImageView
+        android:id="@+id/imagen_evento"
+        android:layout_width="fill_parent"
+        android:layout_height="210dp"
+        android:src="@drawable/menu_concierto"
+        android:scaleType="fitXY"
+        />
+    <ImageView
+        android:layout_marginTop="175dp"
+        android:layout_alignParentRight="true"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/icon_buy"
+        />
+    <LinearLayout
+        android:layout_marginTop="250dp"
+        android:layout_marginLeft="15dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/calendar_icon"
+                />
+
+            <!--- Layout del titulo, fechas y programa -->
+            <LinearLayout
+                android:layout_marginLeft="20dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:id="@+id/titulo_evento_detalle"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Titulo"
+                    />
+                <TextView
+                    android:id="@+id/detalle_programa_evento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Programa"
+                    android:textSize="16sp"
+                    />
+                <TextView
+                    android:id="@+id/detalle_fechas_evento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Fechas"
+                    android:textSize="16sp"
+                    />
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+        <!--- Termina layout titulo, fechas y programa -->
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <ImageView
+
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/person_icon"
+                />
+            <LinearLayout
+                android:layout_marginLeft="20dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:id="@+id/detalle_nombre_director"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    />
+                </LinearLayout>
+
+            </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:src="@drawable/credit_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+
+                />
+            <LinearLayout
+                android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+
+                >
+                <TextView
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Localidades"
+                    />
+                <TextView
+
+                    android:textSize="16sp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/localidades"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="localidades"
+                    />
+
+                </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="70dp"
+                >
+                <TextView
+                    android:layout_gravity="right"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Costo"
+                    />
+                <TextView
+                    android:layout_gravity="right"
+                    android:id="@+id/costos"
+                    android:layout_marginTop="10dp"
+                    android:text="costos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+        
+</RelativeLayout>

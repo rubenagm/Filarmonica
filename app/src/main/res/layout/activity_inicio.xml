@@ -1,0 +1,71 @@
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${relativePackage}.${activityClass}" >
+	
+    <!-- The main content view -->
+	<RelativeLayout 
+	    android:id="@+id/content_frame"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:background="@drawable/background_contador">
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/logo_filarmonica"
+            />
+
+
+
+	    <TextView
+	        android:id="@+id/lbl_dias_horas_minutos_segundos"
+	        android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:textColor="#FFFFFF"
+	    	android:text="@string/dias_horas_minutos_segundos"
+	    	android:textSize="12sp"
+            android:layout_alignBottom="@+id/lbl_contador_proximo_concierto"
+            android:layout_centerHorizontal="true"/>
+
+	    <TextView
+	        android:id="@+id/lbl_contador_proximo_concierto"
+	        android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:textColor="#FFFFFF"
+	    	android:textSize="40sp"
+	    	android:layout_centerHorizontal="true"
+            android:layout_marginTop="315dp"
+            android:layout_marginBottom="10dp"
+            />
+
+	    <TextView
+            android:layout_marginBottom="45dp"
+	        android:id="@+id/lbl_proximo_concierto"
+	        android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:textColor="#FFFFFF"
+	    	android:text="@string/proximo_concierto"
+	    	android:textSize="25sp"
+	    	android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@+id/lbl_contador_proximo_concierto"
+            />
+	    
+    </RelativeLayout>
+	
+	<!-- The navigation drawer -->
+	<ListView 
+	    android:id="@+id/drawer_listView"
+	    android:layout_width="320dp"
+	    android:layout_height="match_parent"
+	    android:layout_gravity="start"
+	    android:choiceMode="singleChoice"
+	    android:divider="#2E2E2E"
+	    android:dividerHeight="2dp"
+	    android:background="#424242"
+	    android:textColor="#424242"/>
+
+</android.support.v4.widget.DrawerLayout>
