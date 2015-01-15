@@ -3,7 +3,6 @@ package com.example.ruben.filarmonica;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,12 +96,6 @@ public class ListAdapterDrawer extends BaseAdapter
             //Sacamos el ancho de la pantalla para acomodar los items que van de 2
             int width = display_metrics.widthPixels / 2;
 
-            //Sacamos el alto de la pantalla para ajustar el ListView a la altura de la
-            //pantalla.
-            int height = display_metrics.heightPixels / 100;
-
-            Log.i("Frank", "Altura Total: " + height + "\nAltura Dividida: " + height * 33);
-
 			//Implementaci�n layout simple.
 			if(tipo == 0)
 			{
@@ -114,9 +107,6 @@ public class ListAdapterDrawer extends BaseAdapter
 				
 				//Colocamos la imagen.
 				view.icono.setBackgroundResource(item.getIcono());
-
-                //Colocamos la altura de la imagen.
-                view.icono.getLayoutParams().height = height * 32;
 			}
 			//Implementaci�n del layout doble.
 			else
@@ -131,9 +121,6 @@ public class ListAdapterDrawer extends BaseAdapter
 
                 //Establecemos ancho y alto de la imagen.
                 view.icono.getLayoutParams().width = width;
-
-                //Colocamos la altura de la imagen.
-                view.icono.getLayoutParams().height = height * 32;
 
 				view.icono.setBackgroundResource(item.getIcono());
 				
@@ -163,9 +150,6 @@ public class ListAdapterDrawer extends BaseAdapter
 
                 //Establecemos ancho de la imagen.
 				view.icono2.getLayoutParams().width = width;
-
-                //Colocamos la altura de la imagen.
-                view.icono2.getLayoutParams().height = height * 32;
 
 				view.icono2.setBackgroundResource(item.getIcono2());
 				
