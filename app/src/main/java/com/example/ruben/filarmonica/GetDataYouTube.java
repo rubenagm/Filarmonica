@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 //////////// CLASE PARA OBTENER DATOS YOUTUBE
 public class GetDataYouTube extends AsyncTask<Void,Void,ArrayList<ItemYoutube>>
@@ -70,11 +71,12 @@ public class GetDataYouTube extends AsyncTask<Void,Void,ArrayList<ItemYoutube>>
             JSONArray jsonArray = json.getJSONObject("feed").getJSONArray("entry");
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-
+                String id = jsonObject.getJSONObject("id").getString("$t");
                 String title = jsonObject.getJSONObject("title").getString("$t");
                 String contenido = jsonObject.getJSONObject("content").getString("$t");
                 String urlImagen = jsonObject.getJSONObject("media$group").getJSONArray("media$thumbnail").getJSONObject(0).getString("url");
-                videos.add(new ItemYoutube(title,contenido,"","","",urlImagen));
+                id = obtenerIdYoutube(id);
+                videos.add(new ItemYoutube(id,title,contenido,"","","",urlImagen));
                 Log.i("Json", title + "\n" + urlImagen);
             }
         }
@@ -86,6 +88,16 @@ public class GetDataYouTube extends AsyncTask<Void,Void,ArrayList<ItemYoutube>>
         httpclient.getConnectionManager().shutdown();
 
         return videos;
+    }
+
+    public String obtenerIdYoutube(String url){
+        StringTokenizer token = new StringTokenizer(url,"/");
+        String id = "";
+        while(token.hasMoreTokens()){
+            id = token.nextToken();
+        }
+        Log.i("Youtube",id);
+        return id;
     }
 
 }
