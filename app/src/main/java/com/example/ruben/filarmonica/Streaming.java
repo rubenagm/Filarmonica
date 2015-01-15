@@ -47,6 +47,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 
 public class Streaming extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener
@@ -55,6 +56,7 @@ public class Streaming extends YouTubeBaseActivity implements YouTubePlayer.OnIn
     TextView textViewDuracionVideo;
     RecyclerView mRecyclerView;
     RecyclerView.Adapter adapter;
+    ArrayList<ItemYoutube> videos;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -63,6 +65,13 @@ public class Streaming extends YouTubeBaseActivity implements YouTubePlayer.OnIn
         contexto = getApplicationContext();
         GetDataYouTube hilo = new GetDataYouTube(adapter,mRecyclerView);
         hilo.execute();
+        try {
+            videos = hilo.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
         //Obtenemos las referecias.
         textViewDuracionVideo = (TextView) findViewById(R.id.titulo_video);
@@ -80,12 +89,6 @@ public class Streaming extends YouTubeBaseActivity implements YouTubePlayer.OnIn
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
 
-        //FALTA HACER QUE LOS VIDEOS LOS OBTENGA DE GetDataYouTube !!!!!!!! Lo de abajo es solo para ver que sí funciona
-        ArrayList<ItemYoutube> videos = new ArrayList<>();
-        videos.add(new ItemYoutube("1","1","","","",""));
-        videos.add(new ItemYoutube("2","2","","","",""));
-        videos.add(new ItemYoutube("3","3","","","",""));
-           /// FUNCIONA SOLO HAY QUE SACAR LOS VIDEOS DE GETDATAYOUTUBE DENTRO DEL ASYNCTASK
         adapter = new AdapterListaVideos(contexto,videos);
         mRecyclerView.setAdapter(adapter);
 
@@ -96,7 +99,7 @@ public class Streaming extends YouTubeBaseActivity implements YouTubePlayer.OnIn
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b)
     {
         if(!b){
-            youTubePlayer.cueVideo("uz0UrrhJEbM");
+            youTubePlayer.cueVideo(videos.get(0).getUrlYouTube());
             int duracion  = youTubePlayer.getDurationMillis();
 
         }
