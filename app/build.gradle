@@ -27,4 +27,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.+'
     compile files('libs/YouTubeAndroidPlayerApi.jar')
     compile files('libs/commons-net-3.3.jar')
+    compile files('libs/jsoup-1.8.1.jar')
 }
