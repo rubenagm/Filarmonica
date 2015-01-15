@@ -79,9 +79,10 @@ public class MainActivity extends Activity
         //getActionBar().hide();
 
         //Obtenemos als referencias del layout.
-        list_view_drawer = (ListView) findViewById(R.id.drawer_listView);
         lblReloj		 = (TextView) findViewById(R.id.lbl_contador_proximo_concierto);
 
+        /******************************* ListView Drawer *****************************/
+        list_view_drawer = (ListView) findViewById(R.id.drawer_listView);
         //Obtenemos las imágenes.
         array_iconos = getResources().obtainTypedArray(R.array.iconos_drawer);
 
@@ -124,7 +125,6 @@ public class MainActivity extends Activity
                         Toast.makeText(contexto, "Has presionado conciertos cambio", Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(MainActivity.this,ListaEventos.class);
                         startActivity(i);
-                        finish();
                         break;
                     }
                     case 1:
@@ -136,6 +136,7 @@ public class MainActivity extends Activity
             }
 
         });
+        /******************************* ListView Drawer *****************************/
 
         ConexionProximoConcierto json = new ConexionProximoConcierto();
         json.execute("");
