@@ -10,7 +10,10 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.jsoup.Jsoup;
+
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 
 public class DetalleEvento extends ActionBarActivity {
@@ -23,6 +26,7 @@ public class DetalleEvento extends ActionBarActivity {
     TextView textViewDirector;
     TextView textViewLocalidades;
     TextView textViewCostos;
+    TextView textViewDescripcion;
     String DIRECTORIO = "/storage/emulated/0/Imagenes/imagenes";
 
     @Override
@@ -37,6 +41,8 @@ public class DetalleEvento extends ActionBarActivity {
         textViewDirector = (TextView) findViewById(R.id.detalle_nombre_director);
         textViewLocalidades = (TextView) findViewById(R.id.localidades);
         textViewCostos = (TextView) findViewById(R.id.costos);
+        textViewDescripcion = (TextView) findViewById(R.id.detalle_descripcion_evento);
+
         contexto = getApplicationContext();
 
         int idEvento = getIntent().getExtras().getInt("idEvento");
@@ -46,7 +52,14 @@ public class DetalleEvento extends ActionBarActivity {
 
         textViewTitulo.setText(mEvento.get(0).getTitulo());
         textViewPrograma.setText(mEvento.get(0).getPrograma());
-        textViewFechas.setText(mEvento.get(0).getFechas().toString());
+        textViewDescripcion.setText(mEvento.get(0).getDescripcionEn());
+        //Fechas
+        ArrayList<String> fechas = mEvento.get(0).getFechas();
+        String fechasString = "";
+        for(int x = 0; x<fechas.size();x++){
+           fechasString += LimpiarFecha(fechas.get(x))+"\n";
+        }
+        textViewFechas.setText(fechasString);
 
         //Obtener localidades
         ArrayList<String> localidades = mEvento.get(0).getLocalidades();
@@ -89,5 +102,59 @@ public class DetalleEvento extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    //FUNCION PARA LIMPIAR LA FECHA
+    public String LimpiarFecha(String fecha){
+        String fechaFinal="";
+        String año = "";
+        String mes = "";
+        String dia = "";
+        StringTokenizer token = new StringTokenizer(fecha,"/");
+        fechaFinal = token.nextToken();
+        StringTokenizer token2 = new StringTokenizer(fechaFinal,"-");
+        año = token2.nextToken();
+        mes = token2.nextToken();
+        dia = token2.nextToken();
+
+        switch (mes){
+            case "01":
+                mes = "Enero";
+                break;
+            case "02":
+                mes = "Febrero";
+                break;
+            case "03":
+                mes = "Marzo";
+                break;
+            case "04":
+                mes = "Abril";
+                break;
+            case"05":
+                mes = "Mayo";
+                break;
+            case "06":
+                mes = "Junio";
+                break;
+            case "07":
+                mes = "Julio";
+                break;
+            case "08":
+                mes = "Agosto";
+                break;
+            case "09":
+                mes = "Septiembre";
+                break;
+            case "10":
+                mes = "Octubre";
+                break;
+            case "11":
+                mes = "Noviembre";
+                break;
+            case "12":
+                mes = "Diciembre";
+                break;
+        }
+
+        return dia + " de " + mes + " del " + año ;
     }
 }

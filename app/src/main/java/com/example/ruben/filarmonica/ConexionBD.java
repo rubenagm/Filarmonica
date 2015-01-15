@@ -7,11 +7,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import org.jsoup.Jsoup;
+
 import java.util.ArrayList;
 
 public class ConexionBD extends SQLiteOpenHelper{
 	private static String DATABASE_NAME = "prueba";
 	private static int DATABASE_VERSION = 1;
+    private static String SQL_SELECT_VIDEO = "SELECT * FROM video";
+    private static String SQL_CREATE_TABLA_VIDEOS = "CREATE TABLE video (titulo TEXT, contenido TEXT,duracion TEXT,urlimagen TEXT)";
     private static String SQL_SELECT_TABLA_LOCALIDAD_EVENTO = "SELECT nombre,costo FROM localidad_evento WHERE evento_id = ";
     private static String SQL_CREATE_TABLA_LOCALIDAD = "CREATE TABLE localidad (id INTEGER PRIMARY KEY, nombre TEXT , costo TEXT,sede_id INTEGER)";
     private static String SQL_CREATE_TABLA_LOCALIDAD_EVENTO = "CREATE TABLE localidad_evento (id INTEGER PRIMARY KEY, nombre TEXT, costo TEXT,evento_id INTEGER , FOREIGN KEY (evento_id) REFERENCES evento (id))";
@@ -31,12 +35,14 @@ public class ConexionBD extends SQLiteOpenHelper{
 		db.execSQL(SQL_CREATE_TABLA_FECHA);
         db.execSQL(SQL_CREATE_TABLA_LOCALIDAD);
         db.execSQL(SQL_CREATE_TABLA_LOCALIDAD_EVENTO);
+        db.execSQL(SQL_CREATE_TABLA_VIDEOS);
 	}
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		
 	}
-	
+
+
 	//INSERTAR UN EVENTO
 	public boolean insertEvento (int id, String programa,String programa_en,String titulo,String titulo_en,String descripcion, String descripcion_en,String estado,int temporada_id){
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -189,6 +195,9 @@ public class ConexionBD extends SQLiteOpenHelper{
             descripcion_en = res.getString(res.getColumnIndex("descripcion_en"));
             estado = res.getString(res.getColumnIndex("estado"));
             temporada_id = res.getInt(res.getColumnIndex("temporada_id"));
+
+            descripcion = Jsoup.parse(descripcion).text();
+            descripcion_en = Jsoup.parse(descripcion_en).text();
             Log.i("Base de datos - Evento obtenido",""+id+ programa+ programa_en+ titulo+titulo_en+ descripcion+ descripcion_en+ estado+ temporada_id);
             evento.add(new ItemEvento(id, programa, programa_en, titulo,titulo_en, descripcion, descripcion_en, estado, temporada_id));
             //Consulta las fechas para el evento

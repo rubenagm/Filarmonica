@@ -1,6 +1,7 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.ruben.filarmonica.Streaming">
 
     <com.google.android.youtube.player.YouTubePlayerView
@@ -12,10 +13,14 @@
         android:id="@+id/titulo_video"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:background="#E52D27"
         android:text="Nombre del video"
         android:textColor="#FFFFFF"
-        android:textSize="30sp"
-        android:layout_below="@id/youtube_player"/>
+        android:textSize="30sp"/>
 
-</RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/lista_videos"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        />
+
+</LinearLayout>

@@ -75,8 +75,6 @@ public class MainActivity extends Activity
             ObtenerEventos hilo = new ObtenerEventos(contexto,sharedPreferences);
             hilo.execute("");
         }
-
-        ConexionBD db = new ConexionBD(contexto);
         //Ocultamos el actionbar.
         //getActionBar().hide();
 
