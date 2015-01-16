@@ -11,12 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import com.google.android.youtube.player.YouTubePlayer;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -26,9 +25,15 @@ import java.util.ArrayList;
 public class AdapterListaVideos extends RecyclerView.Adapter<AdapterListaVideos.ViewHolder> {
     ArrayList<ItemYoutube> videos;
     Context contexto;
-    public AdapterListaVideos(Context contexto, ArrayList<ItemYoutube> videos){
+    YouTubePlayer youTubePlayer;
+    TextView textViewTituloVideo;
+
+    public AdapterListaVideos(Context contexto, ArrayList<ItemYoutube> videos,YouTubePlayer youTubePlayer,
+                                TextView textViewTituloVideo){
         this.videos = videos;
         this.contexto = contexto;
+        this.youTubePlayer = youTubePlayer;
+        this.textViewTituloVideo = textViewTituloVideo;
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -38,10 +43,26 @@ public class AdapterListaVideos extends RecyclerView.Adapter<AdapterListaVideos.
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.textViewTituloVideo.setText(videos.get(position).getTitulo());
         mostrarImagen hilo = new mostrarImagen(holder.imageViewImagenPrevia,videos.get(position).getUrlImagen());
         hilo.execute();
+        holder.imageViewImagenPrevia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Cambiamos el nombre del título del video.
+                textViewTituloVideo.setText(videos.get(position).getTitulo());
+
+                //Reproducir video de Youtube.
+                youTubePlayer.loadVideo(videos.get(position).getUrlYouTube());
+            }
+        });
+        int minutos = Integer.parseInt(videos.get(position).getDuracion().toString())/60;
+        int segundos = Integer.parseInt(videos.get(position).getDuracion().toString())%60;
+
+        holder.textViewDuracion.setText(minutos+":"+segundos);
+
     }
 
     @Override

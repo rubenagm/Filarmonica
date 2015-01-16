@@ -30,7 +30,8 @@
         </activity>
         <activity
             android:name=".Streaming"
-            android:label="@string/title_activity_streaming" >
+            android:label="@string/title_activity_streaming"
+            android:configChanges="orientation|screenSize">
         </activity>
     </application>
 

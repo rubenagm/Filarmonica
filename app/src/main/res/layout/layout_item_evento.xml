@@ -26,8 +26,9 @@
                 />
 
             <TextView
+
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="8dp"
                 android:text="titulo"
                 android:id="@+id/titulo_evento"
                 android:textSize="17dp"

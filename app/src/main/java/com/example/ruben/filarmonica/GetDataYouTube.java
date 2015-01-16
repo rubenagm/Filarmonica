@@ -75,8 +75,9 @@ public class GetDataYouTube extends AsyncTask<Void,Void,ArrayList<ItemYoutube>>
                 String title = jsonObject.getJSONObject("title").getString("$t");
                 String contenido = jsonObject.getJSONObject("content").getString("$t");
                 String urlImagen = jsonObject.getJSONObject("media$group").getJSONArray("media$thumbnail").getJSONObject(0).getString("url");
+                String duracion = jsonObject.getJSONObject("media$group").getJSONArray("media$content").getJSONObject(0).getString("duration");
                 id = obtenerIdYoutube(id);
-                videos.add(new ItemYoutube(id,title,contenido,"","","",urlImagen));
+                videos.add(new ItemYoutube(id,title,contenido,duracion,"","",urlImagen));
                 Log.i("Json", title + "\n" + urlImagen);
             }
         }
