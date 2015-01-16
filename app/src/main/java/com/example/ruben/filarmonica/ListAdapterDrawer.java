@@ -137,7 +137,6 @@ public class ListAdapterDrawer extends BaseAdapter
 							{
                                 Intent i = new Intent(activity,Streaming.class);
                                 activity.startActivity(i);
-								Toast.makeText(activity, "Has presionado Streaming", Toast.LENGTH_SHORT).show();
 								break;
 							}
 						}

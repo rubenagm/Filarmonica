@@ -122,7 +122,6 @@ public class MainActivity extends Activity
                 {
                     case 0:
                     {
-                        Toast.makeText(contexto, "Has presionado conciertos cambio", Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(MainActivity.this,ListaEventos.class);
                         startActivity(i);
                         break;

@@ -10,7 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.youtube.player.YouTubePlayer;
+
+import org.jsoup.parser.Parser;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
@@ -26,9 +30,11 @@ import java.util.ArrayList;
 public class AdapterListaVideos extends RecyclerView.Adapter<AdapterListaVideos.ViewHolder> {
     ArrayList<ItemYoutube> videos;
     Context contexto;
-    public AdapterListaVideos(Context contexto, ArrayList<ItemYoutube> videos){
+    YouTubePlayer youTubePlayer;
+    public AdapterListaVideos(Context contexto, ArrayList<ItemYoutube> videos,YouTubePlayer youTubePlayer){
         this.videos = videos;
         this.contexto = contexto;
+        this.youTubePlayer = youTubePlayer;
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -38,10 +44,21 @@ public class AdapterListaVideos extends RecyclerView.Adapter<AdapterListaVideos.
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.textViewTituloVideo.setText(videos.get(position).getTitulo());
         mostrarImagen hilo = new mostrarImagen(holder.imageViewImagenPrevia,videos.get(position).getUrlImagen());
         hilo.execute();
+        holder.imageViewImagenPrevia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(contexto,videos.get(position).getUrlYouTube(),Toast.LENGTH_SHORT).show();
+            }
+        });
+        int minutos = Integer.parseInt(videos.get(position).getDuracion().toString())/60;
+        int segundos = Integer.parseInt(videos.get(position).getDuracion().toString())%60;
+
+        holder.textViewDuracion.setText(minutos+":"+segundos);
+
     }
 
     @Override

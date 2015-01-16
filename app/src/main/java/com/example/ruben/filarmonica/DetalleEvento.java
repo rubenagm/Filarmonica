@@ -145,7 +145,7 @@ public class DetalleEvento extends ActionBarActivity {
         ArrayList<String> costos = mEvento.get(0).getCostos();
         String costosString = "";
         for(int x = 0; x<costos.size();x++){
-            costosString += costos.get(x) +"\n";
+            costosString += "$ "+costos.get(x) +"\n";
         }
         textViewCostos.setText(costosString);
         Bitmap bitmap = BitmapFactory.decodeFile(DIRECTORIO+mEvento.get(0).getId()+".png");
