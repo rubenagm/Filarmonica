@@ -14,7 +14,8 @@ import java.util.ArrayList;
 public class ConexionBD extends SQLiteOpenHelper{
 	private static String DATABASE_NAME = "prueba";
 	private static int DATABASE_VERSION = 1;
-    private static String SQL_SELECT_VIDEO = "SELECT * FROM video";
+    private static String SQL_SELECT_NOTICIA = "SELECT * FROM noticia";
+    private static String SQL_CREATE_TABLA_NOTICIA = "CREATE TABLE noticia (id INTEGER, titulo TEXT,titulo_en TEXT,contenido TEXT, contenido_en TEXT,fecha DATE, publicada TEXT, fecha_creacion TEXT)";
     private static String SQL_CREATE_TABLA_VIDEOS = "CREATE TABLE video (titulo TEXT, contenido TEXT,duracion TEXT,urlimagen TEXT)";
     private static String SQL_SELECT_TABLA_LOCALIDAD_EVENTO = "SELECT nombre,costo FROM localidad_evento WHERE evento_id = ";
     private static String SQL_CREATE_TABLA_LOCALIDAD = "CREATE TABLE localidad (id INTEGER PRIMARY KEY, nombre TEXT , costo TEXT,sede_id INTEGER)";
@@ -36,6 +37,7 @@ public class ConexionBD extends SQLiteOpenHelper{
         db.execSQL(SQL_CREATE_TABLA_LOCALIDAD);
         db.execSQL(SQL_CREATE_TABLA_LOCALIDAD_EVENTO);
         db.execSQL(SQL_CREATE_TABLA_VIDEOS);
+        db.execSQL(SQL_CREATE_TABLA_NOTICIA);
 	}
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -60,7 +62,63 @@ public class ConexionBD extends SQLiteOpenHelper{
 		Log.i("Insert DB", "Se ha insertado 1 evento");
 		return true;
 	}
-	
+
+	//INSERTAR UNA NOTICIA
+    public boolean insertNoticia(int id, String titulo, String titulo_en,String contenido, String contenido_en, String fecha , String publicada, String fecha_creacion){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("id",id);
+        contentValues.put("titulo",titulo);
+        contentValues.put("titulo_en",titulo_en);
+        contentValues.put("contenido",contenido);
+        contentValues.put("contenido_en",contenido_en);
+        contentValues.put("fecha",fecha);
+        contentValues.put("publicada",publicada);
+        contentValues.put("fecha_creacion",fecha_creacion);
+
+        db.insert("noticia",null,contentValues);
+        Log.i("Insert DB", "Noticia insertada");
+        return true;
+    }
+
+    //OBTENER NOTICIAS
+    public ArrayList<ItemNoticia> obtenerNoticias(){
+        ArrayList<ItemNoticia> noticias = new ArrayList<>();
+
+        int id;
+        String titulo;
+        String titulo_en;
+        String contenido;
+        String contenido_en;
+        String fecha;
+        String publicada;
+        String fecha_creacion;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(SQL_SELECT_NOTICIA,null);
+
+        res.moveToFirst();
+
+        while(res.isAfterLast() == false){
+            id = res.getInt(res.getColumnIndex("id"));
+            titulo = res.getString(res.getColumnIndex("titulo"));
+            titulo_en = res.getString(res.getColumnIndex("titulo_en"));
+            contenido = res.getString(res.getColumnIndex("contenido"));
+            contenido_en = res.getString(res.getColumnIndex("contenido_en"));
+            fecha = res.getString(res.getColumnIndex("fecha"));
+            publicada = res.getString(res.getColumnIndex("publicada"));
+            fecha_creacion = res.getString(res.getColumnIndex("fecha_creacion"));
+            contenido = Jsoup.parse(contenido).text();
+            noticias.add(new ItemNoticia(id,titulo,titulo_en,contenido,contenido_en,fecha,publicada,fecha_creacion));
+
+            res.moveToNext();
+        }
+
+        Log.i("SELECT DB","Obtenidas las noticias");
+        return noticias;
+    }
+
+
 	//INSERTAR UNA FECHA
 	public boolean insertFecha(int id, String fecha, String hora, String minuto, int evento_id){
 		SQLiteDatabase db = this.getWritableDatabase();

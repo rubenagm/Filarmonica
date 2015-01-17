@@ -128,7 +128,8 @@ public class MainActivity extends Activity
                     }
                     case 1:
                     {
-                        Toast.makeText(contexto, "Has presionado Noticias", Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(MainActivity.this,Noticias.class);
+                        startActivity(i);
                         break;
                     }
                 }

@@ -35,6 +35,7 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
 	final String JSON_ESTADO = "estado";
 	final String JSON_TEMPORADA_ID = "temporada_id";
 
+    final String QUERY_NOTICIA = "SELECT * FROM noticia ORDER BY fecha DESC";
 	final String QUERY_EVENTOS = "SELECT * FROM evento  ";
 	final String QUERY_FECHAS = "SELECT * FROM fecha";
     final String QUERY_LOCALIDADES = "SELECT * FROM localidad";
@@ -77,7 +78,7 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
 				
 				int id = jsonElement.getInt(JSON_ID);
 
-                ftpDownload.descargarArchivo(id+"");
+                ftpDownload.descargarArchivo(1,id+"");
 				String programa = jsonElement.getString(JSON_PROGRAMA);
 				String programa_en = jsonElement.getString(JSON_PROGRAMA_EN);
 				String titulo = jsonElement.getString(JSON_TITULO);
@@ -221,6 +222,50 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
         {
             Log.e("HTTP", "Error con la conexi�n HTTP");
         }
+
+        //Se comienza a guardar las Noticias
+        try {
+            List<NameValuePair> mNameValuePairs = new ArrayList<NameValuePair>(1);
+            mNameValuePairs.add(new BasicNameValuePair("query", QUERY_NOTICIA));
+            mHttPost.setEntity(new UrlEncodedFormEntity(mNameValuePairs));
+
+            HttpResponse response = mHttpClient.execute(mHttPost);
+
+            HttpEntity entity = response.getEntity();
+            String resultado = EntityUtils.toString(entity,"UTF-8");
+            ftpDownload = new FtpDownload();
+            //Log.i("JSON",resultado);
+            resultado = resultado.substring(9);
+            Log.i("JSON",resultado);
+            JSONObject jsonObject = new JSONObject(resultado);
+            JSONArray jsonArray = jsonObject.getJSONArray("data");
+            for(int i = 0; i < jsonArray.length(); i++)
+            {
+                JSONObject jsonElement = jsonArray.getJSONObject(i);
+
+                int id = jsonElement.getInt("id");
+                ftpDownload.descargarArchivo(2,id+"");
+                String titulo = jsonElement.getString("titulo");
+                String titulo_en = jsonElement.getString("titulo_en");
+                String contenido = jsonElement.getString("contenido");
+                String contenido_en = jsonElement.getString("contenido_en");
+                String fecha = jsonElement.getString("fecha");
+                String publicada = jsonElement.getString("publicada");
+                String fecha_creacion = jsonElement.getString("fecha_creacion");
+
+                mDB.insertNoticia(id,titulo,titulo_en,contenido,contenido_en,fecha,publicada,fecha_creacion);
+
+            }
+        }
+        catch(JSONException e)
+        {
+            Log.e("JSON", "Error al leer el JSON\n" + e);
+        }
+        catch(IOException e)
+        {
+            Log.e("HTTP", "Error con la conexi�n HTTP");
+        }
+
         editor.putString("DatosInsertados","Insertados");
         editor.commit();
 		return eventos;

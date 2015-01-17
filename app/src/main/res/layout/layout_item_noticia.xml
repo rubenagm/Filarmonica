@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="10dp"
+    >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="150dp"
+        android:layout_height="145dp">
+        <ImageView
+            android:src="@drawable/icon_buy"
+            android:scaleType="fitXY"
+            android:id="@+id/lista_noticia_imagen"
+            android:layout_width="150dp"
+            android:layout_height="100dp" />
+        <TextView
+            android:textColor="#FE2E2E"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:text="LEER MÁS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    <LinearLayout
+        android:layout_marginLeft="8dp"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="145dp">
+        <TextView
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="Titulo"
+            android:id="@+id/lista_noticias_titulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginTop="1dp"
+            android:textSize="14sp"
+            android:text="Fecha"
+            android:id="@+id/lista_noticas_fecha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginTop="3dp"
+            android:textSize="14sp"
+            android:text="Contenido"
+            android:id="@+id/lista_noticias_contenido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+
+</LinearLayout>
