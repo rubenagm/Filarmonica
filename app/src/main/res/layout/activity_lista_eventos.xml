@@ -1,13 +1,36 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.ruben.filarmonica.ListaEventos">
+    tools:context="${relativePackage}.${activityClass}" >
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_marginTop="5dp"
-        android:id="@+id/lista_eventos"
-        android:layout_width="match_parent"
+    <!-- The main content view -->
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        tools:context="com.example.ruben.filarmonica.ListaEventos">
 
-</RelativeLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/lista_eventos"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+    </RelativeLayout>
+
+    <!-- The navigation drawer -->
+    <ListView
+        android:id="@+id/drawer_listView"
+        android:layout_width="320dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:divider="#2E2E2E"
+        android:dividerHeight="2dp"
+        android:background="#424242"
+        android:textColor="#424242"
+        android:scrollbars="none"/>
+
+</android.support.v4.widget.DrawerLayout>

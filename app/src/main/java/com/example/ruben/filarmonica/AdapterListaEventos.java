@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
  * Created by Ruben on 08/01/2015.
@@ -28,8 +29,10 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
         public TextView textViewFechasEvento;
         public TextView textViewMasDetalles;
         public ImageView imageViewImagenEvento;
+        public TextView textViewCompartir;
         public ViewHolder(View v){
             super(v);
+            textViewCompartir = (TextView) v.findViewById(R.id.texto_compartir);
             textViewMasDetalles = (TextView) v.findViewById(R.id.text_mas_detalles);
             mTextView = (TextView) v.findViewById(R.id.titulo_evento);
             textViewProgramaEvento = (TextView) v.findViewById(R.id.programa_evento);
@@ -54,10 +57,20 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
     public void onBindViewHolder(ViewHolder holder, final int position){
         holder.mTextView.setText(mEvento.get(position).getTitulo().toString());
         holder.textViewProgramaEvento.setText(mEvento.get(position).getPrograma().toString());
-        holder.textViewFechasEvento.setText(obtenerFechas(mEvento.get(position).getFechas()));
+
+        //fechas
+        ArrayList<String> fechas = mEvento.get(position).getFechas();
+        String fechasString ="";
+        for(int x = 0;x<fechas.size();x++){
+            fechasString += LimpiarFecha(fechas.get(x)) + "\n";
+        }
+
+        holder.textViewFechasEvento.setText(fechasString);
 
         Bitmap bitmap = BitmapFactory.decodeFile(DIRECTORIO+mEvento.get(position).getId()+".png");
         holder.imageViewImagenEvento.setImageBitmap(bitmap);
+        holder.textViewMasDetalles.setText("MÁS DETALLES"+"\n");
+        holder.textViewCompartir.setText("COMPARTIR" + "\n");
         holder.textViewMasDetalles.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,6 +87,63 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
         return mEvento.size();
     }
 
+
+    //FUNCION PARA LIMPIAR LA FECHA
+    public String LimpiarFecha(String fecha){
+        String fechaFinal="";
+        String año = "";
+        String mes = "";
+        String dia = "";
+        StringTokenizer token = new StringTokenizer(fecha,"/");
+        fechaFinal = token.nextToken();
+        StringTokenizer token2 = new StringTokenizer(fechaFinal,"-");
+        año = token2.nextToken();
+        mes = token2.nextToken();
+        dia = token2.nextToken();
+
+        switch (mes){
+            case "01":
+                mes = "Enero";
+                break;
+            case "02":
+                mes = "Febrero";
+                break;
+            case "03":
+                mes = "Marzo";
+                break;
+            case "04":
+                mes = "Abril";
+                break;
+            case"05":
+                mes = "Mayo";
+                break;
+            case "06":
+                mes = "Junio";
+                break;
+            case "07":
+                mes = "Julio";
+                break;
+            case "08":
+                mes = "Agosto";
+                break;
+            case "09":
+                mes = "Septiembre";
+                break;
+            case "10":
+                mes = "Octubre";
+                break;
+            case "11":
+                mes = "Noviembre";
+                break;
+            case "12":
+                mes = "Diciembre";
+                break;
+        }
+
+        return dia + " de " + mes + " del " + año ;
+    }
+
+    ////
     public String obtenerFechas(ArrayList<String> fechas){
         String fechaReturn ="";
         for(int x = 0; x<fechas.size();x++){

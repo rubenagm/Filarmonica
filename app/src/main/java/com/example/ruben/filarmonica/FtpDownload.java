@@ -23,12 +23,20 @@ import java.net.URL;
 public class FtpDownload {
     FTPClient ftp = null;
     private final String URL = "http://www.ofj.com.mx/img/uploads/events/655x308/";
+    private final String URLImagen = "http://ofj.com.mx/img/uploads/noticias/";
 
-    public boolean descargarArchivo(String nombreArchivo) throws IOException {
+    public boolean descargarArchivo(int tipo,String nombreArchivo) throws IOException {
 
-
+        String urlS = "";
+        if(tipo ==1){
+            urlS = URL;
+        }
+        else
+        {
+            urlS = URLImagen;
+        }
         try {
-            URL url = new URL(URL+nombreArchivo+".jpg");
+            URL url = new URL(urlS+nombreArchivo+".jpg");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             connection.connect();
@@ -39,6 +47,7 @@ public class FtpDownload {
             File dir = new File(file_path);
             if(!dir.exists())
                 dir.mkdirs();
+            if(tipo == 2) nombreArchivo += "Not";
             File file = new File(dir, "imagenes" + nombreArchivo + ".png");
             Log.i("FTP Download ","salvado en "+file.getAbsolutePath());
             FileOutputStream fOut = new FileOutputStream(file);

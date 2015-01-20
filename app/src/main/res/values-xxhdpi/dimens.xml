@@ -1,0 +1,6 @@
+<resources>
+
+    <dimen name="alto_item_drawer">204dp</dimen>
+    <dimen name="alto_item_drawer_doble">202dp</dimen>
+
+</resources>

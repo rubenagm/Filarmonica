@@ -14,7 +14,7 @@ public class ItemEvento {
 	int temporada_id;
 	ArrayList<String> fechas = new ArrayList<String>();
 	ArrayList<String> localidades = new ArrayList<String>();
-	
+	ArrayList<String> costos = new ArrayList<String>();
 	public ItemEvento(int id, String programa,String programa_en,String titulo,String titulo_en,String descripcion, String descripcion_en,String estado,int temporada_id){
 		this.id = id;
 		this.programa = programa;
@@ -26,7 +26,9 @@ public class ItemEvento {
 		this.estado = estado;
 		this.temporada_id = temporada_id;
 	}
-	
+
+
+    public void addCosto(String costo){  costos.add(costo); }
 	public int getId (){
 		return id;
 	}
@@ -69,6 +71,7 @@ public class ItemEvento {
 	public int getCountFechas(){
 		return fechas.size();
 	}
+    public ArrayList<String> getCostos(){return costos; }
 	public int getCountLocalidades(){
 		return localidades.size();
 	}
