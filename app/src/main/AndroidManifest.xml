@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -29,8 +29,17 @@
             android:label="@string/title_activity_detalle_evento" >
         </activity>
         <activity
+            android:name=".Noticias"
+            android:label="@string/title_activity_noticias" >
+        </activity>
+        <activity
+            android:name=".Facebook"
+            android:label="@string/title_activity_facebook" >
+        </activity>
+        <activity
             android:name=".Streaming"
-            android:label="@string/title_activity_streaming" >
+            android:configChanges="orientation|screenSize"
+            android:label="StreamingFull">
         </activity>
     </application>
 

@@ -1,9 +1,6 @@
 package com.example.ruben.filarmonica;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -12,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class ListAdapterDrawer extends BaseAdapter
 {
@@ -89,7 +88,14 @@ public class ListAdapterDrawer extends BaseAdapter
 			
 			//Tomamos un item.
 			ItemDrawer item = array_drawer.get(position);
-			
+
+            //Creamos el objeto para manejar las medidas de la pantalla.
+            DisplayMetrics display_metrics = new DisplayMetrics();
+            activity.getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
+
+            //Sacamos el ancho de la pantalla para acomodar los items que van de 2
+            int width = display_metrics.widthPixels / 2;
+
 			//Implementaci�n layout simple.
 			if(tipo == 0)
 			{
@@ -105,10 +111,6 @@ public class ListAdapterDrawer extends BaseAdapter
 			//Implementaci�n del layout doble.
 			else
 			{
-				//Sacamos el ancho de la pantalla para acomodar los items que van de 2
-				DisplayMetrics display_metrics = new DisplayMetrics();
-				activity.getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
-				int width = display_metrics.widthPixels / 2;
 				
 				//Inflamos el layout.
 				convertView = inflater.inflate(R.layout.item_drawer_doble, null);
@@ -116,7 +118,10 @@ public class ListAdapterDrawer extends BaseAdapter
 				//Obtenemos las referencias y configuramos.
 				//�cono 1.
 				view.icono = (TextView) convertView.findViewById(R.id.icono);
-				view.icono.getLayoutParams().width = width;
+
+                //Establecemos ancho y alto de la imagen.
+                view.icono.getLayoutParams().width = width;
+
 				view.icono.setBackgroundResource(item.getIcono());
 				
 				//Colocamos el click listener.
@@ -132,7 +137,6 @@ public class ListAdapterDrawer extends BaseAdapter
 							{
                                 Intent i = new Intent(activity,Streaming.class);
                                 activity.startActivity(i);
-								Toast.makeText(activity, "Has presionado Streaming", Toast.LENGTH_SHORT).show();
 								break;
 							}
 						}
@@ -142,7 +146,10 @@ public class ListAdapterDrawer extends BaseAdapter
 				
 				//�cono 2.
 				view.icono2 = (TextView) convertView.findViewById(R.id.icono2);
+
+                //Establecemos ancho de la imagen.
 				view.icono2.getLayoutParams().width = width;
+
 				view.icono2.setBackgroundResource(item.getIcono2());
 				
 				view.icono2.setOnClickListener(new View.OnClickListener()

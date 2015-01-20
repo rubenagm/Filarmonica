@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/youtubeFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:background="#E31836"
+        >
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/titulo_video"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Nombre del video"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"/>
+        <ImageView
+            android:id="@+id/boton_compartir"
+            android:layout_marginTop="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:alpha="0.8"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/icono_compartir"
+            />
+        <ImageView
+            android:id="@+id/boton_mas_informacion"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/icono_mas_informacion"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="22dp"
+            android:alpha="0.4"
+            android:layout_marginBottom="15dp"
+            />
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/lista_videos"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        />
+
+</LinearLayout>
