@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
  * Created by root on 16/01/15.
@@ -35,8 +36,10 @@ public class AdapterListaNoticias extends RecyclerView.Adapter<AdapterListaNotic
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         viewHolder.textViewTitulo.setText(noticias.get(i).getTitulo());
-        viewHolder.textViewFecha.setText(noticias.get(i).getFecha());
-        viewHolder.textViewContenido.setText(noticias.get(i).getContenido());
+        viewHolder.textViewFecha.setText(LimpiarFecha(noticias.get(i).fecha));
+        String contenido = noticias.get(i).getContenido();
+        if(contenido.length()>100) contenido = contenido.substring(0,100) + "...";
+        viewHolder.textViewContenido.setText(contenido);
         Bitmap bitmap = BitmapFactory.decodeFile(DIRECTORIO+noticias.get(i).getId()+"Not.png");
         viewHolder.imageViewImagenNoticia.setImageBitmap(bitmap);
     }
@@ -59,6 +62,60 @@ public class AdapterListaNoticias extends RecyclerView.Adapter<AdapterListaNotic
             imageViewImagenNoticia = (ImageView) v.findViewById(R.id.lista_noticia_imagen);
         }
 
+    }
+    //FUNCION PARA LIMPIAR LA FECHA
+    public String LimpiarFecha(String fecha){
+        String fechaFinal="";
+        String año = "";
+        String mes = "";
+        String dia = "";
+        StringTokenizer token = new StringTokenizer(fecha,"/");
+        fechaFinal = token.nextToken();
+        StringTokenizer token2 = new StringTokenizer(fechaFinal,"-");
+        año = token2.nextToken();
+        mes = token2.nextToken();
+        dia = token2.nextToken();
+
+        switch (mes){
+            case "01":
+                mes = "Enero";
+                break;
+            case "02":
+                mes = "Febrero";
+                break;
+            case "03":
+                mes = "Marzo";
+                break;
+            case "04":
+                mes = "Abril";
+                break;
+            case"05":
+                mes = "Mayo";
+                break;
+            case "06":
+                mes = "Junio";
+                break;
+            case "07":
+                mes = "Julio";
+                break;
+            case "08":
+                mes = "Agosto";
+                break;
+            case "09":
+                mes = "Septiembre";
+                break;
+            case "10":
+                mes = "Octubre";
+                break;
+            case "11":
+                mes = "Noviembre";
+                break;
+            case "12":
+                mes = "Diciembre";
+                break;
+        }
+
+        return dia + " de " + mes + " del " + año ;
     }
 
 }

@@ -21,7 +21,7 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="100dp"
-            android:background="#FE2E2E"
+            android:background="#E31836"
             >
             <TextView
                 android:layout_marginTop="10dp"
@@ -32,7 +32,6 @@
                 android:text="Nombre del video"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"/>
-
             <ImageView
                 android:id="@+id/boton_compartir"
                 android:layout_marginTop="15dp"
@@ -44,14 +43,15 @@
                 android:src="@drawable/icono_compartir"
                 />
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:src="@drawable/icono_mas_informacion"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="22dp"
                 android:alpha="0.4"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="15dp"
                 />
             </RelativeLayout>
 
