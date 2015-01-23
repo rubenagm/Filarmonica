@@ -18,9 +18,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.R.integer;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEvento>>{
@@ -35,8 +38,8 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
 	final String JSON_ESTADO = "estado";
 	final String JSON_TEMPORADA_ID = "temporada_id";
 
-    final String QUERY_NOTICIA = "SELECT * FROM noticia ORDER BY fecha DESC";
-	final String QUERY_EVENTOS = "SELECT * FROM evento  ";
+    final String QUERY_NOTICIA = "SELECT * FROM noticia ORDER BY fecha DESC ";
+	final String QUERY_EVENTOS = "SELECT * FROM evento  ORDER BY id DESC";
 	final String QUERY_FECHAS = "SELECT * FROM fecha";
     final String QUERY_LOCALIDADES = "SELECT * FROM localidad";
     final String QUERY_LOCALIDADES_EVENTO = "SELECT * FROM localidad_evento";
@@ -58,7 +61,6 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
 			List<NameValuePair> mNameValuePairs = new ArrayList<NameValuePair>(1);
 			mNameValuePairs.add(new BasicNameValuePair("query", QUERY_EVENTOS));			
 			mHttPost.setEntity(new UrlEncodedFormEntity(mNameValuePairs));
-			ftpDownload = new FtpDownload();
 			HttpResponse response = mHttpClient.execute(mHttPost);
 			
 			HttpEntity entity = response.getEntity();
@@ -71,14 +73,15 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
 			JSONArray jsonArray = jsonObject.getJSONArray("data");
 			mDB.limpiarDB();
             int contadorEventos = 0;
+            int longitud = jsonArray.length();
 			for(int i = 0; i < jsonArray.length(); i++)
 			{
                 contadorEventos++;
 				JSONObject jsonElement = jsonArray.getJSONObject(i);
-				
+				displayNotification(createBasicNotification("OFJ","Actualizando eventos",i+1,longitud));
 				int id = jsonElement.getInt(JSON_ID);
 
-                ftpDownload.descargarArchivo(1,id+"");
+
 				String programa = jsonElement.getString(JSON_PROGRAMA);
 				String programa_en = jsonElement.getString(JSON_PROGRAMA_EN);
 				String titulo = jsonElement.getString(JSON_TITULO);
@@ -106,32 +109,34 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
 		Log.i("Eventos", "Comienza a guardar fechas");
 		
 		/// Se comienzan a guardar las fechas
-		
+
 		try {
 			List<NameValuePair> mNameValuePairs = new ArrayList<NameValuePair>(1);
-			mNameValuePairs.add(new BasicNameValuePair("query", QUERY_FECHAS));			
+			mNameValuePairs.add(new BasicNameValuePair("query", QUERY_FECHAS));
 			mHttPost.setEntity(new UrlEncodedFormEntity(mNameValuePairs));
-			
+
 			HttpResponse response = mHttpClient.execute(mHttPost);
-			
+
 			HttpEntity entity = response.getEntity();
 			String resultado = EntityUtils.toString(entity,"UTF-8");
-			
+
 			//Log.i("JSON",resultado);
 			resultado = resultado.substring(9);
 			Log.i("JSON",resultado);
 			JSONObject jsonObject = new JSONObject(resultado);
 			JSONArray jsonArray = jsonObject.getJSONArray("data");
+            int longitud = jsonArray.length();
 			for(int i = 0; i < jsonArray.length(); i++)
 			{
+                displayNotification(createBasicNotification("OFJ","Actualizando fechas",i+1,longitud));
 				JSONObject jsonElement = jsonArray.getJSONObject(i);
-				
+
 				int id = jsonElement.getInt("id");
 				String fecha = jsonElement.getString("fecha");
 				String hora = jsonElement.getString("hora");
 				String minuto = jsonElement.getString("minuto");
 				int evento_id = jsonElement.getInt("evento_id");
-				
+
 				//Agregamos los valores al arreglo
 				mDB.insertFecha(id, fecha, hora, minuto, evento_id);
 			}
@@ -147,42 +152,7 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
 
         //Se comienzan a guardar las localidades
 
-        try {
-            List<NameValuePair> mNameValuePairs = new ArrayList<NameValuePair>(1);
-            mNameValuePairs.add(new BasicNameValuePair("query", QUERY_LOCALIDADES));
-            mHttPost.setEntity(new UrlEncodedFormEntity(mNameValuePairs));
 
-            HttpResponse response = mHttpClient.execute(mHttPost);
-
-            HttpEntity entity = response.getEntity();
-            String resultado = EntityUtils.toString(entity,"UTF-8");
-
-            //Log.i("JSON",resultado);
-            resultado = resultado.substring(9);
-            Log.i("JSON",resultado);
-            JSONObject jsonObject = new JSONObject(resultado);
-            JSONArray jsonArray = jsonObject.getJSONArray("data");
-            for(int i = 0; i < jsonArray.length(); i++)
-            {
-                JSONObject jsonElement = jsonArray.getJSONObject(i);
-
-                int id = jsonElement.getInt("id");
-                String nombre = jsonElement.getString("nombre");
-                String costo = jsonElement.getString("costo");
-                int sede_id = jsonElement.getInt("sede_id");
-
-                //Agregamos los valores al arreglo
-                mDB.insertLocalidad(id,nombre,costo,sede_id);
-            }
-        }
-        catch(JSONException e)
-        {
-            Log.e("JSON", "Error al leer el JSON\n" + e);
-        }
-        catch(IOException e)
-        {
-            Log.e("HTTP", "Error con la conexi�n HTTP");
-        }
 
 
         //Se comienza a guardar Localidades_eventos
@@ -201,10 +171,11 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
             Log.i("JSON",resultado);
             JSONObject jsonObject = new JSONObject(resultado);
             JSONArray jsonArray = jsonObject.getJSONArray("data");
+            int longitud = jsonArray.length();
             for(int i = 0; i < jsonArray.length(); i++)
             {
                 JSONObject jsonElement = jsonArray.getJSONObject(i);
-
+                displayNotification(createBasicNotification("OFJ","Actualizando localidades",i+1,longitud));
                 int id = jsonElement.getInt("id");
                 String nombre = jsonElement.getString("nombre");
                 String costo = jsonElement.getString("costo");
@@ -225,6 +196,7 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
 
         //Se comienza a guardar las Noticias
         try {
+
             List<NameValuePair> mNameValuePairs = new ArrayList<NameValuePair>(1);
             mNameValuePairs.add(new BasicNameValuePair("query", QUERY_NOTICIA));
             mHttPost.setEntity(new UrlEncodedFormEntity(mNameValuePairs));
@@ -239,12 +211,13 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
             Log.i("JSON",resultado);
             JSONObject jsonObject = new JSONObject(resultado);
             JSONArray jsonArray = jsonObject.getJSONArray("data");
+            int longitud = jsonArray.length();
             for(int i = 0; i < jsonArray.length(); i++)
             {
                 JSONObject jsonElement = jsonArray.getJSONObject(i);
-
+                displayNotification(createBasicNotification("OFJ","Actualizando noticias",i+1,longitud));
                 int id = jsonElement.getInt("id");
-                ftpDownload.descargarArchivo(2,id+"");
+                //ftpDownload.descargarArchivo(2,id+"");
                 String titulo = jsonElement.getString("titulo");
                 String titulo_en = jsonElement.getString("titulo_en");
                 String contenido = jsonElement.getString("contenido");
@@ -266,9 +239,24 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
             Log.e("HTTP", "Error con la conexi�n HTTP");
         }
 
+
         editor.putString("DatosInsertados","Insertados");
         editor.commit();
 		return eventos;
 	}
-	
+    private Notification createBasicNotification(String titulo, String contenido,int progress, int total) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(contexto);
+        Notification notification = builder
+                .setSmallIcon(R.drawable.icon_buy)
+                .setContentTitle(titulo)
+                .setContentText(contenido)
+                .setProgress(total,progress,false)
+                .build();
+
+        return notification;
+    }
+    private void displayNotification(Notification notification) {
+        NotificationManager notificationManager = (NotificationManager)contexto.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1 , notification);
+    }
 }

@@ -14,6 +14,10 @@ import java.util.ArrayList;
 public class ConexionBD extends SQLiteOpenHelper{
 	private static String DATABASE_NAME = "prueba";
 	private static int DATABASE_VERSION = 1;
+    private static String SQL_SELECT_ID_MAYOR_LOCALIDAD_EVENTO = "SELECT MAX(id) AS id FROM localidad_evento";
+    private static String SQL_SELECT_ID_MAYOR_FECHA = "SELECT MAX(id) AS id FROM fecha";
+    private static String SQL_SELECT_ID_MAYOR_NOTICIA = "SELECT MAX(id) AS id FROM noticia";
+    private static String SQL_SELECT_ID_MAYOR_EVENTO="SELECT MAX(id) AS id FROM evento";
     private static String SQL_SELECT_NOTICIA = "SELECT * FROM noticia";
     private static String SQL_CREATE_TABLA_NOTICIA = "CREATE TABLE noticia (id INTEGER, titulo TEXT,titulo_en TEXT,contenido TEXT, contenido_en TEXT,fecha DATE, publicada TEXT, fecha_creacion TEXT)";
     private static String SQL_CREATE_TABLA_VIDEOS = "CREATE TABLE video (titulo TEXT, contenido TEXT,duracion TEXT,urlimagen TEXT)";
@@ -43,6 +47,62 @@ public class ConexionBD extends SQLiteOpenHelper{
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		
 	}
+
+    //OBTENER ID MAYOR DE LA TABLA EVENTO
+    public int obtenerIdMayorEvento(){
+
+        int id = 0;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(SQL_SELECT_ID_MAYOR_EVENTO,null);
+
+        res.moveToPosition(0);
+
+        id = res.getInt(res.getColumnIndex("id"));
+        Log.i("SELECT DB","id mayor " + id);
+        return id;
+    }
+    //OBTENER MAYOR ID DE LA TABLA NOTICIA
+    public int obtenerIdMayorNoticia(){
+        int id = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(SQL_SELECT_ID_MAYOR_NOTICIA,null);
+
+        res.moveToFirst();
+        id = res.getInt(res.getColumnIndex("id"));
+        Log.i("SELECT DB","id mayor Noticia " + id );
+        return id;
+    }
+
+    //OBTENER ID MAYOR DE LA TABLA FECHA
+    public int obtenerIdMayorFecha(){
+        int id = 0;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(SQL_SELECT_ID_MAYOR_FECHA,null);
+
+        res.moveToFirst();
+
+        id = res.getInt(res.getColumnIndex("id"));
+        Log.i("SELECT DB","id mayor fecha "+ id);
+        return id;
+    }
+
+    //OBTENER ID MAYOR DE LA TABLA LOCALIDAD_EVENTO
+    public int obtenerIdMayorLocalidadEvento(){
+        int id = 0;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(SQL_SELECT_ID_MAYOR_LOCALIDAD_EVENTO,null);
+
+        res.moveToFirst();
+
+        id = res.getInt(res.getColumnIndex("id"));
+        Log.i("SELECT DB","id mayor localidad_evento "+ id);
+        return id;
+    }
+
+
 
 
 	//INSERTAR UN EVENTO

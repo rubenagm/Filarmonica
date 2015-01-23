@@ -49,6 +49,7 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
 
     @Override
     public AdapterListaEventos.ViewHolder onCreateViewHolder(ViewGroup parent,int viewType){
+
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_item_evento,parent,false);
         ViewHolder holder = new ViewHolder(v);
         return holder;

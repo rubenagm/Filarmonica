@@ -24,6 +24,7 @@ import java.util.ArrayList;
 public class AdapterListaFacebook extends RecyclerView.Adapter<AdapterListaFacebook.ViewHolder>{
     ArrayList<ItemFacebook> publicaciones;
     Context contexto;
+    String DIRECTORIO = "/storage/emulated/0/Imagenes/imagenes";
     public AdapterListaFacebook(Context  contexto,ArrayList<ItemFacebook> publicaciones){
         this.publicaciones = publicaciones;
         this.contexto = contexto;
@@ -38,8 +39,8 @@ public class AdapterListaFacebook extends RecyclerView.Adapter<AdapterListaFaceb
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
             viewHolder.textViewContenido.setText(publicaciones.get(i).getContenido());
-            mostrarImagen hilo = new mostrarImagen(viewHolder.imageViewImagenFacebook,publicaciones.get(i).getUrlImagen());
-        hilo.execute();
+            Bitmap bitmap = BitmapFactory.decodeFile(DIRECTORIO+publicaciones.get(i).getUrlImagen());
+            viewHolder.imageViewImagenFacebook.setImageBitmap(bitmap);
     }
 
     @Override
@@ -59,39 +60,5 @@ public class AdapterListaFacebook extends RecyclerView.Adapter<AdapterListaFaceb
         }
     }
 
-    static class mostrarImagen extends AsyncTask<Void,Void,Void> {
-        Bitmap mBitmap;
-        ImageView mImageView;
-        static String url2;
-        public mostrarImagen(ImageView mImageView,String url2){
-            this.mImageView = mImageView;
-            this.url2 = url2;
-        }
-
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            try {
-                URL url = new URL(url2);
-                HttpURLConnection connection = null;
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                mBitmap = BitmapFactory.decodeStream(input);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            // TODO Auto-generated method stub
-            mImageView.setImageBitmap(mBitmap);
-        }
-    }
 
 }

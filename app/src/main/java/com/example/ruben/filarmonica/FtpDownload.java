@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.StringTokenizer;
 
 /**
  * Created by Ruben on 13/01/2015.
@@ -24,6 +25,7 @@ public class FtpDownload {
     FTPClient ftp = null;
     private final String URL = "http://www.ofj.com.mx/img/uploads/events/655x308/";
     private final String URLImagen = "http://ofj.com.mx/img/uploads/noticias/";
+    private final String URLImagenFacebook = "";
 
     public boolean descargarArchivo(int tipo,String nombreArchivo) throws IOException {
 
@@ -31,11 +33,16 @@ public class FtpDownload {
         if(tipo ==1){
             urlS = URL;
         }
-        else
+        if(tipo ==2)
         {
             urlS = URLImagen;
         }
+        if(tipo==3){
+            urlS = nombreArchivo;
+            nombreArchivo = "";
+        }
         try {
+            if(tipo == 2 || tipo == 1)  ;
             URL url = new URL(urlS+nombreArchivo+".jpg");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
@@ -48,6 +55,7 @@ public class FtpDownload {
             if(!dir.exists())
                 dir.mkdirs();
             if(tipo == 2) nombreArchivo += "Not";
+            if(tipo == 3) nombreArchivo = nombreImagen(urlS) + "NotFacebook";
             File file = new File(dir, "imagenes" + nombreArchivo + ".png");
             Log.i("FTP Download ","salvado en "+file.getAbsolutePath());
             FileOutputStream fOut = new FileOutputStream(file);
@@ -61,5 +69,15 @@ public class FtpDownload {
             return false;
         }
         return true;
+    }
+    public String nombreImagen (String urlImagen){
+        String id="";
+        StringTokenizer token = new StringTokenizer(urlImagen,"/");
+        while(token.hasMoreTokens()){
+            id = token.nextToken();
+        }
+        StringTokenizer token2 = new StringTokenizer(id,".");
+
+        return token2.nextToken();
     }
 }

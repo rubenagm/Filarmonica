@@ -1,5 +1,6 @@
 package com.example.ruben.filarmonica;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -15,11 +16,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
  * Created by root on 19/01/15.
  */
 public class GetDataFacebook extends AsyncTask<Void,Void,ArrayList<ItemFacebook>>{
+
+
     @Override
     protected ArrayList<ItemFacebook> doInBackground(Void... params) {
         ArrayList<ItemFacebook> publicaciones = new ArrayList<ItemFacebook>();
@@ -43,7 +47,10 @@ public class GetDataFacebook extends AsyncTask<Void,Void,ArrayList<ItemFacebook>
                 if(!jsonArray.getJSONObject(x).isNull("name")){
                     contenido = jsonArray.getJSONObject(x).getString("name");
                     urlImagen = jsonArray.getJSONObject(x).getString("picture");
-                    publicaciones.add(new ItemFacebook(contenido,urlImagen));
+                    FtpDownload ftp = new FtpDownload();
+                    ftp.descargarArchivo(3,urlImagen);
+                    urlImagen= nombreImagen(urlImagen);
+                    publicaciones.add(new ItemFacebook(contenido,urlImagen+"NotFacebook.png"));
                 }
                 Log.i("JSON Facebook", contenido + " ---- "+urlImagen);
 
@@ -58,5 +65,17 @@ public class GetDataFacebook extends AsyncTask<Void,Void,ArrayList<ItemFacebook>
         httpclient.getConnectionManager().shutdown();
 
         return publicaciones;
+    }
+
+
+    public String nombreImagen (String urlImagen){
+        String id="";
+        StringTokenizer token = new StringTokenizer(urlImagen,"/");
+        while(token.hasMoreTokens()){
+            id = token.nextToken();
+        }
+        StringTokenizer token2 = new StringTokenizer(id,".");
+
+        return token2.nextToken();
     }
 }

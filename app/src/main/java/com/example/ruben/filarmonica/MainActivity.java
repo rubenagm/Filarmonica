@@ -65,16 +65,12 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inicio);
 
+
+
         //Obtenemos el contexto.
         contexto = getApplicationContext();
         /*-------- Obtener eventos ---*/
-        SharedPreferences sharedPreferences = getSharedPreferences("Filarmonica",Context.MODE_PRIVATE);
-        String respuesta = sharedPreferences.getString("DatosInsertados","NoInsertados");
 
-        if(respuesta.equals("NoInsertados")){
-            ObtenerEventos hilo = new ObtenerEventos(contexto,sharedPreferences);
-            hilo.execute("");
-        }
         //Ocultamos el actionbar.
         //getActionBar().hide();
 
