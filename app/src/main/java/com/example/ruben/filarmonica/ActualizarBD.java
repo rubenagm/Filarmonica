@@ -235,6 +235,7 @@ public class ActualizarBD extends AsyncTask<Void,Void,Void> {
         }
 
         int mayorEvento = db.obtenerIdMayorEvento();
+        if(db.obtenerIdMayorEvento() == idMayorEvento) idMayorEvento =0;
         for(int x = db.obtenerIdMayorEvento();x>=idMayorEvento;x--){
             displayNotification(createBasicNotification("OFJ","Descargando contenido multimedia",x,mayorEvento));
             try {
@@ -244,7 +245,7 @@ public class ActualizarBD extends AsyncTask<Void,Void,Void> {
             }
         }
 
-
+    if(db.obtenerIdMayorNoticia() == idMayorNoticia) idMayorNoticia = 0;
     int mayorNoticia = db.obtenerIdMayorNoticia();
         for(int x = db.obtenerIdMayorNoticia();x>=idMayorNoticia;x--){
             displayNotification(createBasicNotification("OFJ","Descargando contenido multimedia",x,mayorNoticia));

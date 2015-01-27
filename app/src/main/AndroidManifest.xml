@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashScreen"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,6 +41,9 @@
             android:name=".Facebook"
             android:label="@string/title_activity_facebook" >
         </activity>
+        <activity android:name=".MainActivity"
+            android:label="MainActivity"/>
+        <service android:name=".ServicioActualizacionBD"/>
     </application>
 
 </manifest>

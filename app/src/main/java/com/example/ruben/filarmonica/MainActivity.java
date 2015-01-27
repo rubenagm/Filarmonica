@@ -176,15 +176,11 @@ public class MainActivity extends Activity
         private final static String TAG = "frank";
 
         //Query a mandar.
-        private final static String QUERY_PROXIMO_CONCIERTO = "SELECT * FROM evento AS E"
-                + " JOIN fecha AS F ON E.id = F.evento_id"
-                + " WHERE F.fecha > CURRENT_TIMESTAMP"
-                + " ORDER BY F.fecha"
-                + " LIMIT 1 ;";
+        private final static String QUERY_PROXIMO_CONCIERTO = "SELECT * FROM fecha WHERE fecha >= CURRENT_DATE ORDER BY fecha ASC LIMIT 1";
 
         //Variables de conexión
         private HttpClient mHttpClient = new DefaultHttpClient();
-        private HttpPost mHttpPost = new HttpPost("http://ofj.com.mx/App/prueba.php");
+        private HttpPost mHttpPost = new HttpPost("http://ofj.com.mx/App/prueba1.php");
 
         @Override
         protected ArrayList<String> doInBackground(String... arg0)
