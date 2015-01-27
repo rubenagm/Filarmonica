@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -162,7 +161,8 @@ public class ListAdapterDrawer extends BaseAdapter
 						{
 							case R.id.icono2:
 							{
-								Toast.makeText(activity, "Has presionado Contacto", Toast.LENGTH_SHORT).show();
+								Intent intent = new Intent(activity, Contacto.class);
+                                activity.startActivity(intent);
 								break;
 							}
 						}

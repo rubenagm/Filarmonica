@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".SplashScreen"
+            android:name=".MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,11 +29,6 @@
             android:label="@string/title_activity_detalle_evento" >
         </activity>
         <activity
-            android:name=".Streaming"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/title_activity_streaming" >
-        </activity>
-        <activity
             android:name=".Noticias"
             android:label="@string/title_activity_noticias" >
         </activity>
@@ -41,9 +36,11 @@
             android:name=".Facebook"
             android:label="@string/title_activity_facebook" >
         </activity>
-        <activity android:name=".MainActivity"
-            android:label="MainActivity"/>
-        <service android:name=".ServicioActualizacionBD"/>
+        <activity
+            android:name=".Streaming"
+            android:configChanges="orientation|screenSize"
+            android:label="StreamingFull">
+        </activity>
     </application>
 
 </manifest>

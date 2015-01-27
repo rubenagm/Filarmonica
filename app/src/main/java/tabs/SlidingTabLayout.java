@@ -18,8 +18,12 @@ package tabs;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.util.TypedValue;
@@ -30,6 +34,8 @@ import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.ruben.filarmonica.R;
 
 /**
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as to
@@ -77,6 +83,17 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     private final SlidingTabStrip mTabStrip;
 
+    private static Context contexto;
+
+    //Imágenes de las tabs.
+    private static int[] imagenesTab =
+    {
+            R.drawable.video_icon,
+            R.drawable.musica_icon_off,
+            R.drawable.video_icon_off,
+            R.drawable.musica_icon
+    };
+
     public SlidingTabLayout(Context context) {
         this(context, null);
     }
@@ -97,6 +114,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
         mTabStrip = new SlidingTabStrip(context);
         addView(mTabStrip, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+
+        contexto = context;
     }
 
     /**
@@ -156,6 +175,11 @@ public class SlidingTabLayout extends HorizontalScrollView {
             viewPager.setOnPageChangeListener(new InternalViewPagerListener());
             populateTabStrip();
         }
+
+        //Cargamos las imágenes por primera vez.
+        //mTabStrip.getChildAt(0).setBackgroundResource(R.drawable.video_icon);
+        //mTabStrip.getChildAt(1).setBackgroundResource(R.drawable.musica_icon_off);
+
     }
 
     /**
@@ -304,6 +328,60 @@ public class SlidingTabLayout extends HorizontalScrollView {
             if (mViewPagerPageChangeListener != null) {
                 mViewPagerPageChangeListener.onPageSelected(position);
             }
+
+            //Colocamos las imágenes de las tabs.
+            switch(position)
+            {
+                case 0:
+                {
+                    Drawable imagenTabVideo = contexto.getResources().getDrawable(imagenesTab[0]);
+                    imagenTabVideo.setBounds(0, 0, 60, 60);
+                    SpannableString spannableStringVideo = new SpannableString(" ");
+                    ImageSpan imageSpanVideo = new ImageSpan(imagenTabVideo, ImageSpan.ALIGN_BOTTOM);
+                    spannableStringVideo.setSpan(imageSpanVideo, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    //Sacamos el view donde irá la imagen de video.
+                    TextView viewTabVideo = (TextView) mTabStrip.getChildAt(0);
+                    viewTabVideo.setText(spannableStringVideo);
+
+                    Drawable imagenTabMusica = contexto.getResources().getDrawable(imagenesTab[1]);
+                    imagenTabMusica.setBounds(0, 0, 60, 60);
+                    SpannableString spannableStringMusica = new SpannableString(" ");
+                    ImageSpan imageSpanMusica = new ImageSpan(imagenTabMusica, ImageSpan.ALIGN_BOTTOM);
+                    spannableStringMusica.setSpan(imageSpanMusica, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    //Sacamos el view donde irá la imagen de música.
+                    TextView viewTabMusica = (TextView) mTabStrip.getChildAt(1);
+                    viewTabMusica.setText(spannableStringMusica);
+
+                    break;
+                }
+
+                case 1:
+                {
+                    Drawable imagenTabMusica = contexto.getResources().getDrawable(imagenesTab[3]);
+                    imagenTabMusica.setBounds(0, 0, 60, 60);
+                    SpannableString spannableStringMusica = new SpannableString(" ");
+                    ImageSpan imageSpanMusica = new ImageSpan(imagenTabMusica, ImageSpan.ALIGN_BOTTOM);
+                    spannableStringMusica.setSpan(imageSpanMusica, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    //Sacamos el view donde irá la imagen de música.
+                    TextView viewTabMusica = (TextView) mTabStrip.getChildAt(1);
+                    viewTabMusica.setText(spannableStringMusica);
+
+                    Drawable imagenTabVideo = contexto.getResources().getDrawable(imagenesTab[2]);
+                    imagenTabVideo.setBounds(0, 0, 60, 60);
+                    SpannableString spannableStringVideo = new SpannableString(" ");
+                    ImageSpan imageSpanVideo = new ImageSpan(imagenTabVideo, ImageSpan.ALIGN_BOTTOM);
+                    spannableStringVideo.setSpan(imageSpanVideo, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    //Sacamos el view donde irá la imagen de video.
+                    TextView viewTabVideo = (TextView) mTabStrip.getChildAt(0);
+                    viewTabVideo.setText(spannableStringVideo);
+
+                    break;
+                }
+            }
         }
 
     }
@@ -314,10 +392,56 @@ public class SlidingTabLayout extends HorizontalScrollView {
             for (int i = 0; i < mTabStrip.getChildCount(); i++) {
                 if (v == mTabStrip.getChildAt(i)) {
                     mViewPager.setCurrentItem(i);
+
+                    switch(i)
+                    {
+                        case 0:
+                        {
+                            Drawable imagenTabVideo = contexto.getResources().getDrawable(imagenesTab[0]);
+                            imagenTabVideo.setBounds(0, 0, 60, 60);
+                            SpannableString spannableStringVideo = new SpannableString(" ");
+                            ImageSpan imageSpanVideo = new ImageSpan(imagenTabVideo, ImageSpan.ALIGN_BOTTOM);
+                            spannableStringVideo.setSpan(imageSpanVideo, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            ((TextView) v).setText(spannableStringVideo);
+
+                            Drawable imagenTabMusica = contexto.getResources().getDrawable(imagenesTab[1]);
+                            imagenTabMusica.setBounds(0, 0, 60, 60);
+                            SpannableString spannableStringMusica = new SpannableString(" ");
+                            ImageSpan imageSpanMusica = new ImageSpan(imagenTabMusica, ImageSpan.ALIGN_BOTTOM);
+                            spannableStringMusica.setSpan(imageSpanMusica, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                            //Sacamos el view donde irá la imagen de música.
+                            TextView viewTabMusica = (TextView )mTabStrip.getChildAt(1);
+                            viewTabMusica.setText(spannableStringMusica);
+
+                            break;
+                        }
+
+                        case 1:
+                        {
+                            Drawable imagenTabMusica = contexto.getResources().getDrawable(imagenesTab[3]);
+                            imagenTabMusica.setBounds(0, 0, 60, 60);
+                            SpannableString spannableStringMusica = new SpannableString(" ");
+                            ImageSpan imageSpanMusica = new ImageSpan(imagenTabMusica, ImageSpan.ALIGN_BOTTOM);
+                            spannableStringMusica.setSpan(imageSpanMusica, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            ((TextView) v).setText(spannableStringMusica);
+
+                            Drawable imagenTabVideo = contexto.getResources().getDrawable(imagenesTab[2]);
+                            imagenTabVideo.setBounds(0, 0, 60, 60);
+                            SpannableString spannableStringVideo = new SpannableString(" ");
+                            ImageSpan imageSpanVideo = new ImageSpan(imagenTabVideo, ImageSpan.ALIGN_BOTTOM);
+                            spannableStringVideo.setSpan(imageSpanVideo, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                            //Sacamos el view donde irá la imagen de video.
+                            TextView viewTabVideo = (TextView )mTabStrip.getChildAt(0);
+                            viewTabVideo.setText(spannableStringVideo);
+
+                            break;
+                        }
+                    }
                     return;
                 }
             }
         }
     }
-
 }

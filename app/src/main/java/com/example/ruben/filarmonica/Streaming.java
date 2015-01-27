@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +53,7 @@ public class Streaming extends ActionBarActivity
     private ViewPager mPager;
 
     //Manejador de los tabs.
-    private SlidingTabLayout mTabs;
+    private static SlidingTabLayout mTabs;
 
     //ListView del drawer.
     private ListView list_view_drawer;
@@ -80,6 +84,15 @@ public class Streaming extends ActionBarActivity
     //Manager de fragmentos.
     static FragmentManager supportManager;
 
+    //Imágenes de las tabs.
+    private static int[] imagenesTab =
+    {
+        R.drawable.video_icon,
+        R.drawable.musica_icon_off,
+        R.drawable.video_icon_off,
+        R.drawable.musica_icon
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -96,6 +109,7 @@ public class Streaming extends ActionBarActivity
 
         //Obtenemos las referencias.
         mPager = (ViewPager) findViewById(R.id.pager);
+        mTabs  = new SlidingTabLayout(contexto);
         mTabs  = (SlidingTabLayout) findViewById(R.id.tabs);
 
         //Colocamos el adapdator al ViewPager.
@@ -224,27 +238,17 @@ public class Streaming extends ActionBarActivity
             return NUMERO_TABS;
         }
 
-        //Método para poner nombre a las tabs.
+        //Método para poner nombre (en este caso imágenes) a las tabs.
         @Override
         public CharSequence getPageTitle(int position)
         {
-            String nombreTab = "";
-
-            switch(position)
-            {
-                case 0:
-                {
-                    nombreTab = "Streaming Videos";
-                    break;
-                }
-                case 1:
-                {
-                    nombreTab = "Streaming Música";
-                    break;
-                }
-            }
-
-            return nombreTab;
+            //Cargamos la imagen en base a la posición de la tab.
+            Drawable imagenTab = contexto.getResources().getDrawable(imagenesTab[position]);
+            imagenTab.setBounds(0, 0, 60, 60);
+            SpannableString spannableString = new SpannableString(" ");
+            ImageSpan imageSpan = new ImageSpan(imagenTab, ImageSpan.ALIGN_BOTTOM);
+            spannableString.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return spannableString;
         }
     }
 
