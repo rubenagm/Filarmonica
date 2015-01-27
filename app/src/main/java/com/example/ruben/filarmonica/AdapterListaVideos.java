@@ -28,8 +28,8 @@ public class AdapterListaVideos extends RecyclerView.Adapter<AdapterListaVideos.
     YouTubePlayer youTubePlayer;
     TextView textViewTituloVideo;
 
-    public AdapterListaVideos(Context contexto, ArrayList<ItemYoutube> videos,YouTubePlayer youTubePlayer,
-                                TextView textViewTituloVideo){
+    public AdapterListaVideos(Context contexto, ArrayList<ItemYoutube> videos,
+                                YouTubePlayer youTubePlayer, TextView textViewTituloVideo){
         this.videos = videos;
         this.contexto = contexto;
         this.youTubePlayer = youTubePlayer;

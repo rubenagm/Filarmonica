@@ -7,59 +7,21 @@
     tools:context="${relativePackage}.${activityClass}" >
 
     <!-- The main content view -->
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context="com.example.ruben.filarmonica.Streaming">
+        android:orientation="vertical">
 
-        <com.google.android.youtube.player.YouTubePlayerView
-            android:id="@+id/youtube_player"
+        <tabs.SlidingTabLayout
+            android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="100dp"
-            android:background="#E31836"
-            >
-            <TextView
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:id="@+id/titulo_video"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:text="Nombre del video"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"/>
-            <ImageView
-                android:id="@+id/boton_compartir"
-                android:layout_marginTop="15dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:alpha="0.8"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/icono_compartir"
-                />
-            <ImageView
-
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/icono_mas_informacion"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginRight="22dp"
-                android:alpha="0.4"
-                android:layout_marginBottom="15dp"
-                />
-            </RelativeLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/lista_videos"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            />
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
