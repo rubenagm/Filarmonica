@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/Users/natafrank/AndroidStudioProjects/Filarmonica/selectableRoundedImageView/src/main/res"><file path="/Users/natafrank/AndroidStudioProjects/Filarmonica/selectableRoundedImageView/src/main/res/values/attrs.xml" qualifiers=""><declare-styleable name="SelectableRoundedImageView">
+        <attr format="dimension" name="sriv_left_top_corner_radius"/>
+        <attr format="dimension" name="sriv_right_top_corner_radius"/>
+        <attr format="dimension" name="sriv_left_bottom_corner_radius"/>
+        <attr format="dimension" name="sriv_right_bottom_corner_radius"/>
+        <attr format="dimension" name="sriv_border_width"/>
+        <attr format="color" name="sriv_border_color"/>
+        <attr format="boolean" name="sriv_mutate_background"/>
+        <attr format="boolean" name="sriv_oval"/>
+        <attr name="android:scaleType"/>
+    </declare-styleable></file></source><source path="/Users/natafrank/AndroidStudioProjects/Filarmonica/selectableRoundedImageView/build/generated/res/rs/debug"/><source path="/Users/natafrank/AndroidStudioProjects/Filarmonica/selectableRoundedImageView/build/generated/res/generated/debug"/></dataSet><dataSet config="debug"><source path="/Users/natafrank/AndroidStudioProjects/Filarmonica/selectableRoundedImageView/src/debug/res"/></dataSet><mergedItems><configuration qualifiers=""><declare-styleable name="SelectableRoundedImageView"><attr format="dimension" name="sriv_left_top_corner_radius"/><attr format="dimension" name="sriv_right_top_corner_radius"/><attr format="dimension" name="sriv_left_bottom_corner_radius"/><attr format="dimension" name="sriv_right_bottom_corner_radius"/><attr format="dimension" name="sriv_border_width"/><attr format="color" name="sriv_border_color"/><attr format="boolean" name="sriv_mutate_background"/><attr format="boolean" name="sriv_oval"/><attr name="android:scaleType"/></declare-styleable></configuration></mergedItems></merger>
