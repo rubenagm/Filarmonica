@@ -42,7 +42,6 @@ public class FtpDownload {
             nombreArchivo = "";
         }
         try {
-            if(tipo == 2 || tipo == 1)  ;
             URL url = new URL(urlS+nombreArchivo+".jpg");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
@@ -59,7 +58,6 @@ public class FtpDownload {
             File file = new File(dir, "imagenes" + nombreArchivo + ".png");
             Log.i("FTP Download ","salvado en "+file.getAbsolutePath());
             FileOutputStream fOut = new FileOutputStream(file);
-
             myBitmap.compress(Bitmap.CompressFormat.PNG, 85, fOut);
             Log.i("FTP Fownload","Imagen descargada");
             fOut.flush();

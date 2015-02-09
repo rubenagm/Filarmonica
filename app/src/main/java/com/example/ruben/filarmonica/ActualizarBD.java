@@ -20,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +66,7 @@ public class ActualizarBD extends AsyncTask<Void,Void,Void> {
         idMayorFecha = db.obtenerIdMayorEvento();
         idMayorLocalidadEvento = db.obtenerIdMayorLocalidadEvento();
         idMayorNoticia = db.obtenerIdMayorNoticia();
+
         try {
             List<NameValuePair> mNameValuePairs = new ArrayList<NameValuePair>(1);
             mNameValuePairs.add(new BasicNameValuePair("query", QUERY_EVENTOS + db.obtenerIdMayorEvento()));
@@ -233,26 +235,29 @@ public class ActualizarBD extends AsyncTask<Void,Void,Void> {
         {
             Log.e("HTTP", "Error con la conexi�n HTTP");
         }
-
         int mayorEvento = db.obtenerIdMayorEvento();
-        if(db.obtenerIdMayorEvento() == idMayorEvento) idMayorEvento =0;
-        for(int x = db.obtenerIdMayorEvento();x>=idMayorEvento;x--){
-            displayNotification(createBasicNotification("OFJ","Descargando contenido multimedia",x,mayorEvento));
-            try {
-                ftpDownload.descargarArchivo(1,x+"");
-            } catch (IOException e) {
-                e.printStackTrace();
+        for(int x = db.obtenerIdMayorEvento();x>=0;x--){
+            displayNotification(createBasicNotification("OFJ","Descargando contenido multimedia",mayorEvento-x,mayorEvento));
+            File file = new File("/storage/emulated/0/Imagenes/imagenes"+x+".png");
+            if(!file.exists()) {
+                try {
+                    ftpDownload.descargarArchivo(1, x + "");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
-    if(db.obtenerIdMayorNoticia() == idMayorNoticia) idMayorNoticia = 0;
-    int mayorNoticia = db.obtenerIdMayorNoticia();
-        for(int x = db.obtenerIdMayorNoticia();x>=idMayorNoticia;x--){
-            displayNotification(createBasicNotification("OFJ","Descargando contenido multimedia",x,mayorNoticia));
-            try {
-                ftpDownload.descargarArchivo(2, x + "");
-            } catch (IOException e) {
-                e.printStackTrace();
+        int mayorNoticia = db.obtenerIdMayorNoticia();
+        for(int x = db.obtenerIdMayorNoticia();x>=0;x--){
+            displayNotification(createBasicNotification("OFJ","Descargando contenido multimedia",mayorNoticia-x,mayorNoticia));
+            File file = new File("/storage/emulated/0/Imagenes/imagenes"+x+"Not.png");
+            if(!file.exists()) {
+                try {
+                    ftpDownload.descargarArchivo(2, x + "");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 

@@ -66,7 +66,9 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_inicio);
 
 
-
+         // Hilo de actualización de eventos y contenido multimedia
+        Intent in = new Intent(MainActivity.this, ServicioActualizacionBD.class);
+        startService(in);
         //Obtenemos el contexto.
         contexto = getApplicationContext();
         /*-------- Obtener eventos ---*/

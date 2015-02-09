@@ -7,16 +7,15 @@
     tools:context="${relativePackage}.${activityClass}" >
 
     <!-- The main content view -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Contacto"/>
-
-    </RelativeLayout>
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:scaleType="fitXY"
+            android:src="@drawable/contacto"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+     </ScrollView>
 
     <!-- The navigation drawer -->
     <ListView

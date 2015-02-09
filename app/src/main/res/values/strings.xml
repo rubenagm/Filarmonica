@@ -5,7 +5,7 @@
     <string name="action_settings">prueba</string>
     <string name="hello_world">Hello world!</string>
     <string name="proximo_concierto">Próximo Concierto</string>
-    <string name="dias_horas_minutos_segundos">                             Días           Horas           Minutos        Segundos</string>
+    <string name="dias_horas_minutos_segundos"> Días Horas Minutos Segundos</string>
     <!-- Lista de íconos de navegación -->
   -                    <array name="iconos_drawer">
         <item>@drawable/menu_concierto</item>

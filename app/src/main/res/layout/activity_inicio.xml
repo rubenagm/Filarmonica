@@ -27,9 +27,9 @@
 	    	android:layout_height="wrap_content"
 	    	android:textColor="#FFFFFF"
 	    	android:text="@string/dias_horas_minutos_segundos"
-	    	android:textSize="12sp"
-            android:layout_alignBottom="@+id/lbl_contador_proximo_concierto"
-            android:layout_centerHorizontal="true"/>
+	    	android:textSize="16sp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="370dp" />
 
 	    <TextView
 	        android:id="@+id/lbl_contador_proximo_concierto"
@@ -39,7 +39,7 @@
 	    	android:textSize="40sp"
 	    	android:layout_centerHorizontal="true"
             android:layout_marginTop="315dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="30dp"
             />
 
 	    <TextView

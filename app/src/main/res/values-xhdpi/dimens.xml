@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="alto_item_drawer">188dp</dimen>
-    <dimen name="alto_item_drawer_doble">187dp</dimen>
+    <dimen name="alto_item_drawer">204dp</dimen>
+    <dimen name="alto_item_drawer_doble">203dp</dimen>
 
 </resources>
