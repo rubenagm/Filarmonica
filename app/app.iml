@@ -91,6 +91,7 @@
     <orderEntry type="library" exported="" name="commons-net-3.3" level="project" />
     <orderEntry type="library" exported="" name="YouTubeAndroidPlayerApi" level="project" />
     <orderEntry type="library" exported="" name="cardview-v7-21.0.3" level="project" />
+    <orderEntry type="module" module-name="selectableRoundedImageView" exported="" />
   </component>
 </module>
 
