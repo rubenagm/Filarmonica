@@ -4,9 +4,123 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="match_parent"
+    <!--Contenido de la imagen de streaming -->
+    <RelativeLayout
+        android:background="@drawable/reproductor_imagen_streaming"
+        android:layout_width="fill_parent"
+        android:layout_height="180dp">
+        <TextView
+            android:id="@+id/reproductor_streaming_titulo_cancion"
+            android:textStyle="bold"
+            android:layout_marginBottom="60dp"
+            android:layout_alignParentBottom="true"
+            android:textSize="19sp"
+            android:text="Titulo de la cancion"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/reproductor_streaming_director"
+            android:layout_marginBottom="40dp"
+            android:layout_alignParentBottom="true"
+            android:textSize="18sp"
+            android:text="Director"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/reproductor_streaming_duracion"
+            android:layout_marginBottom="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:textSize="18sp"
+            android:text="00:00"
+            android:textColor="#FFFFFF"
+            android:layout_marginRight="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <SeekBar
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/reproductor_barra_posicion"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+    <!-- Contenido de los controles -->
+    <RelativeLayout
+        android:background="#E31836"
+        android:layout_width="fill_parent"
+        android:layout_height="70dp">
+        <ImageButton
+            android:layout_centerVertical="true"
+            android:id="@+id/boton_play"
+            android:background="@null"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/reproductor_boton_play"
+            android:scaleType="fitXY"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+        <ImageButton
+            android:layout_marginRight="30dp"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:id="@+id/boton_anterior"
+            android:layout_toLeftOf="@+id/boton_play"
+            android:scaleType="fitXY"
+            android:src="@drawable/reproductor_boton_anterior"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
+        <ImageButton
+            android:layout_marginLeft="30dp"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:id ="@+id/boton_siguiente"
+            android:scaleType="fitXY"
+            android:layout_toRightOf="@+id/boton_play"
+            android:src="@drawable/reproductor_siguiente_icono"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
+        <ImageButton
+            android:layout_marginLeft="50dp"
+            android:layout_toRightOf="@+id/boton_siguiente"
+            android:layout_centerVertical="true"
+            android:id="@+id/boton_volumen"
+            android:scaleType="fitXY"
+            android:background="@null"
+            android:src="@drawable/reproductor_boton_volumen"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
+        <ImageButton
+            android:layout_marginRight="50dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/boton_anterior"
+            android:alpha="0.30"
+            android:id="@+id/boton_aleatorio"
+            android:background="@null"
+            android:src="@drawable/reproductor_boton_aleatorio"
+            android:scaleType="fitXY"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
+        </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/reproductor_layout_control_volumen"
+        android:background="#E31836"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp">
+        <SeekBar
+            android:progressDrawable="@drawable/progressbar_volumen_reproductor"
+            android:max="20"
+            android:id="@+id/reproductor_control_volumen"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+        </RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/lista_streaming"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Reproductor de música"/>
+        />
 
 </LinearLayout>

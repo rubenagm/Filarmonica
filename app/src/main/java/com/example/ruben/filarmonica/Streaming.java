@@ -1,11 +1,16 @@
 package com.example.ruben.filarmonica;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.Image;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,7 +28,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -43,7 +51,25 @@ import tabs.SlidingTabLayout;
 public class Streaming extends ActionBarActivity
 {
 
-    //Contexto
+    //Declaracion de controles para el reproductor
+    static ImageButton botonPlay;
+    static TextView textViewTituloCancion;
+    static TextView textViewDirector;
+    static TextView textViewduracion;
+    ///////
+    static boolean banderaConexion = false;
+    //VARIABLES NECESARIAS PARA EL REPRODUCTOR DE MUSICA
+    static public ServicioMusica musicSrv;
+    static public Intent playIntent;
+    static public boolean musicBound=false;
+    static ArrayList<ItemStreamingMusica> canciones = new ArrayList<ItemStreamingMusica>();
+
+    //control de volumen de reproductor de música
+    static public SeekBar controlVolumen = null;
+    static public AudioManager audioManager = null;
+    static public RelativeLayout layoutVolumen = null;
+    static public ImageButton botonMostrarControlVolumen = null;
+     //Contexto
     private static Context contexto;
 
     //Número de tabs que contiene la actividad.
@@ -62,7 +88,8 @@ public class Streaming extends ActionBarActivity
     private ArrayList<ItemDrawer> array_item_drawer;
     private TypedArray array_iconos;
 
-    /******* Variables del reproductor de video. ********/
+    /******* Variables del reproductor de video. *******
+     * */
     //Reproductor.
     static VideoView videoPlayer;
 
@@ -77,6 +104,11 @@ public class Streaming extends ActionBarActivity
 
     //Adaptador del RecyclerView.
     static RecyclerView.Adapter adapter;
+    ///////Streaming
+    static RecyclerView mRecyclerViewStreaming;
+
+    //Adaptador del RecyclerView.
+    static RecyclerView.Adapter adapterStreaming;
 
     //Fragmento del reproductor de youtube.
     static YouTubePlayerSupportFragment youTubePlayerSupportFragment;
@@ -98,7 +130,8 @@ public class Streaming extends ActionBarActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_streaming);
-
+        //
+        audioManager =(AudioManager) getSystemService(Context.AUDIO_SERVICE);
         //Obtenemos el contexto.
         contexto = getApplicationContext();
 
@@ -273,7 +306,106 @@ public class Streaming extends ActionBarActivity
             View layout = null;
 
             layout = inflater.inflate(R.layout.fragment_reproductor_musica, container, false);
+            SeekBar barra = (SeekBar) layout.findViewById(R.id.reproductor_barra_posicion);
 
+            //Control de volumen
+            controlVolumen = (SeekBar) layout.findViewById(R.id.reproductor_control_volumen);
+            layoutVolumen = (RelativeLayout) layout.findViewById(R.id.reproductor_layout_control_volumen);
+            layoutVolumen.setVisibility(View.GONE);
+
+            botonMostrarControlVolumen = (ImageButton) layout.findViewById(R.id.boton_volumen);
+            botonMostrarControlVolumen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    layoutVolumen.setVisibility(View.VISIBLE);
+                }
+            });
+            controlVolumen.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,progress,0);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    layoutVolumen.setVisibility(View.GONE);
+                }
+            });
+
+
+
+            //Inicializacion de los textView del streaming
+            textViewDirector = (TextView) layout.findViewById(R.id.reproductor_streaming_director);
+            textViewTituloCancion = (TextView) layout.findViewById(R.id.reproductor_streaming_titulo_cancion);
+            textViewduracion = (TextView) layout.findViewById(R.id.reproductor_streaming_duracion);
+            textViewDirector.setText(canciones.get(0).getDirector());
+            textViewTituloCancion.setText(canciones.get(0).getTitulo());
+            textViewduracion.setText(canciones.get(0).getDuracion());
+
+            //Recycler view
+            mRecyclerViewStreaming = (RecyclerView) layout.findViewById(R.id.lista_streaming);
+            mRecyclerViewStreaming.setLayoutManager(new LinearLayoutManager(contexto));
+            mRecyclerViewStreaming.setItemAnimator(new DefaultItemAnimator());
+
+            //BotonPlay
+            botonPlay = (ImageButton) layout.findViewById(R.id.boton_play);
+            botonPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    musicSrv.setItems(textViewTituloCancion,textViewDirector,textViewduracion);
+                    if(musicSrv.getReproduccion()){
+                        musicSrv.pauseSong();
+                        botonPlay.setImageResource(R.drawable.reproductor_boton_play);
+                    }
+                    else{
+                        musicSrv.setSong(0);
+                        musicSrv.playSong();
+                        botonPlay.setImageResource(R.drawable.reproductor_boton_pause);
+                    }
+                }
+            });
+
+            //Boton de siguiente cancion
+            ImageButton botonNext = (ImageButton) layout.findViewById(R.id.boton_siguiente);
+            botonNext.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    musicSrv.setItems(textViewTituloCancion,textViewDirector,textViewduracion);
+                    musicSrv.nextSong();
+                }
+            });
+
+            //Boton de cancion previa
+            ImageButton botonPrev = (ImageButton) layout.findViewById(R.id.boton_anterior);
+            botonPrev.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    musicSrv.setItems(textViewTituloCancion,textViewDirector,textViewduracion);
+                    musicSrv.prevSong();
+                }
+            });
+
+            //checar si la conexión con el servicio ya existe
+            if(banderaConexion == true){
+                musicSrv.setItems(textViewTituloCancion,textViewDirector,textViewduracion);
+                //Si ya existe y se está reproduciendo
+                if(musicSrv.getReproduccion()){
+                    botonPlay.setImageResource(R.drawable.reproductor_boton_pause);
+                }
+                adapterStreaming = new AdapterListaStreaming(contexto,canciones,musicSrv);
+                mRecyclerViewStreaming.setAdapter(adapterStreaming);
+            }
             //Retornamos la vista.
             return layout;
         }
@@ -307,7 +439,6 @@ public class Streaming extends ActionBarActivity
 
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     supportManager.beginTransaction();
-
             youTubePlayerSupportFragment = new YouTubePlayerSupportFragment();
             fragmentTransaction.add(R.id.youtubeFragment, youTubePlayerSupportFragment);
             fragmentTransaction.commit();
@@ -352,5 +483,53 @@ public class Streaming extends ActionBarActivity
         {
             super.onConfigurationChanged(newConfig);
         }
+    }
+    ////CONEXION DEL SERVICIO DE MUSICA CON EL ACTIVITY
+    private static ServiceConnection musicConnection = new ServiceConnection(){
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            ServicioMusica.MusicBinder binder = (ServicioMusica.MusicBinder)service;
+            //get service
+            musicSrv = binder.getService();
+            //pass list
+            musicSrv.setList(canciones);
+            musicBound = true;
+            //Cuando la conexión se realiza, se manda el objeto del servicio para que pueda ser utilizado por la lista de canciones
+            adapterStreaming = new AdapterListaStreaming(contexto,canciones,musicSrv);
+            mRecyclerViewStreaming.setAdapter(adapterStreaming);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            musicBound = false;
+        }
+    };
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if(playIntent==null){
+            //Agregar las canciones a la lista
+            canciones.add(new ItemStreamingMusica(1,"Bruckner Symphony No.4","Marco Parisotto","14:48","http://ofj.com.mx/App/mp3/1.mp3"));
+            canciones.add(new ItemStreamingMusica(2,"Beatles Suite","Marco Parisotto","6:26","http://ofj.com.mx/App/mp3/2.mp3"));
+            canciones.add(new ItemStreamingMusica(3,"Brahms Symphony No.1 mvt 1","Marco Parisotto","13:15","http://ofj.com.mx/App/mp3/3.mp3"));
+            canciones.add(new ItemStreamingMusica(4,"Tchaikovsky Serenade","Marco Parisotto","17:19","http://ofj.com.mx/App/mp3/4.mp3"));
+            playIntent = new Intent(Streaming.this, ServicioMusica.class);
+            bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+            startService(playIntent);
+
+        }
+        else{
+            banderaConexion = true;
+        }
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent i = new Intent(Streaming.this, MainActivity.class);
+        startActivity(i);
     }
 }

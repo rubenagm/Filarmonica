@@ -32,8 +32,8 @@ public class SplashScreen extends ActionBarActivity {
         new Thread( new Runnable() {
             @Override
             public void run() {
-                ObtenerEventos hilo = new ObtenerEventos(contexto,sharedPreferences);
-                hilo.execute();
+                //ObtenerEventos hilo = new ObtenerEventos(contexto,sharedPreferences);
+                //hilo.execute();
             }
         }).run();
         TimerTask task = new TimerTask() {
