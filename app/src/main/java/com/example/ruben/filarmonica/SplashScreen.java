@@ -4,11 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.Window;
+import android.support.v7.app.ActionBarActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,7 +23,8 @@ public class SplashScreen extends ActionBarActivity {
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         getSupportActionBar().hide();
         setContentView(R.layout.splash_screen);
-        final SharedPreferences sharedPreferences = getSharedPreferences("Filarmonica", Context.MODE_PRIVATE);
+        final SharedPreferences sharedPreferences = getSharedPreferences("Filarmonica",
+                Context.MODE_PRIVATE);
         String respuesta = sharedPreferences.getString("DatosInsertados","NoInsertados");
 
         new Thread( new Runnable() {

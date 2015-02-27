@@ -3,10 +3,10 @@ package com.example.ruben.filarmonica;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -33,6 +32,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import date.DateControl;
 
 public class MainActivity extends Activity
 {
@@ -59,6 +60,8 @@ public class MainActivity extends Activity
     //Variables del layout.
     private TextView lblReloj;
 
+    private static Thread thread;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -71,10 +74,6 @@ public class MainActivity extends Activity
         startService(in);
         //Obtenemos el contexto.
         contexto = getApplicationContext();
-        /*-------- Obtener eventos ---*/
-
-        //Ocultamos el actionbar.
-        //getActionBar().hide();
 
         //Obtenemos als referencias del layout.
         lblReloj		 = (TextView) findViewById(R.id.lbl_contador_proximo_concierto);
@@ -98,7 +97,8 @@ public class MainActivity extends Activity
         {
             if((i % 2) == 0 && i > 0)
             {
-                array_item_drawer.add(new ItemDrawer(array_iconos.getResourceId(i, -1), array_iconos.getResourceId(i+1, -1)));
+                array_item_drawer.add(new ItemDrawer(array_iconos.getResourceId(i, -1),
+                        array_iconos.getResourceId(i+1, -1)));
             }
             else
             {
@@ -142,17 +142,16 @@ public class MainActivity extends Activity
         {
             fecha = json.get();
 
-            //Mandamos la fecha y la hora al parser.
-            ParserFecha parser_fecha = new ParserFecha(fecha, lblReloj);
+            if(fecha.get(0).equals("tocandoAhora"))
+            {
+                lblReloj.setText("Tocando en este momento.");
+            }
+            else
+            {
+                //Mandamos la fecha y la hora al parser.
+                DateControl dateControl = new DateControl(fecha);
 
-            //Obtenemos los valores.
-            dia_efectivo = parser_fecha.getDiaEfectivo();
-            hora_efectiva = parser_fecha.getHoraEfectiva();
-            minuto_efectivo = parser_fecha.getMinutoEfectivo();
-            segundo_efectivo = parser_fecha.getSegundoEfectivo();
-
-            //Iniciamos el reloj
-            iniciarReloj();
+            }
         }
         catch (InterruptedException e)
         {
@@ -173,12 +172,16 @@ public class MainActivity extends Activity
         private final static String JSON_FECHA  = "fecha";
         private final static String JSON_HORA   = "hora";
         private final static String JSON_MINUTO = "minuto";
+        private final static int NUMERO_CONCIERTOS_A_LEER = 2;
 
         //Variables de control
         private final static String TAG = "frank";
 
         //Query a mandar.
-        private final static String QUERY_PROXIMO_CONCIERTO = "SELECT * FROM fecha WHERE fecha >= CURRENT_DATE ORDER BY fecha ASC LIMIT 1";
+        //Vamos a tomar los 2 conciertos más recientes y vamos a comprobar si el primero ya pasó
+        //de ser así, pasamos al segundo concierto.
+        private final static String QUERY_PROXIMO_CONCIERTO = "SELECT * FROM fecha " +
+                "WHERE fecha >= CURRENT_DATE ORDER BY fecha ASC LIMIT 2";
 
         //Variables de conexión
         private HttpClient mHttpClient = new DefaultHttpClient();
@@ -190,9 +193,9 @@ public class MainActivity extends Activity
             //Inicializamos el arreglo.
             ArrayList<String> arreglo = new ArrayList<String>();
 
-            String fecha  = "";
-            String hora   = "";
-            String minuto = "";
+            String[] fechas  = new String[NUMERO_CONCIERTOS_A_LEER];
+            String[] horas   = new String[NUMERO_CONCIERTOS_A_LEER];
+            String[] minutos = new String[NUMERO_CONCIERTOS_A_LEER];
 
             try
             {
@@ -220,16 +223,59 @@ public class MainActivity extends Activity
                 JSONObject jsonObject = new JSONObject(resultado);
                 JSONArray jsonArray = jsonObject.getJSONArray("data");
 
-                //Creamos el JSON del evento dentro del arreglo data.
-                JSONObject jsonElement = jsonArray.getJSONObject(0);
+                //Recogemos la información de los dos eventos.
+                JSONObject[] conciertosProximos = new JSONObject[NUMERO_CONCIERTOS_A_LEER];
+                for(int i = 0; i < NUMERO_CONCIERTOS_A_LEER; i++)
+                {
+                    conciertosProximos[i] = jsonArray.getJSONObject(i);
+                    fechas[i]  = conciertosProximos[i].getString(JSON_FECHA);
+                    horas[i]   = conciertosProximos[i].getString(JSON_HORA);
+                    minutos[i] = conciertosProximos[i].getString(JSON_MINUTO);
+                }
 
-                //Recogemos los datos que necesitamos.
-                fecha  = jsonElement.getString(JSON_FECHA);
-                hora   = jsonElement.getString(JSON_HORA);
-                minuto = jsonElement.getString(JSON_MINUTO);
+                //Comprobamos cual será el siguiente concierto y lo añadimos al arreglo.
+                Time fechaActual = new Time();
+                fechaActual.setToNow();
 
-                //Mandamos la hora en el fomato "20:30", ya que así lo trabaja el parser de la fecha.
-                hora = hora + ":" + minuto;
+                //Aumentamos en 1 el mes para corregir el formato [0 - 11].
+                fechaActual.month += 1;
+
+                if(fechas[0].equals(fechaActual.year + "-" +
+                        String.format("%02d", fechaActual.month) + "-" +
+                        String.format("%02d", fechaActual.monthDay)))
+                {
+                    if(Integer.parseInt(horas[0]) >= fechaActual.hour)
+                    {
+                        if(Integer.parseInt(minutos[0]) >= fechaActual.minute)
+                        {
+                            //Mandamos el primer concierto.
+                            horas[0] = horas[0] + ":" + minutos[0];
+                            arreglo.add(fechas[0]);
+                            arreglo.add(horas[0]);
+                        }
+                        else
+                        {
+                            //Validar mensaje de que se está actualmente en concierto.
+                            arreglo.add("tocandoAhora");
+                            return arreglo;
+                        }
+                    }
+                    else
+                    {
+                        //VERIFIQUE CONCIERTO MAÑANA
+                        //Mandamos el segundo concierto.
+                        horas[1] = horas[1] + ":" + minutos[1];
+                        arreglo.add(fechas[1]);
+                        arreglo.add(horas[1]);
+                    }
+                }
+                else
+                {
+                    //Mandamos el primer concierto.
+                    horas[0] = horas[0] + ":" + minutos[0];
+                    arreglo.add(fechas[0]);
+                    arreglo.add(horas[0]);
+                }
             }
 
             catch(JSONException e)
@@ -241,9 +287,6 @@ public class MainActivity extends Activity
                 Log.e(TAG, "Error con la conexión HTTP");
             }
 
-            arreglo.add(fecha);
-            arreglo.add(hora);
-
             return arreglo;
         }
 
@@ -251,55 +294,4 @@ public class MainActivity extends Activity
 
 
     /***************************************** CONEXIONES *******************************************/
-
-    public void iniciarReloj()
-    {
-
-        Thread thread = new Thread(new Runnable()
-        {
-            int i, j, k, l;
-            @Override
-            public void run()
-            {
-                for(i = dia_efectivo; i >= 0; i --)
-                {
-                    for(j = hora_efectiva; j >= 0; j--)
-                    {
-                        for(k = minuto_efectivo; k >= 0; k --)
-                        {
-                            for(l = segundo_efectivo; l >= 0; l--)
-                            {
-                                runOnUiThread(new Runnable()
-                                {
-                                    @Override
-                                    public void run()
-                                    {
-                                        String tiempo_faltante = i + ":" + j + ":" + k + ":" + l;
-                                        tiempo_faltante = String.format("%02d:%02d:%02d:%02d", i, j, k, l);
-                                        lblReloj.setText(tiempo_faltante);
-                                    }
-                                });
-                                try
-                                {
-                                    Thread.sleep(1000);
-                                }
-                                catch (InterruptedException e)
-                                {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                            segundo_efectivo = 59;
-
-                        }
-                        minuto_efectivo = 59;
-                    }
-                    hora_efectiva = 23;
-                }
-            }
-
-        });
-
-        thread.start();
-    }
 }

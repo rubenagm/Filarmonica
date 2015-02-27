@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Filarmonica</string>
+    <string name="app_name">Filarmónica</string>
     <string name="action_settings">prueba</string>
     <string name="hello_world">Hello world!</string>
     <string name="proximo_concierto">Próximo Concierto</string>
     <string name="dias_horas_minutos_segundos"> Días Horas Minutos Segundos</string>
+    <string name="ofj">Orquesta Filarmónica de Jalisco</string>
+    <string name="ver_en_facebook">Ver en Facebook</string>
+
     <!-- Lista de íconos de navegación -->
   -                    <array name="iconos_drawer">
         <item>@drawable/menu_concierto</item>
@@ -15,7 +18,7 @@
     </array>
 
     <string name="title_activity_lista_eventos">Conciertos y Eventos</string>
-    <string name="title_activity_detalle_evento">DetalleEvento</string>
+    <string name="title_activity_detalle_evento">Filarmónica</string>
     <string name="title_activity_streaming">Streaming</string>
     <string name="title_activity_noticias">Noticias</string>
     <string name="title_activity_facebook">Facebook</string>

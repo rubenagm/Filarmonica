@@ -14,20 +14,37 @@ import java.util.ArrayList;
 public class ConexionBD extends SQLiteOpenHelper{
 	private static String DATABASE_NAME = "prueba";
 	private static int DATABASE_VERSION = 1;
-    private static String SQL_SELECT_ID_MAYOR_LOCALIDAD_EVENTO = "SELECT MAX(id) AS id FROM localidad_evento";
+    private static String SQL_SELECT_ID_MAYOR_LOCALIDAD_EVENTO = "SELECT MAX(id) AS id " +
+            "FROM localidad_evento";
     private static String SQL_SELECT_ID_MAYOR_FECHA = "SELECT MAX(id) AS id FROM fecha";
     private static String SQL_SELECT_ID_MAYOR_NOTICIA = "SELECT MAX(id) AS id FROM noticia";
     private static String SQL_SELECT_ID_MAYOR_EVENTO="SELECT MAX(id) AS id FROM evento";
     private static String SQL_SELECT_NOTICIA = "SELECT * FROM noticia";
-    private static String SQL_CREATE_TABLA_NOTICIA = "CREATE TABLE noticia (id INTEGER, titulo TEXT,titulo_en TEXT,contenido TEXT, contenido_en TEXT,fecha DATE, publicada TEXT, fecha_creacion TEXT)";
-    private static String SQL_CREATE_TABLA_VIDEOS = "CREATE TABLE video (titulo TEXT, contenido TEXT,duracion TEXT,urlimagen TEXT)";
-    private static String SQL_SELECT_TABLA_LOCALIDAD_EVENTO = "SELECT nombre,costo FROM localidad_evento WHERE evento_id = ";
-    private static String SQL_CREATE_TABLA_LOCALIDAD = "CREATE TABLE localidad (id INTEGER PRIMARY KEY, nombre TEXT , costo TEXT,sede_id INTEGER)";
-    private static String SQL_CREATE_TABLA_LOCALIDAD_EVENTO = "CREATE TABLE localidad_evento (id INTEGER PRIMARY KEY, nombre TEXT, costo TEXT,evento_id INTEGER , FOREIGN KEY (evento_id) REFERENCES evento (id))";
-	private static String SQL_CREATE_TABLA_EVENTO = "CREATE TABLE evento (id integer PRIMARY KEY, programa text, programa_en text, titulo text, titulo_en text, descripcion text, descripcion_en text, estado text, temporada_id integer);";
-	private static String SQL_CREATE_TABLA_FECHA = "CREATE TABLE fecha (id integer PRIMARY KEY, fecha date, hora text,minuto text,evento_id integer, FOREIGN KEY (evento_id) REFERENCES evento (id));";
-    private static String SQL_SELECT_EVENTO = "SELECT E.id ,E.programa,E.programa_en,E.titulo,E.titulo_en,E.descripcion,E.descripcion_en,E.estado,E.temporada_id FROM evento AS E JOIN fecha AS F ON F.evento_id = E.id GROUP BY E.id ORDER BY E.id desc ";
-    private static String SQL_SELECT_EVENTO_UNICO = "SELECT E.id ,E.programa,E.programa_en,E.titulo,E.titulo_en,E.descripcion,E.descripcion_en,E.estado,E.temporada_id FROM evento AS E JOIN fecha AS F ON F.evento_id = E.id WHERE E.id = "; //Parte que falta GROUP BY E.id
+    private static String SQL_CREATE_TABLA_NOTICIA = "CREATE TABLE noticia (id INTEGER, " +
+            "titulo TEXT,titulo_en TEXT,contenido TEXT, contenido_en TEXT,fecha DATE, " +
+            "publicada TEXT, fecha_creacion TEXT)";
+    private static String SQL_CREATE_TABLA_VIDEOS = "CREATE TABLE video (titulo TEXT, " +
+            "contenido TEXT,duracion TEXT,urlimagen TEXT)";
+    private static String SQL_SELECT_TABLA_LOCALIDAD_EVENTO = "SELECT nombre,costo " +
+            "FROM localidad_evento WHERE evento_id = ";
+    private static String SQL_CREATE_TABLA_LOCALIDAD = "CREATE TABLE localidad " +
+            "(id INTEGER PRIMARY KEY, nombre TEXT , costo TEXT,sede_id INTEGER)";
+    private static String SQL_CREATE_TABLA_LOCALIDAD_EVENTO = "CREATE TABLE localidad_evento " +
+            "(id INTEGER PRIMARY KEY, nombre TEXT, costo TEXT,evento_id INTEGER , " +
+            "FOREIGN KEY (evento_id) REFERENCES evento (id))";
+	private static String SQL_CREATE_TABLA_EVENTO = "CREATE TABLE evento (id integer PRIMARY KEY, " +
+            "programa text, programa_en text, titulo text, titulo_en text, descripcion text, " +
+            "descripcion_en text, estado text, temporada_id integer);";
+	private static String SQL_CREATE_TABLA_FECHA = "CREATE TABLE fecha (id integer PRIMARY KEY, " +
+            "fecha date, hora text,minuto text,evento_id integer," +
+            " FOREIGN KEY (evento_id) REFERENCES evento (id));";
+    private static String SQL_SELECT_EVENTO = "SELECT E.id ,E.programa,E.programa_en,E.titulo," +
+            "E.titulo_en,E.descripcion,E.descripcion_en,E.estado,E.temporada_id " +
+            "FROM evento AS E JOIN fecha AS F " +
+            "ON F.evento_id = E.id GROUP BY E.id ORDER BY E.id desc ";
+    private static String SQL_SELECT_EVENTO_UNICO = "SELECT E.id ,E.programa,E.programa_en," +
+            "E.titulo,E.titulo_en,E.descripcion,E.descripcion_en,E.estado,E.temporada_id " +
+            "FROM evento AS E JOIN fecha AS F ON F.evento_id = E.id WHERE E.id = "; //Parte que falta GROUP BY E.id
 	private static String SQL_DELETE_DATOS_EVENTOS = "DELETE FROM evento";
 	private static String SQL_DELETE_DATOS_FECHAS = "DELETE FROM fecha";
 	private static String SQL_SELECT_FECHA_EVENTOS = "SELECT * FROM fecha WHERE evento_id = ";
@@ -106,7 +123,9 @@ public class ConexionBD extends SQLiteOpenHelper{
 
 
 	//INSERTAR UN EVENTO
-	public boolean insertEvento (int id, String programa,String programa_en,String titulo,String titulo_en,String descripcion, String descripcion_en,String estado,int temporada_id){
+	public boolean insertEvento (int id, String programa,String programa_en,String titulo,
+                String titulo_en,String descripcion, String descripcion_en,String estado,
+                int temporada_id){
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("id",id );
@@ -124,7 +143,8 @@ public class ConexionBD extends SQLiteOpenHelper{
 	}
 
 	//INSERTAR UNA NOTICIA
-    public boolean insertNoticia(int id, String titulo, String titulo_en,String contenido, String contenido_en, String fecha , String publicada, String fecha_creacion){
+    public boolean insertNoticia(int id, String titulo, String titulo_en,String contenido,
+                 String contenido_en, String fecha , String publicada, String fecha_creacion){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("id",id);
@@ -169,7 +189,8 @@ public class ConexionBD extends SQLiteOpenHelper{
             publicada = res.getString(res.getColumnIndex("publicada"));
             fecha_creacion = res.getString(res.getColumnIndex("fecha_creacion"));
             contenido = Jsoup.parse(contenido).text();
-            noticias.add(new ItemNoticia(id,titulo,titulo_en,contenido,contenido_en,fecha,publicada,fecha_creacion));
+            noticias.add(new ItemNoticia(id,titulo,titulo_en,contenido,contenido_en,fecha,publicada,
+                    fecha_creacion));
 
             res.moveToNext();
         }
@@ -257,8 +278,8 @@ public class ConexionBD extends SQLiteOpenHelper{
 			descripcion_en = res.getString(res.getColumnIndex("descripcion_en"));
 			estado = res.getString(res.getColumnIndex("estado"));
 			temporada_id = res.getInt(res.getColumnIndex("temporada_id"));
-            Log.i("Base de datos - Evento obtenido",""+id+ programa+ programa_en+ titulo+titulo_en+ descripcion+ descripcion_en+ estado+ temporada_id);
-			eventos.add(new ItemEvento(id, programa, programa_en, titulo,titulo_en, descripcion, descripcion_en, estado, temporada_id));
+			eventos.add(new ItemEvento(id, programa, programa_en, titulo,titulo_en, descripcion,
+                    descripcion_en, estado, temporada_id));
 			//Consulta las fechas para el evento
 			Cursor resFecha = db.rawQuery(SQL_SELECT_FECHA_EVENTOS + id, null);
 			resFecha.moveToFirst();
@@ -314,10 +335,13 @@ public class ConexionBD extends SQLiteOpenHelper{
             estado = res.getString(res.getColumnIndex("estado"));
             temporada_id = res.getInt(res.getColumnIndex("temporada_id"));
 
-            descripcion = Jsoup.parse(descripcion).text();
+            descripcion = Jsoup.parse(descripcion.replaceAll("(?i)<br[^>]*>", "br2n")).text();
+            descripcion = descripcion.replaceAll("br2n", "\n\n");
+
             descripcion_en = Jsoup.parse(descripcion_en).text();
-            Log.i("Base de datos - Evento obtenido",""+id+ programa+ programa_en+ titulo+titulo_en+ descripcion+ descripcion_en+ estado+ temporada_id);
-            evento.add(new ItemEvento(id, programa, programa_en, titulo,titulo_en, descripcion, descripcion_en, estado, temporada_id));
+            evento.add(new ItemEvento(id, programa, programa_en, titulo,titulo_en,
+                    descripcion, descripcion_en, estado, temporada_id));
+
             //Consulta las fechas para el evento
             Cursor resFecha = db.rawQuery(SQL_SELECT_FECHA_EVENTOS + id, null);
             resFecha.moveToFirst();

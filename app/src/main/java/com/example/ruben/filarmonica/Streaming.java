@@ -97,7 +97,7 @@ public class Streaming extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_streaming);
+        setContentView(R.layout.activity_tabs);
 
         //Obtenemos el contexto.
         contexto = getApplicationContext();
@@ -111,7 +111,8 @@ public class Streaming extends ActionBarActivity
         mPager = (ViewPager) findViewById(R.id.pager);
         mTabs  = new SlidingTabLayout(contexto);
         mTabs  = (SlidingTabLayout) findViewById(R.id.tabs);
-
+        //Colocamos la descripción.
+        mTabs.setDescription("Streaming");
         //Colocamos el adapdator al ViewPager.
         mPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
 

@@ -34,7 +34,7 @@ public class ListaEventos extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lista_eventos);
+        setContentView(R.layout.activity_lista_cards);
         contexto = getApplicationContext();
         Intent in = new Intent(ListaEventos.this,ServicioActualizacionBD.class);
         startService(in);
@@ -60,7 +60,8 @@ public class ListaEventos extends ActionBarActivity {
         {
             if((i % 2) == 0 && i > 0)
             {
-                array_item_drawer.add(new ItemDrawer(array_iconos.getResourceId(i, -1), array_iconos.getResourceId(i+1, -1)));
+                array_item_drawer.add(new ItemDrawer(array_iconos.getResourceId(i, -1),
+                        array_iconos.getResourceId(i+1, -1)));
             }
             else
             {
@@ -98,10 +99,10 @@ public class ListaEventos extends ActionBarActivity {
         });
         /******************************* ListView Drawer *****************************/
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.lista_eventos);
+        mRecyclerView = (RecyclerView) findViewById(R.id.lista_cards);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator( new DefaultItemAnimator());
-        ArrayList<ItemEvento> lista = new ArrayList<ItemEvento>();
+        ArrayList<ItemEvento> lista = new ArrayList<>();
         ConexionBD db = new ConexionBD(contexto);
 
         lista = db.obtenerEventos();

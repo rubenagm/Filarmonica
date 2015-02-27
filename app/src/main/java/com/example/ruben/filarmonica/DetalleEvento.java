@@ -33,6 +33,7 @@ public class DetalleEvento extends ActionBarActivity {
     TextView textViewCostos;
     TextView textViewDescripcion;
     String DIRECTORIO = "/storage/emulated/0/Imagenes/imagenes";
+    int idEvento;
 
     //Variables del Drawer.
     private ListView list_view_drawer;
@@ -45,6 +46,25 @@ public class DetalleEvento extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detalle_evento);
+
+        final Intent intent = getIntent();
+        final String action = intent.getAction();
+
+        if (Intent.ACTION_VIEW.equals(action))
+        {
+            String urlEvento = intent.getDataString();
+            StringTokenizer tokenizerUrlEvento = new StringTokenizer(urlEvento, "?");
+
+            //Obtenemos el id del evento.
+            tokenizerUrlEvento.nextToken();//Quitamos la primera parte del tokenizer, basura.
+            String auxIdEvento = tokenizerUrlEvento.nextToken();
+            auxIdEvento = auxIdEvento.substring(3);
+            idEvento = Integer.parseInt(auxIdEvento);
+        }
+        else
+        {
+            idEvento = getIntent().getExtras().getInt("idEvento");
+        }
 
         //Ocultamos el ActionBar.
         getSupportActionBar().hide();
@@ -116,8 +136,6 @@ public class DetalleEvento extends ActionBarActivity {
 
         });
         /******************************* ListView Drawer *****************************/
-
-        int idEvento = getIntent().getExtras().getInt("idEvento");
 
         ConexionBD db = new ConexionBD(contexto);
         mEvento = db.obtenerUnEvento(""+idEvento);

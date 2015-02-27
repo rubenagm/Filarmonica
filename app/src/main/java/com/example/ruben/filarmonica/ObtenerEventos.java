@@ -1,8 +1,13 @@
 package com.example.ruben.filarmonica;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import android.R.integer;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -17,14 +22,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.R.integer;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.support.v4.app.NotificationCompat;
-import android.util.Log;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEvento>>{
     FtpDownload ftpDownload;
@@ -78,7 +78,8 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
 			{
                 contadorEventos++;
 				JSONObject jsonElement = jsonArray.getJSONObject(i);
-				displayNotification(createBasicNotification("OFJ","Actualizando eventos",i+1,longitud));
+				displayNotification(createBasicNotification("OFJ","Actualizando eventos",
+                        i+1,longitud));
 				int id = jsonElement.getInt(JSON_ID);
 
 
@@ -92,8 +93,10 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
 				int temporada_id = jsonElement.getInt(JSON_TEMPORADA_ID);
 				
 				//Agregamos los valores al arreglo
-				mDB.insertEvento(id, programa, programa_en, titulo, titulo_en, descripcion, descripcion_en, estado, temporada_id);
-				eventos.add(new ItemEvento(id, programa, programa_en, titulo, titulo_en, descripcion, descripcion_en, estado, temporada_id));
+				mDB.insertEvento(id, programa, programa_en, titulo, titulo_en, descripcion,
+                        descripcion_en, estado, temporada_id);
+				eventos.add(new ItemEvento(id, programa, programa_en, titulo, titulo_en,
+                        descripcion, descripcion_en, estado, temporada_id));
 			}
             Log.i("Eventos insertados",""+contadorEventos);
 		}
@@ -128,7 +131,8 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
             int longitud = jsonArray.length();
 			for(int i = 0; i < jsonArray.length(); i++)
 			{
-                displayNotification(createBasicNotification("OFJ","Actualizando fechas",i+1,longitud));
+                displayNotification(createBasicNotification("OFJ","Actualizando fechas",
+                        i+1,longitud));
 				JSONObject jsonElement = jsonArray.getJSONObject(i);
 
 				int id = jsonElement.getInt("id");
@@ -175,7 +179,8 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
             for(int i = 0; i < jsonArray.length(); i++)
             {
                 JSONObject jsonElement = jsonArray.getJSONObject(i);
-                displayNotification(createBasicNotification("OFJ","Actualizando localidades",i+1,longitud));
+                displayNotification(createBasicNotification("OFJ","Actualizando localidades",
+                        i+1,longitud));
                 int id = jsonElement.getInt("id");
                 String nombre = jsonElement.getString("nombre");
                 String costo = jsonElement.getString("costo");
@@ -215,7 +220,8 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
             for(int i = 0; i < jsonArray.length(); i++)
             {
                 JSONObject jsonElement = jsonArray.getJSONObject(i);
-                displayNotification(createBasicNotification("OFJ","Actualizando noticias",i+1,longitud));
+                displayNotification(createBasicNotification("OFJ","Actualizando noticias",i+1,
+                        longitud));
                 int id = jsonElement.getInt("id");
                 //ftpDownload.descargarArchivo(2,id+"");
                 String titulo = jsonElement.getString("titulo");
@@ -226,7 +232,8 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
                 String publicada = jsonElement.getString("publicada");
                 String fecha_creacion = jsonElement.getString("fecha_creacion");
 
-                mDB.insertNoticia(id,titulo,titulo_en,contenido,contenido_en,fecha,publicada,fecha_creacion);
+                mDB.insertNoticia(id,titulo,titulo_en,contenido,contenido_en,fecha,publicada,
+                        fecha_creacion);
 
             }
         }
@@ -244,7 +251,8 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
         editor.commit();
 		return eventos;
 	}
-    private Notification createBasicNotification(String titulo, String contenido,int progress, int total) {
+    private Notification createBasicNotification(String titulo, String contenido,int progress,
+                                                 int total) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(contexto);
         Notification notification = builder
                 .setSmallIcon(R.drawable.icon_buy)
@@ -256,7 +264,8 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
         return notification;
     }
     private void displayNotification(Notification notification) {
-        NotificationManager notificationManager = (NotificationManager)contexto.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager)contexto.
+                getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1 , notification);
     }
 }
