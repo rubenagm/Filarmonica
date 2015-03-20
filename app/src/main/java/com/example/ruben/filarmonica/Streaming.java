@@ -129,7 +129,7 @@ public class Streaming extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_streaming);
+       setContentView(R.layout.activity_tabs);
         //
         audioManager =(AudioManager) getSystemService(Context.AUDIO_SERVICE);
         //Obtenemos el contexto.
@@ -148,11 +148,13 @@ public class Streaming extends ActionBarActivity
         //Colocamos el adapdator al ViewPager.
         mPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
 
+        mTabs.setDescription("Streaming");
         //Distribuimos las tabs en ancho de manera equivalente.
         mTabs.setDistributeEvenly(true);
 
         //Colocamos el ViewPager a las Tabs.
         mTabs.setViewPager(mPager);
+
 
         /******************************* ListView Drawer *****************************/
         list_view_drawer = (ListView) findViewById(R.id.drawer_listView);

@@ -8,7 +8,7 @@
 
     <!-- The main content view -->
     <ScrollView
-
+        android:id="@+id/scroll_detalle_evento"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         tools:context="com.example.ruben.filarmonica.DetalleEvento"

@@ -5,9 +5,10 @@
               android:layout_height="match_parent">
 
     <!-- Un GridLayout es una buena opción para la galería -->
-    <TextView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/imagenes_instagram"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Galería"/>
+        android:layout_height="match_parent"
+        />
 
 </LinearLayout>

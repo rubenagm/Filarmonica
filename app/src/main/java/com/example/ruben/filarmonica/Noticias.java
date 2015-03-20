@@ -1,5 +1,7 @@
 package com.example.ruben.filarmonica;
 
+import android.app.Activity;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -14,6 +16,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +31,12 @@ import tabs.SlidingTabLayout;
 
 public class Noticias extends ActionBarActivity
 {
+    static DialogoMostrarImagenInstagram newFragment ;
+    static FragmentTransaction ft;
+    static Fragment prev;
+    /// Dialogo
 
+    ////
     private static Context contexto;
     private final static int NUMERO_TABS = 3;
 
@@ -46,10 +54,25 @@ public class Noticias extends ActionBarActivity
     private TypedArray array_iconos;
     private static ArrayList<ItemNoticia> noticiasArray;
     private static ArrayList<ItemFacebook> facebookArray;
+    private static  ArrayList<ItemImagenInstagram> imagenesInstagram;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+
+        //Dialogo
+
+        ft = getSupportFragmentManager().beginTransaction();
+        prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+
+
+        ///
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabs);
@@ -57,7 +80,6 @@ public class Noticias extends ActionBarActivity
 
         //Obtenemos el contexto.
         contexto = getApplicationContext();
-
         //Obtenemos las referencias.
         mPager = (ViewPager) findViewById(R.id.pager);
         mTabs  = new SlidingTabLayout(contexto);
@@ -93,6 +115,9 @@ public class Noticias extends ActionBarActivity
         {
             e.printStackTrace();
         }
+
+        GetDataInstagram instragramThread = new GetDataInstagram(contexto);
+        instragramThread.execute();
 
         /******************************* ListView Drawer *****************************/
         list_view_drawer = (ListView) findViewById(R.id.drawer_listView);
@@ -296,6 +321,8 @@ public class Noticias extends ActionBarActivity
             Bundle args = new Bundle();
             args.putInt("position", position);
             fragment.setArguments(args);
+
+
             return fragment;
         }
 
@@ -309,7 +336,16 @@ public class Noticias extends ActionBarActivity
             //Inflamos el layout.(PRUEBA, CAMBIAR EL LAYOUT).
             layout = inflater.inflate(R.layout.fragment_galeria, container, false);
 
+            RecyclerView mRecyclerView = (RecyclerView)layout.findViewById(R.id.imagenes_instagram);
+            ConexionBD db = new ConexionBD(contexto);
+            imagenesInstagram = db.obtenerDatosInstragram();
+            //Configuramos el RecyclerView.
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(contexto));
+            mRecyclerView.setAdapter(new AdapterImagenesInstagram(imagenesInstagram,contexto,newFragment,ft,prev,getActivity()));
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
             return layout;
         }
     }//Fragment de Galería
+
 }//Noticias

@@ -48,7 +48,13 @@ public class ConexionBD extends SQLiteOpenHelper{
 	private static String SQL_DELETE_DATOS_EVENTOS = "DELETE FROM evento";
 	private static String SQL_DELETE_DATOS_FECHAS = "DELETE FROM fecha";
 	private static String SQL_SELECT_FECHA_EVENTOS = "SELECT * FROM fecha WHERE evento_id = ";
-	public ConexionBD(Context contexto){
+
+    // Base de datos de Instagram
+
+    private final String SQL_CREATE_TABLE_INSTAGRAM = "CREATE TABLE Instagram (ImagenNd TEXT UNIQUE,ImagenHd TEXT UNIQUE,Texto TEXT,Link TEXT)";
+	private final String SQL_SELECT_INSTAGRAM = "SELECT * FROM Instagram";
+
+    public ConexionBD(Context contexto){
 		super(contexto,DATABASE_NAME,null,DATABASE_VERSION);
 	}
 	@Override
@@ -59,6 +65,7 @@ public class ConexionBD extends SQLiteOpenHelper{
         db.execSQL(SQL_CREATE_TABLA_LOCALIDAD_EVENTO);
         db.execSQL(SQL_CREATE_TABLA_VIDEOS);
         db.execSQL(SQL_CREATE_TABLA_NOTICIA);
+        db.execSQL(SQL_CREATE_TABLE_INSTAGRAM);
 	}
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -299,7 +306,68 @@ public class ConexionBD extends SQLiteOpenHelper{
 		Log.i("Reegresa eventos", "Resultado\n" + eventos.toArray().toString());
 		return eventos;
 	}
+    //// Guardar en tabla datos Instagram
+    public void insertarImagenInstagram(String imagenNd,String imagenHd,String texto,String link){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
 
+        contentValues.put("ImagenHd",imagenHd);
+        contentValues.put("ImagenNd",imagenNd);
+        contentValues.put("Texto",texto);
+        contentValues.put("Link",link);
+
+        db.insert("Instagram",null,contentValues);
+        Log.i("Instagram","Datos insertados");
+    }
+
+    ////Obtener datos Instagram
+    public ArrayList<ItemImagenInstagram> obtenerDatosInstragram(){
+        ArrayList<ItemImagenInstagram> imagenes = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(SQL_SELECT_INSTAGRAM,null);
+        res.moveToFirst();
+
+
+        while(res.isAfterLast() == false){
+            int contador = 0;
+            String urlImagenNd1="";
+            String urlImagenNd2="";
+            String urlImagenNd3="";
+            String textoImagen1="";
+            String textoImagen2="";
+            String textoImagen3="";
+            String urlImagenHd1="";
+            String urlImagenHd2="";
+            String urlImagenHd3="";
+            String link1 = "";
+            String link2 = "";
+            String link3 = "";
+            if(res.isAfterLast()==false) {
+                urlImagenNd1 = res.getString(res.getColumnIndex("ImagenNd"));
+                urlImagenHd1 = res.getString(res.getColumnIndex("ImagenHd"));
+                textoImagen1 = res.getString(res.getColumnIndex("Texto"));
+                link1 = res.getString(res.getColumnIndex("Link"));
+                res.moveToNext();
+            }
+            if(res.isAfterLast()==false) {
+                urlImagenNd2 = res.getString(res.getColumnIndex("ImagenNd"));
+                urlImagenHd2 = res.getString(res.getColumnIndex("ImagenHd"));
+                textoImagen2 = res.getString(res.getColumnIndex("Texto"));
+                link2 = res.getString(res.getColumnIndex("Link"));
+                res.moveToNext();
+            }
+            if(res.isAfterLast()==false) {
+                urlImagenNd3 = res.getString(res.getColumnIndex("ImagenNd"));
+                urlImagenHd3 = res.getString(res.getColumnIndex("ImagenHd"));
+                textoImagen3 = res.getString(res.getColumnIndex("Texto"));
+                link3 = res.getString(res.getColumnIndex("Link"));
+                res.moveToNext();
+            }
+            imagenes.add(new ItemImagenInstagram(urlImagenHd1,urlImagenHd2,urlImagenHd3,urlImagenNd1,urlImagenNd2,urlImagenNd3,textoImagen1,textoImagen2,textoImagen3,link1,link2,link3));
+
+        }
+        return imagenes;
+    }
 
     /**************************************Obtener un evento ******************///
 

@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEvento>>{
-    FtpDownload ftpDownload;
+    //FtpDownload ftpDownload;
 	final String JSON_ID = "id";
 	final String JSON_PROGRAMA = "programa";
 	final String JSON_PROGRAMA_EN = "programa_en";
@@ -112,6 +112,7 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
 		Log.i("Eventos", "Comienza a guardar fechas");
 		
 		/// Se comienzan a guardar las fechas
+
 
 		try {
 			List<NameValuePair> mNameValuePairs = new ArrayList<NameValuePair>(1);
@@ -210,7 +211,7 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
 
             HttpEntity entity = response.getEntity();
             String resultado = EntityUtils.toString(entity,"UTF-8");
-            ftpDownload = new FtpDownload();
+            //ftpDownload = new FtpDownload();
             //Log.i("JSON",resultado);
             resultado = resultado.substring(9);
             Log.i("JSON",resultado);
@@ -255,7 +256,7 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
                                                  int total) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(contexto);
         Notification notification = builder
-                .setSmallIcon(R.drawable.icon_buy)
+                .setSmallIcon(R.drawable.ic_av_loop)
                 .setContentTitle(titulo)
                 .setContentText(contenido)
                 .setProgress(total,progress,false)

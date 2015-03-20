@@ -56,10 +56,14 @@ public class FtpDownload {
                 dir.mkdirs();
             if(tipo == 2) nombreArchivo += "Not";
             if(tipo == 3) nombreArchivo = nombreImagen(urlS) + "NotFacebook";
+            //Instagram
+            if(tipo==4){
+                nombreArchivo = "Instagram_"+nombreImagen(nombreArchivo);
+            }
             File file = new File(dir, "imagenes" + nombreArchivo + ".png");
             Log.i("FTP Download ","salvado en "+file.getAbsolutePath());
             FileOutputStream fOut = new FileOutputStream(file);
-            myBitmap.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+            myBitmap.compress(Bitmap.CompressFormat.PNG, 85, fOut);///storage/emulated/0/Imagenes/imagenesInstagram_a1b5802a8f3a11e29a4b22000a1fb593_7.png /storage/emulated/0/Imagenes/imagenesInstagram_a1b5802a8f3a11e29a4b22000a1fb593_7.png
             Log.i("FTP Download","Imagen descargada");
             fOut.flush();
             fOut.close();
@@ -80,4 +84,5 @@ public class FtpDownload {
 
         return token2.nextToken();
     }
+
 }

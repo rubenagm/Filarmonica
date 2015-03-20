@@ -2,5 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <RelativeLayout
+        android:id="@+id/layout_cerrar_dialogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:layout_marginRight="20dp"
+        android:textSize="30sp"
+        android:layout_alignParentRight="true"
+        android:text="X"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <ImageView
+        android:scaleType="centerCrop"
+        android:id="@+id/dialogo_imagen_instagram"
+        android:src="@drawable/icon_buy"
+        android:layout_width="fill_parent"
+        android:layout_height="350dp" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="#FFFFFF"
+            android:id="@+id/dialogo_ver_en_instagram"
+            android:layout_alignParentRight="true"
+            android:text="Ver en Instagram"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        </RelativeLayout>
+    <TextView
+        android:layout_marginTop="5dp"
+        android:textColor="#FFFFFF"
+        android:id="@+id/dialogo_informacion_instagram"
+        android:text="Informacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </LinearLayout>

@@ -36,8 +36,8 @@ public class ListaEventos extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_cards);
         contexto = getApplicationContext();
-        Intent in = new Intent(ListaEventos.this,ServicioActualizacionBD.class);
-        startService(in);
+        // Intent in = new Intent(ListaEventos.this,ServicioActualizacionBD.class);
+        //startService(in);
         //Ocultamos el action bar.
         getSupportActionBar().hide();
 

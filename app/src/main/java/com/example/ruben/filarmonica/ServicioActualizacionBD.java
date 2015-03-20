@@ -43,7 +43,7 @@ public class ServicioActualizacionBD extends Service {
             ActualizarBD hilo = new ActualizarBD(contexto);
             hilo.execute();
         }
-        return START_STICKY;
+        return 0;
     }
 
     @Override

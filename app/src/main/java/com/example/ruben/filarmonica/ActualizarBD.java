@@ -29,7 +29,7 @@ import java.util.List;
  * Created by macmini3cuceimobile on 21/01/15.
  */
 public class ActualizarBD extends AsyncTask<Void,Void,Void> {
-    FtpDownload ftpDownload;
+    //*FtpDownload ftpDownload;
     int idMayorEvento ;
     int idMayorNoticia;
     int idMayorLocalidadEvento;
@@ -71,7 +71,7 @@ public class ActualizarBD extends AsyncTask<Void,Void,Void> {
             List<NameValuePair> mNameValuePairs = new ArrayList<NameValuePair>(1);
             mNameValuePairs.add(new BasicNameValuePair("query", QUERY_EVENTOS + db.obtenerIdMayorEvento()));
             mHttPost.setEntity(new UrlEncodedFormEntity(mNameValuePairs));
-            ftpDownload = new FtpDownload();
+            //ftpDownload = new FtpDownload();
             HttpResponse response = mHttpClient.execute(mHttPost);
 
             HttpEntity entity = response.getEntity();
@@ -89,7 +89,7 @@ public class ActualizarBD extends AsyncTask<Void,Void,Void> {
 
                 int id = jsonElement.getInt(JSON_ID);
 
-                ftpDownload.descargarArchivo(1, id + "");
+                //ftpDownload.descargarArchivo(1, id + "");
                 String programa = jsonElement.getString(JSON_PROGRAMA);
                 String programa_en = jsonElement.getString(JSON_PROGRAMA_EN);
                 String titulo = jsonElement.getString(JSON_TITULO);
@@ -202,7 +202,7 @@ public class ActualizarBD extends AsyncTask<Void,Void,Void> {
 
             HttpEntity entity = response.getEntity();
             String resultado = EntityUtils.toString(entity,"UTF-8");
-            ftpDownload = new FtpDownload();
+            //ftpDownload = new FtpDownload();
             //Log.i("JSON",resultado);
             resultado = resultado.substring(9);
             Log.i("JSON",resultado);
@@ -235,6 +235,7 @@ public class ActualizarBD extends AsyncTask<Void,Void,Void> {
         {
             Log.e("HTTP", "Error con la conexi�n HTTP");
         }
+        /*
         int mayorEvento = db.obtenerIdMayorEvento();
         for(int x = db.obtenerIdMayorEvento();x>=0;x--){
             displayNotification(createBasicNotification("OFJ","Descargando contenido multimedia",mayorEvento-x,mayorEvento));
@@ -260,6 +261,7 @@ public class ActualizarBD extends AsyncTask<Void,Void,Void> {
                 }
             }
         }
+        */
 
 
         return null;
@@ -267,7 +269,7 @@ public class ActualizarBD extends AsyncTask<Void,Void,Void> {
     private Notification createBasicNotification(String titulo, String contenido,int progress, int total) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(contexto);
         Notification notification = builder
-                .setSmallIcon(R.drawable.icon_buy)
+                .setSmallIcon(R.drawable.ic_av_loop)
                 .setContentTitle(titulo)
                 .setContentText(contenido)
                 .setProgress(total,progress,false)

@@ -6,14 +6,18 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +39,9 @@ public class DetalleEvento extends ActionBarActivity {
     String DIRECTORIO = "/storage/emulated/0/Imagenes/imagenes";
     int idEvento;
 
+    //el actionbar
+    ActionBar actionBar = null;
+
     //Variables del Drawer.
     private ListView list_view_drawer;
 
@@ -46,6 +53,7 @@ public class DetalleEvento extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detalle_evento);
+
 
         final Intent intent = getIntent();
         final String action = intent.getAction();
@@ -67,7 +75,8 @@ public class DetalleEvento extends ActionBarActivity {
         }
 
         //Ocultamos el ActionBar.
-        getSupportActionBar().hide();
+        actionBar = getSupportActionBar();
+        actionBar.hide();
 
         textViewTitulo = (TextView) findViewById(R.id.titulo_evento_detalle);
         imageViewImagenEvento = (ImageView) findViewById(R.id.imagen_evento);
@@ -168,6 +177,9 @@ public class DetalleEvento extends ActionBarActivity {
         textViewCostos.setText(costosString);
         Bitmap bitmap = BitmapFactory.decodeFile(DIRECTORIO+mEvento.get(0).getId()+".png");
         imageViewImagenEvento.setImageBitmap(bitmap);
+
+        //Funciones del scroll para que oculte o muestre el action bar
+
 
     }
 
