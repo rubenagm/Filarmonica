@@ -48,6 +48,7 @@ public class ConexionBD extends SQLiteOpenHelper{
 	private static String SQL_DELETE_DATOS_EVENTOS = "DELETE FROM evento";
 	private static String SQL_DELETE_DATOS_FECHAS = "DELETE FROM fecha";
 	private static String SQL_SELECT_FECHA_EVENTOS = "SELECT * FROM fecha WHERE evento_id = ";
+
 	public ConexionBD(Context contexto){
 		super(contexto,DATABASE_NAME,null,DATABASE_VERSION);
 	}

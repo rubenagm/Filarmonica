@@ -1,17 +1,15 @@
 package com.example.ruben.filarmonica;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,36 +29,28 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import date.DateControl;
+import date.DateDifference;
 
 public class MainActivity extends Activity
 {
 
+    //Constants.
+    private static final int SLEEP_SECOND = 1000;
+    private static final int TIEMPO_ESPERA_BUSQUEDA_PROXIMO_CONCIERTO = (1000 * 60 * 60) * 2;
+
     //Contexto.
-    private Context contexto;
+    private static Context contexto;
+    private static ProgressDialog progressDialog;
 
     //Variables del Drawer.
     private ListView list_view_drawer;
 
-    //Arreglos.
-    private ArrayList<ItemDrawer> array_item_drawer;
-    private TypedArray array_iconos;
-
-    //Variables para el contador.
-    private static ArrayList<String> fecha;
-
-    //Variables que se usarán para crear el reloj.
-    private int dia_efectivo;
-    private int hora_efectiva;
-    private int minuto_efectivo;
-    private int segundo_efectivo;
-
     //Variables del layout.
     private TextView lblReloj;
-
-    private static Thread thread;
+    private TextView lblProximoConcierto;
+    private TextView lblDHMS;//Dias, horas, minutos, segundos.
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -71,101 +61,35 @@ public class MainActivity extends Activity
 
          // Hilo de actualización de eventos y contenido multimedia
         Intent in = new Intent(MainActivity.this, ServicioActualizacionBD.class);
-        startService(in);
+        //startService(in);
         //Obtenemos el contexto.
-        contexto = getApplicationContext();
+        contexto = MainActivity.this;
 
-        //Obtenemos als referencias del layout.
-        lblReloj		 = (TextView) findViewById(R.id.lbl_contador_proximo_concierto);
+        //Obtenemos las referencias del layout.
+        lblReloj		    = (TextView) findViewById(R.id.lbl_contador_proximo_concierto);
+        lblDHMS             = (TextView) findViewById(R.id.lbl_dias_horas_minutos_segundos);
+        lblProximoConcierto = (TextView) findViewById(R.id.lbl_proximo_concierto);
 
         /******************************* ListView Drawer *****************************/
         list_view_drawer = (ListView) findViewById(R.id.drawer_listView);
-        //Obtenemos las imágenes.
-        array_iconos = getResources().obtainTypedArray(R.array.iconos_drawer);
-
-        //Creamos el arreglo de ItemDrawer.
-        array_item_drawer = new ArrayList<ItemDrawer>();
+        list_view_drawer.setAdapter(new ListViewAdapter(this));
 
         //Ajustar el ListView al ancho de la pantalla
         DisplayMetrics display_metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
         int width = display_metrics.widthPixels;
         list_view_drawer.getLayoutParams().width = width;
+        int height = display_metrics.heightPixels;
+        list_view_drawer.getLayoutParams().height = height;
 
-        //Agregamos las imágenes al arreglo de Item.
-        for(int i = 0; i < 3; i++)
-        {
-            if((i % 2) == 0 && i > 0)
-            {
-                array_item_drawer.add(new ItemDrawer(array_iconos.getResourceId(i, -1),
-                        array_iconos.getResourceId(i+1, -1)));
-            }
-            else
-            {
-                array_item_drawer.add(new ItemDrawer(array_iconos.getResourceId(i, -1)));
-            }
-        }
-
-        //Colocamos el adaptador al ListView.
-        list_view_drawer.setAdapter(new ListAdapterDrawer(this, array_item_drawer));
-
-        //Colocamos el click listener al ListView.
-        list_view_drawer.setOnItemClickListener(new OnItemClickListener()
-        {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                switch(position)
-                {
-                    case 0:
-                    {
-                        Intent i = new Intent(MainActivity.this,ListaEventos.class);
-                        startActivity(i);
-                        break;
-                    }
-                    case 1:
-                    {
-                        Intent i = new Intent(MainActivity.this,Noticias.class);
-                        startActivity(i);
-                        break;
-                    }
-                }
-            }
-
-        });
         /******************************* ListView Drawer *****************************/
-
         ConexionProximoConcierto json = new ConexionProximoConcierto();
         json.execute("");
-        try
-        {
-            fecha = json.get();
-
-            if(fecha.get(0).equals("tocandoAhora"))
-            {
-                lblReloj.setText("Tocando en este momento.");
-            }
-            else
-            {
-                //Mandamos la fecha y la hora al parser.
-                DateControl dateControl = new DateControl(fecha);
-
-            }
-        }
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
-        catch (ExecutionException e)
-        {
-            e.printStackTrace();
-        }
     }//OnCreate
 
     /***************************************** CONEXIONES *******************************************/
     //Clase para acceder al JSON.
-    private static class ConexionProximoConcierto extends AsyncTask<String, Void, ArrayList<String>>
+    private class ConexionProximoConcierto extends AsyncTask<String, Void, ArrayList<String>>
     {
 
         //Etiquetas JSON.
@@ -188,10 +112,22 @@ public class MainActivity extends Activity
         private HttpPost mHttpPost = new HttpPost("http://ofj.com.mx/App/prueba1.php");
 
         @Override
+        protected void onPreExecute()
+        {
+            super.onPreExecute();
+            lblProximoConcierto.setVisibility(View.INVISIBLE);
+            lblDHMS.setVisibility(View.INVISIBLE);
+            progressDialog = new ProgressDialog(contexto, R.style.MyTheme);
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(false);
+
+            progressDialog.show();
+        }
+
+        @Override
         protected ArrayList<String> doInBackground(String... arg0)
         {
-            //Inicializamos el arreglo.
-            ArrayList<String> arreglo = new ArrayList<String>();
+            ArrayList<String> fecha = new ArrayList<>();
 
             String[] fechas  = new String[NUMERO_CONCIERTOS_A_LEER];
             String[] horas   = new String[NUMERO_CONCIERTOS_A_LEER];
@@ -250,14 +186,14 @@ public class MainActivity extends Activity
                         {
                             //Mandamos el primer concierto.
                             horas[0] = horas[0] + ":" + minutos[0];
-                            arreglo.add(fechas[0]);
-                            arreglo.add(horas[0]);
+                            fecha.add(fechas[0]);
+                            fecha.add(horas[0]);
                         }
                         else
                         {
                             //Validar mensaje de que se está actualmente en concierto.
-                            arreglo.add("tocandoAhora");
-                            return arreglo;
+                            fecha.add("tocandoAhora");
+                            return fecha;
                         }
                     }
                     else
@@ -265,16 +201,16 @@ public class MainActivity extends Activity
                         //VERIFIQUE CONCIERTO MAÑANA
                         //Mandamos el segundo concierto.
                         horas[1] = horas[1] + ":" + minutos[1];
-                        arreglo.add(fechas[1]);
-                        arreglo.add(horas[1]);
+                        fecha.add(fechas[1]);
+                        fecha.add(horas[1]);
                     }
                 }
                 else
                 {
                     //Mandamos el primer concierto.
                     horas[0] = horas[0] + ":" + minutos[0];
-                    arreglo.add(fechas[0]);
-                    arreglo.add(horas[0]);
+                    fecha.add(fechas[0]);
+                    fecha.add(horas[0]);
                 }
             }
 
@@ -287,11 +223,92 @@ public class MainActivity extends Activity
                 Log.e(TAG, "Error con la conexión HTTP");
             }
 
-            return arreglo;
+            return fecha;
         }
 
+        @Override
+        protected void onPostExecute(ArrayList<String> strings)
+        {
+            progressDialog.dismiss();
+            lblProximoConcierto.setVisibility(View.VISIBLE);
+            lblDHMS.setVisibility(View.VISIBLE);
+            if(strings.get(0).equals("tocandoAhora"))
+            {
+
+                DateDifference countdownTimer = DateDifference.getDateDifferenceCompletedTime();
+                iniciarReloj(countdownTimer);
+            }
+            else
+            {
+                //Mandamos la fecha y la hora al parser.
+                DateControl dateControl = new DateControl(strings);
+                DateDifference countdownTimer = dateControl.startCountdown();
+                iniciarReloj(countdownTimer);
+            }
+        }
     }
 
 
-    /***************************************** CONEXIONES *******************************************/
+    /*************************************** CONEXIONES *****************************************/
+
+    public void iniciarReloj(final DateDifference dateDifference)
+    {
+        Thread thread = new Thread(new Runnable()
+        {
+            DateDifference countdownTimer = dateDifference;
+            @Override
+            public void run()
+            {
+                while(!countdownTimer.isCompletedTime())
+                {
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            String tiempo_faltante = String.format("%02d:%02d:%02d:%02d",
+                                    countdownTimer.getDay(), countdownTimer.getHour(),
+                                    countdownTimer.getMinute(), countdownTimer.getSecond());
+                            lblReloj.setText(tiempo_faltante);
+                            countdownTimer.substractSecond();
+                        }
+                    });
+                    try
+                    {
+                        Thread.sleep(SLEEP_SECOND);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        //Una vez el concierto empezado, colocar mensaje y después de determinado tiempo
+                        //volver a hacer una consulta en busca del próximo concierto.
+                        lblReloj.setText(getText(R.string.en_concierto));
+                        lblDHMS.setVisibility(View.GONE);
+                        lblProximoConcierto.setVisibility(View.GONE);
+                    }
+                });
+
+                //Esperamos y buscamos por próximos conciertos.
+                try
+                {
+                    Thread.sleep(TIEMPO_ESPERA_BUSQUEDA_PROXIMO_CONCIERTO);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                ConexionProximoConcierto json = new ConexionProximoConcierto();
+                json.execute("");
+            }
+        });
+
+        thread.start();
+    }
 }

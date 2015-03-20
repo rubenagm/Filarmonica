@@ -9,34 +9,48 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+
+import conexion.DescargarImagen;
 
 /**
  * Created by Ruben on 08/01/2015.
  */
-public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEventos.ViewHolder> {
+public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEventos.ViewHolder>
+{
+
+    private final static int IMAGEN_TIPO_EVENTO = 1;
+
     //Clase View Holder
     Context contexto;
     ArrayList<ItemEvento> mEvento;
     String DIRECTORIO = "/storage/emulated/0/Imagenes/imagenes";
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder
+    {
         public TextView mTextView;
         public TextView textViewProgramaEvento;
         public TextView textViewFechasEvento;
         public TextView textViewMasDetalles;
         public ImageView imageViewImagenEvento;
         public TextView textViewCompartir;
+        public ProgressBar progressCargandoImagen;
+        public LinearLayout linearLayoutEventos;
         public ViewHolder(View v){
             super(v);
-            textViewCompartir = (TextView) v.findViewById(R.id.texto_compartir);
-            textViewMasDetalles = (TextView) v.findViewById(R.id.text_mas_detalles);
-            mTextView = (TextView) v.findViewById(R.id.titulo_evento);
+            textViewCompartir      = (TextView) v.findViewById(R.id.texto_compartir);
+            textViewMasDetalles    = (TextView) v.findViewById(R.id.text_mas_detalles);
+            mTextView              = (TextView) v.findViewById(R.id.titulo_evento);
             textViewProgramaEvento = (TextView) v.findViewById(R.id.programa_evento);
-            textViewFechasEvento = (TextView) v.findViewById(R.id.fechas_evento);
-            imageViewImagenEvento = (ImageView) v.findViewById(R.id.imagen_evento);
+            textViewFechasEvento   = (TextView) v.findViewById(R.id.fechas_evento);
+            imageViewImagenEvento  = (ImageView) v.findViewById(R.id.imagen_evento);
+            progressCargandoImagen = (ProgressBar) v.findViewById(R.id.progress_cargando_imagen);
+            linearLayoutEventos    = (LinearLayout) v.findViewById(R.id.linear_layout_eventos);
         }
     }
     //Termina clase ViewHolder
@@ -54,7 +68,10 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
         return holder;
     }
 
-    public void onBindViewHolder(ViewHolder holder, final int position){
+    public void onBindViewHolder(ViewHolder holder, final int position)
+    {
+        holder.setIsRecyclable(false);
+
         holder.mTextView.setText(mEvento.get(position).getTitulo().toString());
         holder.textViewProgramaEvento.setText(mEvento.get(position).getPrograma().toString());
 
@@ -67,8 +84,22 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
 
         holder.textViewFechasEvento.setText(fechasString);
 
-        Bitmap bitmap = BitmapFactory.decodeFile(DIRECTORIO+mEvento.get(position).getId()+".png");
-        holder.imageViewImagenEvento.setImageBitmap(bitmap);
+        //Cargamos la imagen. Comprobamos si existe, sino la descargamos.
+        String rutaAccesoImagen = DIRECTORIO + mEvento.get(position).getId() + ".png";
+        File archivoImagen = new File(rutaAccesoImagen);
+        if(!archivoImagen.exists())
+        {
+            DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_EVENTO,
+                    holder.progressCargandoImagen, holder.imageViewImagenEvento,
+                    holder.linearLayoutEventos);
+            descargarImagen.execute(Integer.toString(mEvento.get(position).getId()));
+        }
+        else
+        {
+            Bitmap bitmap = BitmapFactory.decodeFile(rutaAccesoImagen);
+            holder.imageViewImagenEvento.setImageBitmap(bitmap);
+        }
+
         holder.textViewMasDetalles.setText("MÁS DETALLES"+"\n");
         holder.textViewCompartir.setText("COMPARTIR" + "\n");
 
@@ -161,14 +192,5 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
         }
 
         return dia + " de " + mes + " del " + año ;
-    }
-
-    ////
-    public String obtenerFechas(ArrayList<String> fechas){
-        String fechaReturn ="";
-        for(int x = 0; x<fechas.size();x++){
-            fechaReturn += fechas.get(x) + "\n";
-        }
-        return fechaReturn;
     }
 }

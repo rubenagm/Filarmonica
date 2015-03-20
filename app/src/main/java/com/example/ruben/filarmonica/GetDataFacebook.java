@@ -1,6 +1,5 @@
 package com.example.ruben.filarmonica;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -46,7 +45,7 @@ public class GetDataFacebook extends AsyncTask<Void,Void,ArrayList<ItemFacebook>
 
                 if(!jsonArray.getJSONObject(x).isNull("name")){
                     contenido = jsonArray.getJSONObject(x).getString("name");
-                    urlImagen = jsonArray.getJSONObject(x).getString("picture");
+                    urlImagen = jsonArray.getJSONObject(x).getString("source");
                     FtpDownload ftp = new FtpDownload();
                     ftp.descargarArchivo(3,urlImagen);
                     urlImagen= nombreImagen(urlImagen);

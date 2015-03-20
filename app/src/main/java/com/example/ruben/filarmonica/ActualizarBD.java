@@ -20,7 +20,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,7 @@ import java.util.List;
  * Created by macmini3cuceimobile on 21/01/15.
  */
 public class ActualizarBD extends AsyncTask<Void,Void,Void> {
-    FtpDownload ftpDownload;
+    //FtpDownload ftpDownload;
     int idMayorEvento ;
     int idMayorNoticia;
     int idMayorLocalidadEvento;
@@ -71,7 +70,6 @@ public class ActualizarBD extends AsyncTask<Void,Void,Void> {
             List<NameValuePair> mNameValuePairs = new ArrayList<NameValuePair>(1);
             mNameValuePairs.add(new BasicNameValuePair("query", QUERY_EVENTOS + db.obtenerIdMayorEvento()));
             mHttPost.setEntity(new UrlEncodedFormEntity(mNameValuePairs));
-            ftpDownload = new FtpDownload();
             HttpResponse response = mHttpClient.execute(mHttPost);
 
             HttpEntity entity = response.getEntity();
@@ -89,7 +87,6 @@ public class ActualizarBD extends AsyncTask<Void,Void,Void> {
 
                 int id = jsonElement.getInt(JSON_ID);
 
-                ftpDownload.descargarArchivo(1, id + "");
                 String programa = jsonElement.getString(JSON_PROGRAMA);
                 String programa_en = jsonElement.getString(JSON_PROGRAMA_EN);
                 String titulo = jsonElement.getString(JSON_TITULO);
@@ -202,7 +199,6 @@ public class ActualizarBD extends AsyncTask<Void,Void,Void> {
 
             HttpEntity entity = response.getEntity();
             String resultado = EntityUtils.toString(entity,"UTF-8");
-            ftpDownload = new FtpDownload();
             //Log.i("JSON",resultado);
             resultado = resultado.substring(9);
             Log.i("JSON",resultado);
@@ -238,27 +234,13 @@ public class ActualizarBD extends AsyncTask<Void,Void,Void> {
         int mayorEvento = db.obtenerIdMayorEvento();
         for(int x = db.obtenerIdMayorEvento();x>=0;x--){
             displayNotification(createBasicNotification("OFJ","Descargando contenido multimedia",mayorEvento-x,mayorEvento));
-            File file = new File("/storage/emulated/0/Imagenes/imagenes"+x+".png");
-            if(!file.exists()) {
-                try {
-                    ftpDownload.descargarArchivo(1, x + "");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+
         }
 
         int mayorNoticia = db.obtenerIdMayorNoticia();
         for(int x = db.obtenerIdMayorNoticia();x>=0;x--){
             displayNotification(createBasicNotification("OFJ","Descargando contenido multimedia",mayorNoticia-x,mayorNoticia));
-            File file = new File("/storage/emulated/0/Imagenes/imagenes"+x+"Not.png");
-            if(!file.exists()) {
-                try {
-                    ftpDownload.descargarArchivo(2, x + "");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+
         }
 
 
