@@ -1,11 +1,9 @@
 package com.example.ruben.filarmonica;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,9 +13,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.Window;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -25,12 +20,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 
-public class ListaEventos extends ActionBarActivity implements ViewTreeObserver.OnScrollChangedListener{
+public class ListaEventos extends ActionBarActivity {
     RecyclerView mRecyclerView;
     Context contexto;
-    int scrollY = 0;
-    private float mActionBarHeight;
-    private ActionBar mActionBar;
+
     //Variables del Drawer.
     private ListView list_view_drawer;
 
@@ -41,18 +34,12 @@ public class ListaEventos extends ActionBarActivity implements ViewTreeObserver.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lista_eventos);
-
-        final TypedArray styledAttributes = getTheme().obtainStyledAttributes(
-                new int[] { android.R.attr.actionBarSize });
-        mActionBarHeight = styledAttributes.getDimension(0, 0);
-        styledAttributes.recycle();
-        mActionBar = getSupportActionBar();
-
+        setContentView(R.layout.activity_lista_cards);
         contexto = getApplicationContext();
         Intent in = new Intent(ListaEventos.this,ServicioActualizacionBD.class);
         startService(in);
         //Ocultamos el action bar.
+        getSupportActionBar().hide();
 
         /******************************* ListView Drawer *****************************/
         list_view_drawer = (ListView) findViewById(R.id.drawer_listView);
@@ -73,7 +60,8 @@ public class ListaEventos extends ActionBarActivity implements ViewTreeObserver.
         {
             if((i % 2) == 0 && i > 0)
             {
-                array_item_drawer.add(new ItemDrawer(array_iconos.getResourceId(i, -1), array_iconos.getResourceId(i+1, -1)));
+                array_item_drawer.add(new ItemDrawer(array_iconos.getResourceId(i, -1),
+                        array_iconos.getResourceId(i+1, -1)));
             }
             else
             {
@@ -111,34 +99,17 @@ public class ListaEventos extends ActionBarActivity implements ViewTreeObserver.
         });
         /******************************* ListView Drawer *****************************/
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.lista_eventos);
+        mRecyclerView = (RecyclerView) findViewById(R.id.lista_cards);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.getViewTreeObserver().addOnScrollChangedListener(this);
-        ArrayList<ItemEvento> lista = new ArrayList<ItemEvento>();
+        mRecyclerView.setItemAnimator( new DefaultItemAnimator());
+        ArrayList<ItemEvento> lista = new ArrayList<>();
         ConexionBD db = new ConexionBD(contexto);
 
         lista = db.obtenerEventos();
         Log.i("InformacionLista",lista.size()+"!");
         RecyclerView.Adapter adapter = new AdapterListaEventos(contexto,lista);
         mRecyclerView.setAdapter(adapter);
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
 
-            }
-            @Override
-            public void onScrolled(RecyclerView recyclerView,int x,int y){
-                if (y >= 1 && mActionBar.isShowing()) {
-                    mActionBar.hide();
-
-                } else if ( y<-1  && !mActionBar.isShowing()) {
-                    mActionBar.show();
-                }
-                Log.i("Scroll",y+"");
-            }
-        });
 
     }
 
@@ -163,11 +134,5 @@ public class ListaEventos extends ActionBarActivity implements ViewTreeObserver.
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onScrollChanged() {
-
-
     }
 }

@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -38,7 +37,6 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
             textViewProgramaEvento = (TextView) v.findViewById(R.id.programa_evento);
             textViewFechasEvento = (TextView) v.findViewById(R.id.fechas_evento);
             imageViewImagenEvento = (ImageView) v.findViewById(R.id.imagen_evento);
-
         }
     }
     //Termina clase ViewHolder
@@ -50,7 +48,8 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
     @Override
     public AdapterListaEventos.ViewHolder onCreateViewHolder(ViewGroup parent,int viewType){
 
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_item_evento,parent,false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_item_evento,
+                parent,false);
         ViewHolder holder = new ViewHolder(v);
         return holder;
     }
@@ -72,6 +71,8 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
         holder.imageViewImagenEvento.setImageBitmap(bitmap);
         holder.textViewMasDetalles.setText("MÁS DETALLES"+"\n");
         holder.textViewCompartir.setText("COMPARTIR" + "\n");
+
+        /**************************** ClickListeners *********************/
         holder.textViewMasDetalles.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,6 +80,24 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
                 Intent i = new Intent(contextoView, DetalleEvento.class);
                 i.putExtra("idEvento", mEvento.get(position).getId());
                 contextoView.startActivity(i);
+            }
+        });
+
+        holder.textViewCompartir.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                final String URL_EVENTO = "http://ofj.com.mx/conciertos-eventos/evento/?id=";
+                Context contextoView = v.getContext();
+
+                String urlEfectiva = URL_EVENTO + mEvento.get(position).getId();
+
+                Intent compartir = new Intent();
+                compartir.setAction(Intent.ACTION_SEND);
+                compartir.putExtra(Intent.EXTRA_TEXT, urlEfectiva);
+                compartir.setType( "text/plain");
+                contextoView.startActivity(compartir);
             }
         });
     }

@@ -113,8 +113,8 @@
                         android:id="@+id/detalle_nombre_director"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nombre"
-                        android:textSize="18dp"
+                        android:text="Descripción del evento"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         />
                     <TextView
@@ -123,7 +123,8 @@
                         android:textSize="15sp"
                         android:text="Descripcion"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        />
                     </LinearLayout>
 
                 </LinearLayout>

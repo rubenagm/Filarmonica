@@ -28,6 +28,17 @@
         <activity
             android:name=".DetalleEvento"
             android:label="@string/title_activity_detalle_evento" >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="http"
+                      android:host="ofj.com.mx"
+                        android:pathPrefix="/conciertos-eventos/"/>
+                <data android:scheme="http"
+                      android:host="www.ofj.com.mx"
+                      android:pathPrefix="/conciertos-eventos/"/>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Noticias"

@@ -40,7 +40,7 @@ public class Facebook extends ActionBarActivity {
             e.printStackTrace();
         }
 
-        RecyclerView.Adapter adapter = new AdapterListaFacebook(contexto,publicaciones);
+        RecyclerView.Adapter adapter = new AdapterListaFacebook(publicaciones);
 
         mRecyclerView.setAdapter(adapter);
 

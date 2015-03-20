@@ -17,6 +17,7 @@ package tabs;
  */
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.PagerAdapter;
@@ -176,10 +177,14 @@ public class SlidingTabLayout extends HorizontalScrollView {
             populateTabStrip();
         }
 
-        //Cargamos las imágenes por primera vez.
-        //mTabStrip.getChildAt(0).setBackgroundResource(R.drawable.video_icon);
-        //mTabStrip.getChildAt(1).setBackgroundResource(R.drawable.musica_icon_off);
-
+        //Hacemos que el título de la primera tab en la sección de noticias aparezca en rojo,
+        //indicando que esa tab está seleccionada.
+        CharSequence descripcion = mTabStrip.getContentDescription();
+        if(descripcion.equals("Noticias"))
+        {
+            TextView tabNoticias  = (TextView) mTabStrip.getChildAt(0);
+            tabNoticias.setTextColor(Color.parseColor("#E31836"));
+        }
     }
 
     /**
@@ -198,9 +203,6 @@ public class SlidingTabLayout extends HorizontalScrollView {
         getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground,
                 outValue, true);
         textView.setBackgroundResource(outValue.resourceId);
-
-        //Se necesita incrementar al api 14. Por revisar.
-        //textView.setAllCaps(true);
 
         int padding = (int) (TAB_VIEW_PADDING_DIPS * getResources().getDisplayMetrics().density);
         textView.setPadding(padding, padding, padding, padding);
@@ -329,57 +331,128 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 mViewPagerPageChangeListener.onPageSelected(position);
             }
 
-            //Colocamos las imágenes de las tabs.
-            switch(position)
+            CharSequence descripcion = mTabStrip.getContentDescription();
+            if(descripcion.equals("Streaming"))
             {
-                case 0:
+                //Colocamos las imágenes de las tabs.
+                switch(position)
                 {
-                    Drawable imagenTabVideo = contexto.getResources().getDrawable(imagenesTab[0]);
-                    imagenTabVideo.setBounds(0, 0, 60, 60);
-                    SpannableString spannableStringVideo = new SpannableString(" ");
-                    ImageSpan imageSpanVideo = new ImageSpan(imagenTabVideo, ImageSpan.ALIGN_BOTTOM);
-                    spannableStringVideo.setSpan(imageSpanVideo, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    case 0:
+                    {
+                        Drawable imagenTabVideo = contexto.getResources().
+                                getDrawable(imagenesTab[0]);
+                        imagenTabVideo.setBounds(0, 0, 60, 60);
+                        SpannableString spannableStringVideo = new SpannableString(" ");
+                        ImageSpan imageSpanVideo = new ImageSpan(imagenTabVideo,
+                                ImageSpan.ALIGN_BOTTOM);
+                        spannableStringVideo.setSpan(imageSpanVideo, 0, 1,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                    //Sacamos el view donde irá la imagen de video.
-                    TextView viewTabVideo = (TextView) mTabStrip.getChildAt(0);
-                    viewTabVideo.setText(spannableStringVideo);
+                        //Sacamos el view donde irá la imagen de video.
+                        TextView viewTabVideo = (TextView) mTabStrip.getChildAt(0);
+                        viewTabVideo.setText(spannableStringVideo);
 
-                    Drawable imagenTabMusica = contexto.getResources().getDrawable(imagenesTab[1]);
-                    imagenTabMusica.setBounds(0, 0, 60, 60);
-                    SpannableString spannableStringMusica = new SpannableString(" ");
-                    ImageSpan imageSpanMusica = new ImageSpan(imagenTabMusica, ImageSpan.ALIGN_BOTTOM);
-                    spannableStringMusica.setSpan(imageSpanMusica, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        Drawable imagenTabMusica = contexto.getResources().
+                                getDrawable(imagenesTab[1]);
+                        imagenTabMusica.setBounds(0, 0, 60, 60);
+                        SpannableString spannableStringMusica = new SpannableString(" ");
+                        ImageSpan imageSpanMusica = new ImageSpan(imagenTabMusica,
+                                ImageSpan.ALIGN_BOTTOM);
+                        spannableStringMusica.setSpan(imageSpanMusica, 0, 1,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                    //Sacamos el view donde irá la imagen de música.
-                    TextView viewTabMusica = (TextView) mTabStrip.getChildAt(1);
-                    viewTabMusica.setText(spannableStringMusica);
+                        //Sacamos el view donde irá la imagen de música.
+                        TextView viewTabMusica = (TextView) mTabStrip.getChildAt(1);
+                        viewTabMusica.setText(spannableStringMusica);
 
-                    break;
+                        break;
+                    }
+
+                    case 1:
+                    {
+                        Drawable imagenTabMusica = contexto.getResources().
+                                getDrawable(imagenesTab[3]);
+                        imagenTabMusica.setBounds(0, 0, 60, 60);
+                        SpannableString spannableStringMusica = new SpannableString(" ");
+                        ImageSpan imageSpanMusica = new ImageSpan(imagenTabMusica,
+                                ImageSpan.ALIGN_BOTTOM);
+                        spannableStringMusica.setSpan(imageSpanMusica, 0, 1,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                        //Sacamos el view donde irá la imagen de música.
+                        TextView viewTabMusica = (TextView) mTabStrip.getChildAt(1);
+                        viewTabMusica.setText(spannableStringMusica);
+
+                        Drawable imagenTabVideo = contexto.getResources().
+                                getDrawable(imagenesTab[2]);
+                        imagenTabVideo.setBounds(0, 0, 60, 60);
+                        SpannableString spannableStringVideo = new SpannableString(" ");
+                        ImageSpan imageSpanVideo = new ImageSpan(imagenTabVideo,
+                                ImageSpan.ALIGN_BOTTOM);
+                        spannableStringVideo.setSpan(imageSpanVideo, 0, 1,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                        //Sacamos el view donde irá la imagen de video.
+                        TextView viewTabVideo = (TextView) mTabStrip.getChildAt(0);
+                        viewTabVideo.setText(spannableStringVideo);
+
+                        break;
+                    }
                 }
-
-                case 1:
+            }
+            else if(descripcion.equals("Noticias"))
+            {
+                //Cambiamos el texto.
+                switch(position)
                 {
-                    Drawable imagenTabMusica = contexto.getResources().getDrawable(imagenesTab[3]);
-                    imagenTabMusica.setBounds(0, 0, 60, 60);
-                    SpannableString spannableStringMusica = new SpannableString(" ");
-                    ImageSpan imageSpanMusica = new ImageSpan(imagenTabMusica, ImageSpan.ALIGN_BOTTOM);
-                    spannableStringMusica.setSpan(imageSpanMusica, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    case 0:
+                    {
+                        TextView tabNoticias  = (TextView) mTabStrip.getChildAt(0);
+                        TextView tabFacebook  = (TextView) mTabStrip.getChildAt(1);
+                        TextView tabGaleria   = (TextView) mTabStrip.getChildAt(2);
 
-                    //Sacamos el view donde irá la imagen de música.
-                    TextView viewTabMusica = (TextView) mTabStrip.getChildAt(1);
-                    viewTabMusica.setText(spannableStringMusica);
+                        tabNoticias.setText("NOTICIAS");
+                        tabFacebook.setText("FACEBOOK");
+                        tabGaleria.setText("GALERIA");
 
-                    Drawable imagenTabVideo = contexto.getResources().getDrawable(imagenesTab[2]);
-                    imagenTabVideo.setBounds(0, 0, 60, 60);
-                    SpannableString spannableStringVideo = new SpannableString(" ");
-                    ImageSpan imageSpanVideo = new ImageSpan(imagenTabVideo, ImageSpan.ALIGN_BOTTOM);
-                    spannableStringVideo.setSpan(imageSpanVideo, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        tabNoticias.setTextColor(Color.parseColor("#E31836"));
+                        tabFacebook.setTextColor(-1979711488);
+                        tabGaleria.setTextColor(-1979711488);
 
-                    //Sacamos el view donde irá la imagen de video.
-                    TextView viewTabVideo = (TextView) mTabStrip.getChildAt(0);
-                    viewTabVideo.setText(spannableStringVideo);
+                        break;
+                    }
+                    case 1:
+                    {
+                        TextView tabNoticias  = (TextView) mTabStrip.getChildAt(0);
+                        TextView tabFacebook  = (TextView) mTabStrip.getChildAt(1);
+                        TextView tabGaleria   = (TextView) mTabStrip.getChildAt(2);
 
-                    break;
+                        tabNoticias.setText("NOTICIAS");
+                        tabFacebook.setText("FACEBOOK");
+                        tabGaleria.setText("GALERIA");
+
+                        tabNoticias.setTextColor(-1979711488);
+                        tabFacebook.setTextColor(Color.parseColor("#E31836"));
+                        tabGaleria.setTextColor(-1979711488);
+
+                        break;
+                    }
+                    case 2:
+                    {
+                        TextView tabNoticias  = (TextView) mTabStrip.getChildAt(0);
+                        TextView tabFacebook  = (TextView) mTabStrip.getChildAt(1);
+                        TextView tabGaleria   = (TextView) mTabStrip.getChildAt(2);
+
+                        tabNoticias.setText("NOTICIAS");
+                        tabFacebook.setText("FACEBOOK");
+                        tabGaleria.setText("GALERIA");
+
+                        tabNoticias.setTextColor(-1979711488);
+                        tabFacebook.setTextColor(-1979711488);
+                        tabGaleria.setTextColor(Color.parseColor("#E31836"));
+
+                        break;
+                    }
                 }
             }
         }
@@ -393,55 +466,78 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 if (v == mTabStrip.getChildAt(i)) {
                     mViewPager.setCurrentItem(i);
 
-                    switch(i)
+                    CharSequence descripcion = mTabStrip.getContentDescription();
+
+                    if(descripcion.equals("Streaming"))
                     {
-                        case 0:
+                        switch(i)
                         {
-                            Drawable imagenTabVideo = contexto.getResources().getDrawable(imagenesTab[0]);
-                            imagenTabVideo.setBounds(0, 0, 60, 60);
-                            SpannableString spannableStringVideo = new SpannableString(" ");
-                            ImageSpan imageSpanVideo = new ImageSpan(imagenTabVideo, ImageSpan.ALIGN_BOTTOM);
-                            spannableStringVideo.setSpan(imageSpanVideo, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            ((TextView) v).setText(spannableStringVideo);
+                            case 0:
+                            {
+                                Drawable imagenTabVideo = contexto.getResources().
+                                        getDrawable(imagenesTab[0]);
+                                imagenTabVideo.setBounds(0, 0, 60, 60);
+                                SpannableString spannableStringVideo = new SpannableString(" ");
+                                ImageSpan imageSpanVideo = new ImageSpan(imagenTabVideo,
+                                        ImageSpan.ALIGN_BOTTOM);
+                                spannableStringVideo.setSpan(imageSpanVideo, 0, 1,
+                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                ((TextView) v).setText(spannableStringVideo);
 
-                            Drawable imagenTabMusica = contexto.getResources().getDrawable(imagenesTab[1]);
-                            imagenTabMusica.setBounds(0, 0, 60, 60);
-                            SpannableString spannableStringMusica = new SpannableString(" ");
-                            ImageSpan imageSpanMusica = new ImageSpan(imagenTabMusica, ImageSpan.ALIGN_BOTTOM);
-                            spannableStringMusica.setSpan(imageSpanMusica, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                Drawable imagenTabMusica = contexto.getResources().
+                                        getDrawable(imagenesTab[1]);
+                                imagenTabMusica.setBounds(0, 0, 60, 60);
+                                SpannableString spannableStringMusica = new SpannableString(" ");
+                                ImageSpan imageSpanMusica = new ImageSpan(imagenTabMusica,
+                                        ImageSpan.ALIGN_BOTTOM);
+                                spannableStringMusica.setSpan(imageSpanMusica, 0, 1,
+                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                            //Sacamos el view donde irá la imagen de música.
-                            TextView viewTabMusica = (TextView )mTabStrip.getChildAt(1);
-                            viewTabMusica.setText(spannableStringMusica);
+                                //Sacamos el view donde irá la imagen de música.
+                                TextView viewTabMusica = (TextView )mTabStrip.getChildAt(1);
+                                viewTabMusica.setText(spannableStringMusica);
 
-                            break;
-                        }
+                                break;
+                            }
 
-                        case 1:
-                        {
-                            Drawable imagenTabMusica = contexto.getResources().getDrawable(imagenesTab[3]);
-                            imagenTabMusica.setBounds(0, 0, 60, 60);
-                            SpannableString spannableStringMusica = new SpannableString(" ");
-                            ImageSpan imageSpanMusica = new ImageSpan(imagenTabMusica, ImageSpan.ALIGN_BOTTOM);
-                            spannableStringMusica.setSpan(imageSpanMusica, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            ((TextView) v).setText(spannableStringMusica);
+                            case 1:
+                            {
+                                Drawable imagenTabMusica = contexto.getResources().
+                                        getDrawable(imagenesTab[3]);
+                                imagenTabMusica.setBounds(0, 0, 60, 60);
+                                SpannableString spannableStringMusica = new SpannableString(" ");
+                                ImageSpan imageSpanMusica = new ImageSpan(imagenTabMusica,
+                                        ImageSpan.ALIGN_BOTTOM);
+                                spannableStringMusica.setSpan(imageSpanMusica, 0, 1,
+                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                ((TextView) v).setText(spannableStringMusica);
 
-                            Drawable imagenTabVideo = contexto.getResources().getDrawable(imagenesTab[2]);
-                            imagenTabVideo.setBounds(0, 0, 60, 60);
-                            SpannableString spannableStringVideo = new SpannableString(" ");
-                            ImageSpan imageSpanVideo = new ImageSpan(imagenTabVideo, ImageSpan.ALIGN_BOTTOM);
-                            spannableStringVideo.setSpan(imageSpanVideo, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                Drawable imagenTabVideo = contexto.getResources().
+                                        getDrawable(imagenesTab[2]);
+                                imagenTabVideo.setBounds(0, 0, 60, 60);
+                                SpannableString spannableStringVideo = new SpannableString(" ");
+                                ImageSpan imageSpanVideo = new ImageSpan(imagenTabVideo,
+                                        ImageSpan.ALIGN_BOTTOM);
+                                spannableStringVideo.setSpan(imageSpanVideo, 0, 1,
+                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                            //Sacamos el view donde irá la imagen de video.
-                            TextView viewTabVideo = (TextView )mTabStrip.getChildAt(0);
-                            viewTabVideo.setText(spannableStringVideo);
+                                //Sacamos el view donde irá la imagen de video.
+                                TextView viewTabVideo = (TextView )mTabStrip.getChildAt(0);
+                                viewTabVideo.setText(spannableStringVideo);
 
-                            break;
+                                break;
+                            }
                         }
                     }
                     return;
                 }
             }
         }
+    }
+
+    //Método que servirá para poder diferenciar de que actividad se configuran las tabs.
+    public void setDescription(String description)
+    {
+        mTabStrip.setContentDescription(description);
     }
 }

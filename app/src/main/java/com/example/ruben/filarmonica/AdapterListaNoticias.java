@@ -1,6 +1,5 @@
 package com.example.ruben.filarmonica;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
@@ -16,23 +15,27 @@ import java.util.StringTokenizer;
 /**
  * Created by root on 16/01/15.
  */
-public class AdapterListaNoticias extends RecyclerView.Adapter<AdapterListaNoticias.ViewHolder>{
+public class AdapterListaNoticias extends RecyclerView.Adapter<AdapterListaNoticias.ViewHolder>
+{
     ArrayList<ItemNoticia> noticias;
-    Context contexto;
     String DIRECTORIO = "/storage/emulated/0/Imagenes/imagenes";
 
-    public AdapterListaNoticias(Context contexto, ArrayList<ItemNoticia> noticias){
+    public AdapterListaNoticias(ArrayList<ItemNoticia> noticias)
+    {
         this.noticias = noticias;
-        this.contexto = contexto;
     }
 
+    //Creamos nuevas vistas.
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_noticia,viewGroup,false);
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+    {
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_noticia,
+                viewGroup,false);
         ViewHolder holder = new ViewHolder(v);
         return holder;
     }
 
+    //Vaciamos las información.
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         viewHolder.textViewTitulo.setText(noticias.get(i).getTitulo());
@@ -44,11 +47,13 @@ public class AdapterListaNoticias extends RecyclerView.Adapter<AdapterListaNotic
         viewHolder.imageViewImagenNoticia.setImageBitmap(bitmap);
     }
 
+    //Número de items del arreglo.
     @Override
     public int getItemCount() {
         return noticias.size();
     }
 
+    //Clase contenedor de las vistas.
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView textViewTitulo;
         TextView textViewFecha;
