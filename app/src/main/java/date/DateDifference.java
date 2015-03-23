@@ -3,11 +3,8 @@ package date;
 /**
  * Created by natafrank on 2/27/15.
  */
-public class DateDifference extends Thread
+public class DateDifference
 {
-    //Constants.
-    private static final int SLEEP_SECOND = 1000;
-
     //Fields.
     private int second;
     private int minute;
@@ -23,6 +20,12 @@ public class DateDifference extends Thread
         this.minute = minute;
         this.hour   = hour;
         this.day    = day;
+        completedTime = false;
+    }
+
+    public DateDifference(boolean completedTime)
+    {
+        this.completedTime = completedTime;
     }
 
     public void substractSecond()
@@ -63,21 +66,33 @@ public class DateDifference extends Thread
         }
     }
 
-    @Override
-    public void run()
+    public static DateDifference getDateDifferenceCompletedTime()
     {
-        while(!completedTime)
-        {
-            substractSecond();
+        return new DateDifference(true);
+    }
 
-            try
-            {
-                sleep(SLEEP_SECOND);
-            }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-        }
+    public int getDay()
+    {
+        return day;
+    }
+
+    public int getHour()
+    {
+        return hour;
+    }
+
+    public int getMinute()
+    {
+        return minute;
+    }
+
+    public int getSecond()
+    {
+        return second;
+    }
+
+    public boolean isCompletedTime()
+    {
+        return completedTime;
     }
 }

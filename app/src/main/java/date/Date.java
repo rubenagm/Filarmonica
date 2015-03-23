@@ -152,12 +152,33 @@ public class Date
         {
             throw new IllegalArgumentException(ARGUMENT_EXCEPTION);
         }
+        else
+        {
+            this.month  = month;
+            this.day    = day;
+            this.hour   = hour;
+            this.minute = minute;
+            this.second = second;
+        }
     }
 
     public boolean isLeapYear()
     {
         if( ((year % 400) == 0)
                 || ( ((year % 4) == 0) && ((year % 100) != 0) ))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static boolean isLeapYear(Time time)
+    {
+        if( ((time.year % 400) == 0)
+                || ( ((time.year % 4) == 0) && ((time.year % 100) != 0) ))
         {
             return true;
         }
@@ -187,6 +208,10 @@ public class Date
         //Set the fields of both dates.
         actualDate.set(second, minute, hour, day, month - 1, year);
         goalDate.set(date.second, date.minute, date.hour, date.day, date.month - 1, date.year);
+
+        //Set the yearDate.
+        setYearDay(actualDate);
+        setYearDay(goalDate);
 
         //Get the differences.
         //Day.
@@ -219,6 +244,14 @@ public class Date
         {
             minuteDifference--;
             secondDifference = 60 - (second - date.second);
+
+            //Trigger para indicar que un concierto ya ha comenzado.
+            if(dayDifference < 0 || hourDifference < 0 || minuteDifference < 0 ||
+                    secondDifference < 0)
+            {
+                //Retornamos concierto comenzado.
+                return new DateDifference(0, 0, 0, 0);
+            }
         }
         else
         {
@@ -226,5 +259,78 @@ public class Date
         }
 
         return new DateDifference(dayDifference, hourDifference, minuteDifference, secondDifference);
+    }
+
+    public void setYearDay(Time time)
+    {
+        int dias = -1;
+
+        switch(time.month)
+        {
+            //Restar uno a todos porque Time trabaja los meses en el formato (0 - 11).
+            case JANUARY - 1:
+            {
+                dias = time.monthDay;
+                break;
+            }
+            case FEBRAURY - 1:
+            {
+                dias = 31 + time.monthDay;
+                break;
+            }
+            case MARCH - 1:
+            {
+                dias = 59 + time.monthDay;
+                break;
+            }
+            case APRIL - 1:
+            {
+                dias = 90 + time.monthDay;
+                break;
+            }
+            case MAY - 1:
+            {
+                dias = 120 + time.monthDay;
+                break;
+            }
+            case JUNE - 1:
+            {
+                dias = 151 + time.monthDay;
+                break;
+            }
+            case JULY - 1:
+            {
+                dias = 181 + time.monthDay;
+                break;
+            }
+            case AUGUST - 1:
+            {
+                dias = 212 + time.monthDay;
+                break;
+            }
+            case SEPTEMBER - 1:
+            {
+                dias = 243 + time.monthDay;
+                break;
+            }
+            case OCTOBER - 1:
+            {
+                dias = 273 + time.monthDay;
+                break;
+            }
+            case NOVEMBER - 1:
+            {
+                dias = 304 + time.monthDay;
+                break;
+            }
+            case DECEMBER - 1:
+            {
+                dias = 334 + time.monthDay;
+                break;
+            }
+        }
+
+        //Colocamos los días.
+        time.yearDay = dias;
     }
 }
