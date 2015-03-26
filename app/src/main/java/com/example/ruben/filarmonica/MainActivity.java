@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
@@ -83,13 +84,29 @@ public class MainActivity extends Activity
         list_view_drawer.getLayoutParams().height = height;
 
         /******************************* ListView Drawer *****************************/
-        ConexionProximoConcierto json = new ConexionProximoConcierto();
-        json.execute("");
+
+        //Obtenemos el próximo concierto.
+        //Buscamos en la base de datos local, sino accedemos a la base de datos remota.
+        SharedPreferences sharedPreferences = getSharedPreferences("Filarmonica",
+            Context.MODE_PRIVATE);
+        String resultadoSharedPreferences = sharedPreferences.getString("DatosInsertados", "false");
+
+        if(!resultadoSharedPreferences.equals("false"))
+        {
+            ConexionLocalProximoConcierto conexionLocal = new ConexionLocalProximoConcierto();
+            conexionLocal.execute("");
+            Log.i("frank.frank", "Entró en la conexión local");
+        }
+        else
+        {
+            ConexionRemotaProximoConcierto json = new ConexionRemotaProximoConcierto();
+            json.execute("");
+        }
     }//OnCreate
 
     /***************************************** CONEXIONES *******************************************/
     //Clase para acceder al JSON.
-    private class ConexionProximoConcierto extends AsyncTask<String, Void, ArrayList<String>>
+    private class ConexionRemotaProximoConcierto extends AsyncTask<String, Void, ArrayList<String>>
     {
 
         //Etiquetas JSON.
@@ -227,12 +244,12 @@ public class MainActivity extends Activity
         }
 
         @Override
-        protected void onPostExecute(ArrayList<String> strings)
+        protected void onPostExecute(ArrayList<String> result)
         {
             progressDialog.dismiss();
             lblProximoConcierto.setVisibility(View.VISIBLE);
             lblDHMS.setVisibility(View.VISIBLE);
-            if(strings.get(0).equals("tocandoAhora"))
+            if(result.get(0).equals("tocandoAhora"))
             {
 
                 DateDifference countdownTimer = DateDifference.getDateDifferenceCompletedTime();
@@ -241,13 +258,58 @@ public class MainActivity extends Activity
             else
             {
                 //Mandamos la fecha y la hora al parser.
-                DateControl dateControl = new DateControl(strings);
+                DateControl dateControl = new DateControl(result);
                 DateDifference countdownTimer = dateControl.startCountdown();
                 iniciarReloj(countdownTimer);
             }
         }
     }
 
+    private class ConexionLocalProximoConcierto extends AsyncTask<String, Void, ArrayList<String>>
+    {
+
+        @Override
+        protected void onPreExecute()
+        {
+            super.onPreExecute();
+            lblProximoConcierto.setVisibility(View.INVISIBLE);
+            lblDHMS.setVisibility(View.INVISIBLE);
+            progressDialog = new ProgressDialog(contexto, R.style.MyTheme);
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(false);
+
+            progressDialog.show();
+        }
+
+        @Override
+        protected ArrayList<String> doInBackground(String... params)
+        {
+            ConexionBD db = new ConexionBD(contexto);
+            return db.obtenerFechaProximoEvento();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> result)
+        {
+            super.onPostExecute(result);
+            //Si hubo error al obtener los datos de manera local, los obtenemos de manera remota.
+            if(result == null)
+            {
+                ConexionRemotaProximoConcierto json = new ConexionRemotaProximoConcierto();
+                json.execute("");
+            }
+            else
+            {
+                progressDialog.dismiss();
+                lblProximoConcierto.setVisibility(View.VISIBLE);
+                lblDHMS.setVisibility(View.VISIBLE);
+                //Mandamos la fecha y la hora al parser.
+                DateControl dateControl = new DateControl(result);
+                DateDifference countdownTimer = dateControl.startCountdown();
+                iniciarReloj(countdownTimer);
+            }
+        }
+    }
 
     /*************************************** CONEXIONES *****************************************/
 
@@ -304,8 +366,8 @@ public class MainActivity extends Activity
                 {
                     e.printStackTrace();
                 }
-                ConexionProximoConcierto json = new ConexionProximoConcierto();
-                json.execute("");
+                ConexionLocalProximoConcierto conexionLocal = new ConexionLocalProximoConcierto();
+                conexionLocal.execute("");
             }
         });
 

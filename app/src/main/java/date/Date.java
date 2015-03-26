@@ -330,6 +330,12 @@ public class Date
             }
         }
 
+        //Trigger para sumar el 29 de febrero en caso de ser año bisiesto.
+        if(isLeapYear() && time.month > FEBRAURY)
+        {
+            dias += 1;
+        }
+
         //Colocamos los días.
         time.yearDay = dias;
     }

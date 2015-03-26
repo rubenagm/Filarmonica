@@ -5,10 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -27,7 +25,6 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -83,10 +80,6 @@ public class Streaming extends ActionBarActivity
 
     //ListView del drawer.
     private ListView list_view_drawer;
-
-    //Arreglos.
-    private ArrayList<ItemDrawer> array_item_drawer;
-    private TypedArray array_iconos;
 
     /******* Variables del reproductor de video. *******
      * */
@@ -158,59 +151,15 @@ public class Streaming extends ActionBarActivity
 
         /******************************* ListView Drawer *****************************/
         list_view_drawer = (ListView) findViewById(R.id.drawer_listView);
-        //Obtenemos las imágenes.
-        array_iconos = getResources().obtainTypedArray(R.array.iconos_drawer);
-
-        //Creamos el arreglo de ItemDrawer.
-        array_item_drawer = new ArrayList<ItemDrawer>();
+        list_view_drawer.setAdapter(new ListViewAdapter(this));
 
         //Ajustar el ListView al ancho de la pantalla
         DisplayMetrics display_metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
         int width = display_metrics.widthPixels;
         list_view_drawer.getLayoutParams().width = width;
-
-        //Agregamos las imágenes al arreglo de Item.
-        for(int i = 0; i < 3; i++)
-        {
-            if((i % 2) == 0 && i > 0)
-            {
-                array_item_drawer.add(new ItemDrawer(array_iconos.getResourceId(i, -1), array_iconos.getResourceId(i+1, -1)));
-            }
-            else
-            {
-                array_item_drawer.add(new ItemDrawer(array_iconos.getResourceId(i, -1)));
-            }
-        }
-
-        //Colocamos el adaptador al ListView.
-        list_view_drawer.setAdapter(new ListAdapterDrawer(this, array_item_drawer));
-
-        //Colocamos el click listener al ListView.
-        list_view_drawer.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                switch(position)
-                {
-                    case 0:
-                    {
-                        Intent i = new Intent(contexto, ListaEventos.class);
-                        startActivity(i);
-                        break;
-                    }
-                    case 1:
-                    {
-                        Intent i = new Intent(contexto, Noticias.class);
-                        startActivity(i);
-                        break;
-                    }
-                }
-            }
-
-        });
+        int height = display_metrics.heightPixels;
+        list_view_drawer.getLayoutParams().height = height;
         /******************************* ListView Drawer *****************************/
 
         //Cargamos los videos del canal.
