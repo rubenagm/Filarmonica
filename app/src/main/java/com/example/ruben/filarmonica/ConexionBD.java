@@ -48,10 +48,13 @@ public class ConexionBD extends SQLiteOpenHelper{
 	private static String SQL_DELETE_DATOS_EVENTOS = "DELETE FROM evento";
 	private static String SQL_DELETE_DATOS_FECHAS = "DELETE FROM fecha";
 	private static String SQL_SELECT_FECHA_EVENTOS = "SELECT * FROM fecha WHERE evento_id = ";
+    private static final String SQL_PROXIMO_EVENTO = "SELECT * FROM evento as e JOIN fecha as f ON"
+            + " e.id=f.evento_id WHERE f.fecha >= date('now') ORDER BY f.fecha ASC LIMIT 1";
 
     // Base de datos de Instagram
 
-    private final String SQL_CREATE_TABLE_INSTAGRAM = "CREATE TABLE Instagram (ImagenNd TEXT UNIQUE,ImagenHd TEXT UNIQUE,Texto TEXT,Link TEXT)";
+    private final String SQL_CREATE_TABLE_INSTAGRAM = "CREATE TABLE Instagram (ImagenNd TEXT UNIQUE," +
+            "ImagenHd TEXT UNIQUE,Texto TEXT,Link TEXT)";
 	private final String SQL_SELECT_INSTAGRAM = "SELECT * FROM Instagram";
 
     public ConexionBD(Context contexto){
@@ -363,7 +366,9 @@ public class ConexionBD extends SQLiteOpenHelper{
                 link3 = res.getString(res.getColumnIndex("Link"));
                 res.moveToNext();
             }
-            imagenes.add(new ItemImagenInstagram(urlImagenHd1,urlImagenHd2,urlImagenHd3,urlImagenNd1,urlImagenNd2,urlImagenNd3,textoImagen1,textoImagen2,textoImagen3,link1,link2,link3));
+            imagenes.add(new ItemImagenInstagram(urlImagenHd1,urlImagenHd2,urlImagenHd3,
+                    urlImagenNd1,urlImagenNd2,urlImagenNd3,textoImagen1,textoImagen2,textoImagen3,
+                    link1,link2,link3));
 
         }
         return imagenes;
@@ -438,5 +443,30 @@ public class ConexionBD extends SQLiteOpenHelper{
             contadorEvento ++;
         }
         return evento;
+    }
+
+    public ArrayList<String> obtenerFechaProximoEvento()
+    {
+        final int INDEX_COLUMNA_FECHA  = 10;
+        final int INDEX_COLUMNA_HORA   = 11;
+        final int INDEX_COLUMNA_MINUTO = 12;
+
+        ArrayList<String> fecha = new ArrayList<>();
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(SQL_PROXIMO_EVENTO, null);
+        cursor.moveToFirst();
+
+        fecha.add(cursor.getString(INDEX_COLUMNA_FECHA));
+        fecha.add(cursor.getString(INDEX_COLUMNA_HORA) + ":" + cursor.getString(INDEX_COLUMNA_MINUTO));
+
+        if(fecha.isEmpty())
+        {
+            return null;
+        }
+        else
+        {
+            return fecha;
+        }
     }
 }
