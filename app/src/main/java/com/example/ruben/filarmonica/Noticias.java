@@ -47,7 +47,7 @@ public class Noticias extends ActionBarActivity
     private ListView list_view_drawer;
 
     //Arreglos.
-    private static ArrayList<ItemNoticia> noticiasArray;
+    private static ArrayList<ItemTwitter> twitterArray;
     private static ArrayList<ItemFacebook> facebookArray;
     private static  ArrayList<ItemImagenInstagram> imagenesInstagram;
 
@@ -91,9 +91,20 @@ public class Noticias extends ActionBarActivity
         //Colocamos el ViewPager a las Tabs.
         mTabs.setViewPager(mPager);
 
-        //Obtenemos los datos de noticias la base de datos.
-        ConexionBD db = new ConexionBD(contexto);
-        noticiasArray = db.obtenerNoticias();
+
+        /******** Parte de twitter ******/
+        GetDataTwitter twitterThread = new GetDataTwitter();
+        twitterThread.execute();
+
+        try {
+            twitterArray = twitterThread.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        /////////****////////////////
 
         //Obtenemos los datos de facebook.
         GetDataFacebook facebookThread = new GetDataFacebook();
@@ -221,7 +232,7 @@ public class Noticias extends ActionBarActivity
             RecyclerView mRecyclerView = (RecyclerView) layout.findViewById(R.id.lista_cards);
 
             //Configuramos el recycler view.
-            RecyclerView.Adapter adapter = new AdapterListaNoticias(noticiasArray);
+            RecyclerView.Adapter adapter = new AdapterListaTwitter(twitterArray);
             mRecyclerView.setAdapter(adapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(contexto));
             mRecyclerView.setItemAnimator( new DefaultItemAnimator());

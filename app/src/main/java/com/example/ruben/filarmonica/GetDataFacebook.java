@@ -47,7 +47,7 @@ public class GetDataFacebook extends AsyncTask<Void,Void,ArrayList<ItemFacebook>
                     contenido = jsonArray.getJSONObject(x).getString("name");
                     urlImagen = jsonArray.getJSONObject(x).getString("source");
                     FtpDownload ftp = new FtpDownload();
-                    ftp.descargarArchivo(3,urlImagen);
+                    //ftp.descargarArchivo(3,urlImagen);
                     urlImagen= nombreImagen(urlImagen);
                     publicaciones.add(new ItemFacebook(contenido,urlImagen+"NotFacebook.png"));
                 }

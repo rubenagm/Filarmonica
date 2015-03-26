@@ -36,7 +36,7 @@ public class DescargarImagen extends AsyncTask<String, Void, Boolean>
     private final static String EXTENSION_FACEBOOK = "notFacebook";
     private final static String PREFIJO_IMAGENES   = "imagenes";
 
-    private final static int CALIDAD_DE_COMPRESION = 85;
+    private final static int CALIDAD_DE_COMPRESION = 10;
 
     /*
      * TIPOS
