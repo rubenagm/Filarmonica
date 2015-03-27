@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.view.Menu;
@@ -28,7 +29,8 @@ public class DetalleEvento extends ActionBarActivity {
     TextView textViewLocalidades;
     TextView textViewCostos;
     TextView textViewDescripcion;
-    String DIRECTORIO = "/storage/emulated/0/Imagenes/imagenes";
+    String DIRECTORIO = Environment.getExternalStorageDirectory().getAbsolutePath() +
+            "/Imagenes/Eventos/";
     int idEvento;
 
     //Variables del Drawer.

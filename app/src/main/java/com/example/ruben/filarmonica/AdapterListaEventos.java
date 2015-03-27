@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.File;
@@ -30,7 +30,8 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
     //Clase View Holder
     Context contexto;
     ArrayList<ItemEvento> mEvento;
-    String DIRECTORIO = "/storage/emulated/0/Imagenes/imagenes";
+    String DIRECTORIO = Environment.getExternalStorageDirectory().getAbsolutePath() +
+            "/Imagenes/Eventos/";
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
         public TextView mTextView;
@@ -39,8 +40,7 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
         public TextView textViewMasDetalles;
         public ImageView imageViewImagenEvento;
         public TextView textViewCompartir;
-        public ProgressBar progressCargandoImagen;
-        public LinearLayout linearLayoutEventos;
+        public RelativeLayout progressCargandoImagen;
         public ViewHolder(View v){
             super(v);
             textViewCompartir      = (TextView) v.findViewById(R.id.texto_compartir);
@@ -49,8 +49,7 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
             textViewProgramaEvento = (TextView) v.findViewById(R.id.programa_evento);
             textViewFechasEvento   = (TextView) v.findViewById(R.id.fechas_evento);
             imageViewImagenEvento  = (ImageView) v.findViewById(R.id.imagen_evento);
-            progressCargandoImagen = (ProgressBar) v.findViewById(R.id.progress_cargando_imagen);
-            linearLayoutEventos    = (LinearLayout) v.findViewById(R.id.linear_layout_eventos);
+            progressCargandoImagen = (RelativeLayout) v.findViewById(R.id.relative_progress);
         }
     }
     //Termina clase ViewHolder
@@ -90,8 +89,7 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
         if(!archivoImagen.exists())
         {
             DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_EVENTO,
-                    holder.progressCargandoImagen, holder.imageViewImagenEvento,
-                    holder.linearLayoutEventos);
+                    holder.progressCargandoImagen, holder.imageViewImagenEvento);
             descargarImagen.execute(Integer.toString(mEvento.get(position).getId()));
         }
         else

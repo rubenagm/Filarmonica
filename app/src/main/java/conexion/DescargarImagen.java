@@ -6,8 +6,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,57 +24,56 @@ public class DescargarImagen extends AsyncTask<String, Void, Boolean>
 {
     //URLS.
     private final static String URL_EVENTO  = "http://www.ofj.com.mx/img/uploads/events/655x308/";
-    private final static String URL_NOTICIA = "http://ofj.com.mx/img/uploads/noticias/";
 
     //Ruta donde se guardarán todas la imagenes.
     private final static String RUTA_IMAGENES = Environment.getExternalStorageDirectory()
             .getAbsolutePath() + "/Imagenes/";
 
     //Extensiones de control para las imágenes.
-    private final static String EXTENSION_NOTICIAS = "Not";
-    private final static String EXTENSION_FACEBOOK = "notFacebook";
-    private final static String PREFIJO_IMAGENES   = "imagenes";
+    private final static String DIRECTORIO_EVENTOS   = "Eventos/";
+    private final static String DIRECTORIO_TWITTER   = "Twitter/";
+    private final static String DIRECTORIO_FACEBOOK  = "Facebook/";
+    private final static String DIRECTORIO_INSTAGRAM = "Instagram/";
 
     private final static int CALIDAD_DE_COMPRESION = 10;
 
     /*
      * TIPOS
-     * 1.- Evento
-     * 2.- Noticias
+     * 1.- Eventos
+     * 2.- Twitter
      * 3.- Facebook
+     * 4.- Instagram
      */
-    private final static int TIPO_EVENTO   = 1;
-    private final static int TIPO_NOTICIA  = 2;
-    private final static int TIPO_FACEBOOK = 3;
+    private final static int TIPO_EVENTO    = 1;
+    private final static int TIPO_TWITTER   = 2;
+    private final static int TIPO_FACEBOOK  = 3;
+    private final static int TIPO_INSTAGRAM = 4;
 
     private int tipo;
-    private ProgressBar progressBar;
+    private RelativeLayout progressBar;
     private ImageView imagen;
-    private String accesoImagen;
-    private LinearLayout linearLayout;
+    private String archivo;
 
-    public DescargarImagen(int tipo, ProgressBar progressBar, ImageView imagen,
-                           LinearLayout linearLayout)
+    public DescargarImagen(int tipo, RelativeLayout progressBar, ImageView imagen)
     {
         this.tipo         = tipo;
         this.progressBar  = progressBar;
         this.imagen       = imagen;
-        this.linearLayout = linearLayout;
     }
 
     @Override
     protected void onPreExecute()
     {
         super.onPreExecute();
+        imagen.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
-        linearLayout.setVisibility(View.GONE);
     }
 
     @Override
     protected Boolean doInBackground(String... params)
     {
         String urlDescarga = "";//url a formar para realizar petición FTP.
-        String archivo = params[0];//Obtenemos el archivo del parámetro.
+        archivo = params[0];//Obtenemos el archivo del parámetro.
 
         //Creamos la url
         switch(tipo)
@@ -83,18 +81,22 @@ public class DescargarImagen extends AsyncTask<String, Void, Boolean>
             case TIPO_EVENTO:
             {
                 urlDescarga = URL_EVENTO + archivo + ".jpg";
-                archivo = archivo + ".png";
+                archivo = DIRECTORIO_EVENTOS + archivo + ".png";
                 break;
             }
-            case TIPO_NOTICIA:
+            case TIPO_TWITTER:
             {
-                urlDescarga = URL_NOTICIA + archivo + ".jpg";
-                archivo = archivo + EXTENSION_NOTICIAS + ".png";
+                archivo = DIRECTORIO_TWITTER + nombreImagen(urlDescarga) + ".png";
                 break;
             }
             case TIPO_FACEBOOK:
             {
-                archivo = nombreImagen(urlDescarga) + EXTENSION_FACEBOOK + ".png";
+                archivo = DIRECTORIO_FACEBOOK + nombreImagen(urlDescarga) + ".png";
+                break;
+            }
+            case TIPO_INSTAGRAM:
+            {
+                archivo = DIRECTORIO_INSTAGRAM + nombreImagen(urlDescarga) + ".png";
                 break;
             }
             default:
@@ -114,16 +116,15 @@ public class DescargarImagen extends AsyncTask<String, Void, Boolean>
             InputStream input = connection.getInputStream();
             Bitmap bitmap = BitmapFactory.decodeStream(input);
 
-            //Verificamos el directorio donde se guardarán als imágenes.
-            File directorio = new File(RUTA_IMAGENES);
+            //Verificamos el directorio donde se guardarán las imágenes.
+            File directorio = new File(RUTA_IMAGENES + getDirectorio());
             if(!directorio.exists())
             {
                 directorio.mkdirs();
             }
 
             //Guardamos la imagen.
-            accesoImagen = PREFIJO_IMAGENES + archivo;
-            File archivoGuardar = new File(directorio, accesoImagen);
+            File archivoGuardar = new File(RUTA_IMAGENES + archivo);
             FileOutputStream outputStream = new FileOutputStream(archivoGuardar);
             bitmap.compress(Bitmap.CompressFormat.PNG, CALIDAD_DE_COMPRESION, outputStream);
 
@@ -153,10 +154,10 @@ public class DescargarImagen extends AsyncTask<String, Void, Boolean>
         //Mostramos la imagen.
         if(Boolean.valueOf(resultado))
         {
-            progressBar.setVisibility(View.GONE);
-            Bitmap bitmap = BitmapFactory.decodeFile(RUTA_IMAGENES + accesoImagen);
+            Bitmap bitmap = BitmapFactory.decodeFile(RUTA_IMAGENES + archivo);
             imagen.setImageBitmap(bitmap);
-            linearLayout.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+            imagen.setVisibility(View.VISIBLE);
         }
         else
         {
@@ -165,7 +166,36 @@ public class DescargarImagen extends AsyncTask<String, Void, Boolean>
         }
     }
 
-    //Función para obtener el nombre de la imagen de Facebook.
+    //Función que regresa el directorio donde se guardará la imágen.
+    public String getDirectorio()
+    {
+        switch(tipo)
+        {
+            case TIPO_EVENTO:
+            {
+                return DIRECTORIO_EVENTOS;
+            }
+            case TIPO_TWITTER:
+            {
+                return DIRECTORIO_TWITTER;
+            }
+            case TIPO_FACEBOOK:
+            {
+                return DIRECTORIO_FACEBOOK;
+            }
+            case TIPO_INSTAGRAM:
+            {
+                return DIRECTORIO_INSTAGRAM;
+            }
+            default:
+            {
+                //Error si caemos aquí.
+                return null;
+            }
+        }
+    }
+
+    //Función para obtener el nombre de la imagen de Facebook, Twitter e Instagram.
     public String nombreImagen (String urlImagen)
     {
         String id="";

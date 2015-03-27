@@ -17,15 +17,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
             <!--ProgressBar mientras se descarga la imagen-->
-            <ProgressBar
-                android:id="@+id/progress_cargando_imagen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:indeterminate="true"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                style="?android:attr/progressBarStyleLarge"/>
+
             <LinearLayout
                 android:id="@+id/linear_layout_eventos"
                 android:orientation="vertical"
@@ -39,6 +31,21 @@
                     android:scaleType="centerCrop"
                     app:sriv_left_top_corner_radius="5dp"
                     app:sriv_right_top_corner_radius="5dp"/>
+                <RelativeLayout
+                    android:background="#E6E6E6"
+                    android:id="@+id/relative_progress"
+                    android:layout_width="fill_parent"
+                    android:layout_height="200dp"
+                    android:visibility="gone">
+                    <ProgressBar
+                        android:id="@+id/progress_cargando_imagen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        style="?android:attr/progressBarStyleLarge"/>
+                </RelativeLayout>
 
                 <TextView
 
