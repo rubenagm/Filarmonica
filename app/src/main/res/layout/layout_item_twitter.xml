@@ -4,15 +4,6 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     >
-    <ProgressBar
-        android:id="@+id/progress_cargando_imagen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:indeterminate="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        style="?android:attr/progressBarStyleLarge"/>
         <!-- imagen de perfil-->
         <LinearLayout
             android:layout_marginTop="10dp"
@@ -79,6 +70,24 @@
                 android:id="@+id/lista_twitter_imagen_tweet"
                 android:layout_width="fill_parent"
                 android:layout_height="250dp" />
+            <RelativeLayout
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="12dp"
+                android:background="#E6E6E6"
+                android:id="@+id/relative_progress"
+                android:layout_width="fill_parent"
+                android:layout_height="250dp"
+                android:visibility="gone">
+                <ProgressBar
+                    android:id="@+id/progress_cargando_imagen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    style="?android:attr/progressBarStyleLarge"/>
+            </RelativeLayout>
 
             <!--fecha y ver mas -->
             <RelativeLayout
