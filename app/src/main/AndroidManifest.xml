@@ -42,7 +42,11 @@
         </activity>
         <activity
             android:name=".Noticias"
-            android:label="@string/title_activity_noticias" >
+            android:label="@string/title_activity_noticias">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Facebook"

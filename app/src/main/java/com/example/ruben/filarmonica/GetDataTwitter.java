@@ -65,7 +65,7 @@ public class GetDataTwitter extends AsyncTask<Void,Void,ArrayList<ItemTwitter>> 
                         //Se obtienen todos los hashtags
                         for(int y=0;y<hashTagsCount;y++){
                             String hashtag = json.getJSONObject(x).getJSONObject("entities").getJSONArray("hashtags").getJSONObject(y).getString("text");
-                            tweets.get(x).addHashTags(hashtag); //se agrega al objeto
+                            tweets.get(x).addHashTags("#"+hashtag); //se agrega al objeto
                         }
                     }
                 }
@@ -73,10 +73,10 @@ public class GetDataTwitter extends AsyncTask<Void,Void,ArrayList<ItemTwitter>> 
                 if(!json.getJSONObject(x).getJSONObject("entities").isNull("user_mentions")){
                     int usersCount = json.getJSONObject(x).getJSONObject("entities").getJSONArray("user_mentions").length();
                     if(usersCount>0){
-                        //Se obtienen todos los hashtags
+                        //Se obtienen todos los usuarios
                         for(int y=0;y<usersCount;y++){
                             String user = json.getJSONObject(x).getJSONObject("entities").getJSONArray("user_mentions").getJSONObject(y).getString("screen_name");
-                            tweets.get(x).addUsers(user); //se agrega al objeto
+                            tweets.get(x).addUsers("@"+user); //se agrega al objeto
                         }
                     }
                 }
