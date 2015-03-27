@@ -1,7 +1,5 @@
 package com.example.ruben.filarmonica;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,8 +51,8 @@ public class AdapterListaFacebook extends RecyclerView.Adapter<AdapterListaFaceb
     public void onBindViewHolder(ViewHolder viewHolder, int i)
     {
             viewHolder.textViewContenido.setText(publicaciones.get(i).getContenido());
-            Bitmap bitmap = BitmapFactory.decodeFile(DIRECTORIO+publicaciones.get(i).getUrlImagen());
-            viewHolder.imageViewImagenFacebook.setImageBitmap(bitmap);
+            //Bitmap bitmap = BitmapFactory.decodeFile(DIRECTORIO+publicaciones.get(i).getUrlImagen());
+            //viewHolder.imageViewImagenFacebook.setImageBitmap(bitmap);
     }
 
     @Override

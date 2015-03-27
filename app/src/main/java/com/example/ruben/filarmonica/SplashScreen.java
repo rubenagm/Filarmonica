@@ -68,7 +68,7 @@ public class SplashScreen extends ActionBarActivity {
         videoView.setVideoURI(video);
         videoView.start();
 
-        timer.schedule(task,TIEMPO_DURACION_VIDEO);
+        timer.schedule(task,1);
     }
 
 }

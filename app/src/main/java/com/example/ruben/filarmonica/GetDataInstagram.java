@@ -59,8 +59,8 @@ public class GetDataInstagram extends AsyncTask<Void,Void,ArrayList<ItemImagenIn
                 texto[contador] = jsonArray.getJSONObject(x).getJSONObject("caption").getString("text");
                 link[contador] = jsonArray.getJSONObject(x).getString("link");
 
-                ftp.descargarArchivo(4,urlImagenHd[contador]);
-                ftp.descargarArchivo(4,urlImagenNd[contador]);
+                //ftp.descargarArchivo(4,urlImagenHd[contador]);
+                //ftp.descargarArchivo(4,urlImagenNd[contador]);
                 db.insertarImagenInstagram(nombreImagen(urlImagenHd[contador]),nombreImagen(urlImagenNd[contador]),texto[contador],link[contador]);
                 if(contador ==2){
                    // imagenes.add(new ItemImagenInstagram(urlImagenHd,urlImagenNd,texto));

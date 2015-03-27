@@ -2,19 +2,18 @@ package com.example.ruben.filarmonica;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 import conexion.DescargarImagen;
 
@@ -23,11 +22,11 @@ import conexion.DescargarImagen;
  */
 public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitter.ViewHolder>
 {
-    private final static int IMAGEN_TIPO_NOTICIA = 2;
-    private final static String EXTENSION_NOTICIAS = "Not";
+    private final static int IMAGEN_TIPO_TWITTER   = 2;
 
     ArrayList<ItemTwitter> tweets;
-    String DIRECTORIO = "/storage/emulated/0/Imagenes/imagenes";
+    String DIRECTORIO = Environment.getExternalStorageDirectory().getAbsolutePath() +
+            "/Imagenes/Twitter/";
     final String COLOR_INICIO = "<font color='#AD731C'>";
     final String COLOR_FIN = "</font>";
 
@@ -63,6 +62,23 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
         if(imagen.equals("")){
            viewHolder.imageViewImagenTwitter.setVisibility(View.GONE);
         }
+        else
+        {
+            //Cargamos la imagen. Comprobamos si existe, sino la descargamos.
+            String rutaAccesoImagen = DIRECTORIO + DescargarImagen.nombreImagenUrl(imagen) + ".png";
+            File archivoImagen = new File(rutaAccesoImagen);
+            if(!archivoImagen.exists())
+            {
+                DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_TWITTER,
+                        viewHolder.progressCargandoImagen, viewHolder.imageViewImagenTwitter);
+                descargarImagen.execute(imagen);
+            }
+            else
+            {
+                Bitmap bitmap = BitmapFactory.decodeFile(rutaAccesoImagen);
+                viewHolder.imageViewImagenTwitter.setImageBitmap(bitmap);
+            }
+        }
 
         contenido = tweets.get(i).getText();
         //Pintar links
@@ -79,23 +95,6 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
         }
 
         viewHolder.textViewContenido.setText(Html.fromHtml(contenido));
-
-        /*
-        //Cargamos la imagen. Comprobamos si existe, sino la descargamos.
-        String rutaAccesoImagen = DIRECTORIO + tweets.get(i).getId() + EXTENSION_NOTICIAS + ".png";
-        File archivoImagen = new File(rutaAccesoImagen);
-        if(!archivoImagen.exists())
-        {
-            DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_NOTICIA,
-                    viewHolder.progressCargandoImagen, viewHolder.imageViewImagenNoticia,
-                    viewHolder.linearLayoutNoticias);
-            descargarImagen.execute(Integer.toString(noticias.get(i).getId()));
-        }
-        else
-        {
-            Bitmap bitmap = BitmapFactory.decodeFile(DIRECTORIO+noticias.get(i).getId()+"Not.png");
-            viewHolder.imageViewImagenNoticia.setImageBitmap(bitmap);
-        }*/
     }
 
     //Número de items del arreglo.
@@ -109,14 +108,13 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
         TextView textViewContenido;
         ImageView imageViewImagenTwitter;
         TextView textViewVerEnTwitter;
-        ProgressBar progressCargandoImagen;
-        LinearLayout linearLayoutTwitter;
+        RelativeLayout progressCargandoImagen;
         public ViewHolder(View v){
             super(v);
             textViewVerEnTwitter = (TextView) v.findViewById(R.id.lista_twitter_ver_en_twitter);
             textViewContenido = (TextView) v.findViewById(R.id.lista_twitter_contenido);
             imageViewImagenTwitter = (ImageView) v.findViewById(R.id.lista_twitter_imagen_tweet);
-            progressCargandoImagen = (ProgressBar) v.findViewById(R.id.progress_cargando_imagen);
+            progressCargandoImagen = (RelativeLayout) v.findViewById(R.id.relative_progress);
             //linearLayoutTwitter = (LinearLayout) v.findViewById(R.id.linear_layout_twitter);
         }
 

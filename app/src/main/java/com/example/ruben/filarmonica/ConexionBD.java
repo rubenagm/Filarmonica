@@ -49,7 +49,7 @@ public class ConexionBD extends SQLiteOpenHelper{
 	private static String SQL_DELETE_DATOS_FECHAS = "DELETE FROM fecha";
 	private static String SQL_SELECT_FECHA_EVENTOS = "SELECT * FROM fecha WHERE evento_id = ";
     private static final String SQL_PROXIMO_EVENTO = "SELECT * FROM evento as e JOIN fecha as f ON"
-            + " e.id=f.evento_id WHERE f.fecha >= date('now') ORDER BY f.fecha ASC LIMIT 1";
+            + " e.id=f.evento_id WHERE f.fecha >= date('now' , '-1 days') ORDER BY f.fecha ASC LIMIT 2";
 
     // Base de datos de Instagram
 
@@ -456,7 +456,6 @@ public class ConexionBD extends SQLiteOpenHelper{
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(SQL_PROXIMO_EVENTO, null);
         cursor.moveToFirst();
-
         fecha.add(cursor.getString(INDEX_COLUMNA_FECHA));
         fecha.add(cursor.getString(INDEX_COLUMNA_HORA) + ":" + cursor.getString(INDEX_COLUMNA_MINUTO));
 

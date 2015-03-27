@@ -72,8 +72,8 @@ public class DescargarImagen extends AsyncTask<String, Void, Boolean>
     @Override
     protected Boolean doInBackground(String... params)
     {
-        String urlDescarga = "";//url a formar para realizar petición FTP.
-        archivo = params[0];//Obtenemos el archivo del parámetro.
+        String urlDescarga = params[0];//url a formar para realizar petición FTP.
+        archivo = urlDescarga;//Obtenemos el archivo del parámetro.
 
         //Creamos la url
         switch(tipo)
@@ -197,6 +197,20 @@ public class DescargarImagen extends AsyncTask<String, Void, Boolean>
 
     //Función para obtener el nombre de la imagen de Facebook, Twitter e Instagram.
     public String nombreImagen (String urlImagen)
+    {
+        String id="";
+        StringTokenizer token = new StringTokenizer(urlImagen,"/");
+        while(token.hasMoreTokens())
+        {
+            id = token.nextToken();
+        }
+        StringTokenizer token2 = new StringTokenizer(id,".");
+
+        return token2.nextToken();
+    }
+
+    //Función para obtener el nombre de la imagen de Facebook, Twitter e Instagram.
+    public static String nombreImagenUrl (String urlImagen)
     {
         String id="";
         StringTokenizer token = new StringTokenizer(urlImagen,"/");
