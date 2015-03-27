@@ -65,7 +65,7 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
         }
 
         contenido = tweets.get(i).getText();
-        //Pintar hashtags
+        //Pintar links
         for(int x = 0; x<tweets.get(i).getLinks().size();x++){
             contenido = pintarPalabras(contenido,tweets.get(i).getLinks().get(x));
         }
@@ -117,13 +117,16 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
             textViewContenido = (TextView) v.findViewById(R.id.lista_twitter_contenido);
             imageViewImagenTwitter = (ImageView) v.findViewById(R.id.lista_twitter_imagen_tweet);
             progressCargandoImagen = (ProgressBar) v.findViewById(R.id.progress_cargando_imagen);
-            linearLayoutTwitter = (LinearLayout) v.findViewById(R.id.linear_layout_twitter);
+            //linearLayoutTwitter = (LinearLayout) v.findViewById(R.id.linear_layout_twitter);
         }
 
     }
 
     //Funciòn que pinta los hashtags
+
     public String pintarPalabras(String original,String palabraPintar){
+
+
         //Se obtiene la posicion donde comienza la palabra a pintar
         int inicio = original.indexOf(palabraPintar);
 
