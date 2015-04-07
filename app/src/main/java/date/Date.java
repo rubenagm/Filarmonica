@@ -13,7 +13,7 @@ public class Date
     private static final int MARCH     = 3;
     private static final int APRIL     = 4;
     private static final int MAY       = 5;
-    private static final int JUNE	   = 6;
+    private static final int JUNE	      = 6;
     private static final int JULY      = 7;
     private static final int AUGUST    = 8;
     private static final int SEPTEMBER = 9;

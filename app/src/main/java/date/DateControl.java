@@ -82,7 +82,7 @@ public class DateControl
         Time now = new Time();
         now.setToNow();
         Date actualDate = new Date(now.year, now.month + 1, now.monthDay, now.hour, now.minute,
-                now.second);
+               now.second);
 
         //Create next concert's date.
         Date goalDate = new Date(dateYear, dateMonth, dateDay, hourHour, hourMinute, 0);

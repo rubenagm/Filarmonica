@@ -2,7 +2,8 @@ package com.example.ruben.filarmonica;
 
 import java.util.ArrayList;
 
-public class ItemEvento {
+public class ItemEvento  implements Comparable<ItemEvento>
+{
 	int id;
 	String programa;
 	String programa_en;
@@ -12,6 +13,7 @@ public class ItemEvento {
 	String descripcion_en;
 	String estado;
 	int temporada_id;
+    boolean evento_culminado;
 	ArrayList<String> fechas = new ArrayList<String>();
 	ArrayList<String> localidades = new ArrayList<String>();
 	ArrayList<String> costos = new ArrayList<String>();
@@ -25,8 +27,17 @@ public class ItemEvento {
 		this.descripcion_en = descripcion;
 		this.estado = estado;
 		this.temporada_id = temporada_id;
+        this.evento_culminado = false;
 	}
 
+
+    //Método para comparar las fechas de los eventos y así poder ordenarlos.
+    @Override
+    public int compareTo(ItemEvento otroEvento)
+    {
+        //Comparamos la primera fecha del evento contra la primera fecha del otro evento.
+        return otroEvento.getFechas().get(0).compareTo(this.getFechas().get(0));
+    }
 
     public void addCosto(String costo){  costos.add(costo); }
 	public int getId (){
@@ -75,4 +86,12 @@ public class ItemEvento {
 	public int getCountLocalidades(){
 		return localidades.size();
 	}
+    public void setEventoCulminado(boolean eventoCulminado)
+    {
+        this.evento_culminado = eventoCulminado;
+    }
+    public boolean getEventoCulminado()
+    {
+        return evento_culminado;
+    }
 }

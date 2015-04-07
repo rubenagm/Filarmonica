@@ -6,19 +6,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.StringTokenizer;
 
-import conexion.ConexionInternet;
 import conexion.DescargarImagen;
 
 /**
@@ -34,6 +34,7 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
     ArrayList<ItemEvento> mEvento;
     String DIRECTORIO = Environment.getExternalStorageDirectory().getAbsolutePath() +
             "/Imagenes/Eventos/";
+
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
         public TextView mTextView;
@@ -43,6 +44,7 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
         public ImageView imageViewImagenEvento;
         public TextView textViewCompartir;
         public RelativeLayout progressCargandoImagen;
+        public TextView textEventoCulminado;
         public ViewHolder(View v){
             super(v);
             textViewCompartir      = (TextView) v.findViewById(R.id.texto_compartir);
@@ -52,12 +54,20 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
             textViewFechasEvento   = (TextView) v.findViewById(R.id.fechas_evento);
             imageViewImagenEvento  = (ImageView) v.findViewById(R.id.imagen_evento);
             progressCargandoImagen = (RelativeLayout) v.findViewById(R.id.relative_progress);
+            textEventoCulminado      = (TextView) v.findViewById(R.id.text_evento_culminado);
         }
     }
     //Termina clase ViewHolder
-    public AdapterListaEventos(Context contexto,ArrayList<ItemEvento> mEvento){
+    public AdapterListaEventos(Context contexto,ArrayList<ItemEvento> mEvento)
+    {
         this.contexto = contexto;
         this.mEvento = mEvento;
+
+        //Ordenamos los eventos por fecha.
+        Collections.sort(mEvento);
+
+        //Marcamos los eventos culminados.
+        marcarEventosCulminados();
     }
 
     @Override
@@ -71,13 +81,17 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
 
     public void onBindViewHolder(ViewHolder holder, final int position)
     {
+        //Obtenemos el evento.
+        ItemEvento evento = mEvento.get(position);
+
+        //Cancelamos el reciclaje del RecyclerView.
         holder.setIsRecyclable(false);
 
-        holder.mTextView.setText(mEvento.get(position).getTitulo().toString());
-        holder.textViewProgramaEvento.setText(mEvento.get(position).getPrograma().toString());
+        holder.mTextView.setText(evento.getTitulo().toString());
+        holder.textViewProgramaEvento.setText(evento.getPrograma().toString());
 
         //fechas
-        ArrayList<String> fechas = mEvento.get(position).getFechas();
+        ArrayList<String> fechas = evento.getFechas();
         String fechasString ="";
         for(int x = 0;x<fechas.size();x++){
             fechasString += LimpiarFecha(fechas.get(x)) + "\n";
@@ -86,13 +100,13 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
         holder.textViewFechasEvento.setText(fechasString);
 
         //Cargamos la imagen. Comprobamos si existe, sino la descargamos.
-        String rutaAccesoImagen = DIRECTORIO + mEvento.get(position).getId() + ".png";
+        String rutaAccesoImagen = DIRECTORIO + evento.getId() + ".png";
         File archivoImagen = new File(rutaAccesoImagen);
         if(!archivoImagen.exists())
         {
             DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_EVENTO,
                     holder.progressCargandoImagen, holder.imageViewImagenEvento, contexto);
-            descargarImagen.execute(Integer.toString(mEvento.get(position).getId()));
+            descargarImagen.execute(Integer.toString(evento.getId()));
         }
         else
         {
@@ -131,6 +145,12 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
                 contextoView.startActivity(compartir);
             }
         });
+
+        //Si el evento ha sido culminado colocamos la maarca.
+        if(evento.getEventoCulminado())
+        {
+            holder.textEventoCulminado.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -138,6 +158,46 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
         return mEvento.size();
     }
 
+    //Método para marcar los eventos que han sido culminados.
+    public void marcarEventosCulminados()
+    {
+        //Establecemos la fecha actual.
+        Time ahora = new Time();
+        ahora.setToNow();
+
+        //Obtenemos el mes de esta manera por cuestiones de control, ya que los meses en la clase
+        //Time se expresan así (0 - 11);
+        int mes = ahora.month + 1;
+
+        //Fecha actual que servirá de punto de comparación.
+        String fechaActual = String.format("%04d-%02d-%02d", ahora.year, mes, ahora.monthDay);
+
+        //Marca que nos indicará que a partir de aquí todos los eventos han sido concluidos.
+        boolean marcaConcluidos = false;
+        int i = 0;
+
+        while(!marcaConcluidos)
+        {
+            //Obtenemos el evento.
+            ItemEvento evento = mEvento.get(i);
+
+            //Comparamos con la última fecha de cada evento.
+            if(evento.getFechas().get(evento.getCountFechas() - 1).compareTo(fechaActual) < 0)
+            {
+                marcaConcluidos = true;
+            }
+            else
+            {
+                i++;
+            }
+        }
+
+        //Marcamos los eventos.
+        for(int j = i; j < mEvento.size(); j++)
+        {
+            mEvento.get(j).setEventoCulminado(true);
+        }
+    }
 
     //FUNCION PARA LIMPIAR LA FECHA
     public String LimpiarFecha(String fecha){

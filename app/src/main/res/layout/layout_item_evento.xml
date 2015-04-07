@@ -46,7 +46,16 @@
                         android:layout_centerVertical="true"
                         style="?android:attr/progressBarStyleLarge"/>
                 </RelativeLayout>
-
+                <TextView
+                    android:id="@+id/text_evento_culminado"
+                    android:textStyle="bold"
+                    android:textColor="#c4302b"
+                    android:layout_marginLeft="20dp"
+                    android:textSize="16dp"
+                    android:text="EVENTO CULMINADO"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"/>
                 <TextView
 
                     android:layout_marginLeft="20dp"
