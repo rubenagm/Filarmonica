@@ -12,11 +12,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import conexion.ConexionInternet;
 import conexion.DescargarImagen;
 
 /**
@@ -89,7 +91,7 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
         if(!archivoImagen.exists())
         {
             DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_EVENTO,
-                    holder.progressCargandoImagen, holder.imageViewImagenEvento);
+                    holder.progressCargandoImagen, holder.imageViewImagenEvento, contexto);
             descargarImagen.execute(Integer.toString(mEvento.get(position).getId()));
         }
         else

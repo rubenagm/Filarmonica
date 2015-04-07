@@ -1,5 +1,6 @@
 package com.example.ruben.filarmonica;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
@@ -11,10 +12,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
 
+import conexion.ConexionInternet;
 import conexion.DescargarImagen;
 
 /**
@@ -23,6 +26,7 @@ import conexion.DescargarImagen;
 public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitter.ViewHolder>
 {
     private final static int IMAGEN_TIPO_TWITTER   = 2;
+    private Context contexto;
 
     ArrayList<ItemTwitter> tweets;
     String DIRECTORIO = Environment.getExternalStorageDirectory().getAbsolutePath() +
@@ -30,11 +34,11 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
     final String COLOR_INICIO = "<font color='#AD731C'>";
     final String COLOR_FIN = "</font>";
 
-    //variable que muestra el contenido del twitter con colores en caso de haber
-    String contenido = "";
-    public AdapterListaTwitter(ArrayList<ItemTwitter> tweets)
+
+    public AdapterListaTwitter(Context contexto, ArrayList<ItemTwitter> tweets)
     {
-        this.tweets = tweets;
+        this.tweets   = tweets;
+        this.contexto = contexto;
     }
 
 
@@ -52,8 +56,14 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i)
     {
-        viewHolder.setIsRecyclable(false);
+        //Verificamos la conexión a internet.
+        if(!ConexionInternet.verificarConexion(contexto))
+        {
+            Toast.makeText(contexto, contexto.getResources().getString(R.string
+                    .conexion_fallida), Toast.LENGTH_SHORT).show();
+        }
 
+        viewHolder.setIsRecyclable(false);
 
         String contenido = tweets.get(i).getText();
         //viewHolder.textViewContenido.setText(contenido);
@@ -70,7 +80,8 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
             if(!archivoImagen.exists())
             {
                 DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_TWITTER,
-                        viewHolder.progressCargandoImagen, viewHolder.imageViewImagenTwitter);
+                        viewHolder.progressCargandoImagen, viewHolder.imageViewImagenTwitter,
+                        contexto);
                 descargarImagen.execute(imagen);
             }
             else

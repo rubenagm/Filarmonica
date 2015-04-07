@@ -1,8 +1,10 @@
 package com.example.ruben.filarmonica;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -31,6 +34,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import conexion.ConexionInternet;
 import date.DateControl;
 import date.DateDifference;
 
@@ -59,12 +63,37 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inicio);
 
-
-         // Hilo de actualización de eventos y contenido multimedia
-        Intent in = new Intent(MainActivity.this, ServicioActualizacionBD.class);
-        //startService(in);
         //Obtenemos el contexto.
         contexto = MainActivity.this;
+
+        //Trigger para salir de la aplicación en caso de que no haya datos insertados debido a la
+        // conexión a internet.
+        Intent intent = getIntent();
+        if(intent.getExtras().getString("DatosInsertados").equals("NoInsertados"))
+        {
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle("Configuración Necesaria");
+            alertDialog.setMessage(getResources().getString(R.string.conexion_requerida));
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Ok", new DialogInterface
+                    .OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+                    finish();
+                    System.exit(0);
+                }
+            });
+            alertDialog.show();
+        }
+
+
+        //Comprobamos la conexión.
+        if(!ConexionInternet.verificarConexion(contexto))
+        {
+            Toast.makeText(contexto, getResources().getString(R.string.conexion_fallida),
+                    Toast.LENGTH_LONG).show();
+        }
 
         //Obtenemos las referencias del layout.
         lblReloj		    = (TextView) findViewById(R.id.lbl_contador_proximo_concierto);
@@ -99,8 +128,11 @@ public class MainActivity extends Activity
         }
         else
         {
-            ConexionRemotaProximoConcierto json = new ConexionRemotaProximoConcierto();
-            json.execute("");
+            if(ConexionInternet.verificarConexion(contexto))
+            {
+                ConexionRemotaProximoConcierto json = new ConexionRemotaProximoConcierto();
+                json.execute("");
+            }
         }
     }//OnCreate
 

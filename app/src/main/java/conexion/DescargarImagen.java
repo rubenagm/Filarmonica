@@ -1,5 +1,6 @@
 package conexion;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -7,11 +8,15 @@ import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import com.example.ruben.filarmonica.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ContentHandler;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -35,7 +40,8 @@ public class DescargarImagen extends AsyncTask<String, Void, Boolean>
     private final static String DIRECTORIO_FACEBOOK  = "Facebook/";
     private final static String DIRECTORIO_INSTAGRAM = "Instagram/";
 
-    private final static int CALIDAD_DE_COMPRESION = 10;
+    private final static int CALIDAD_DE_COMPRESION        = 10;
+    private final static int TIEMPO_ESPERA_REANUDAR_HILO = 60000;
 
     /*
      * TIPOS
@@ -49,16 +55,18 @@ public class DescargarImagen extends AsyncTask<String, Void, Boolean>
     private final static int TIPO_FACEBOOK  = 3;
     private final static int TIPO_INSTAGRAM = 4;
 
+    private Context contexto;
     private int tipo;
     private RelativeLayout progressBar;
     private ImageView imagen;
     private String archivo;
 
-    public DescargarImagen(int tipo, RelativeLayout progressBar, ImageView imagen)
+    public DescargarImagen(int tipo, RelativeLayout progressBar, ImageView imagen, Context contexto)
     {
         this.tipo         = tipo;
         this.progressBar  = progressBar;
         this.imagen       = imagen;
+        this.contexto     = contexto;
     }
 
     @Override
@@ -67,6 +75,12 @@ public class DescargarImagen extends AsyncTask<String, Void, Boolean>
         super.onPreExecute();
         imagen.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
+
+        //Verificamos la conextion a internet.
+        if(! ConexionInternet.verificarConexion(contexto))
+        {
+            cancel(true);
+        }
     }
 
     @Override

@@ -12,8 +12,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import conexion.ConexionInternet;
 
 
 public class ListaEventos extends ActionBarActivity {
@@ -28,10 +31,16 @@ public class ListaEventos extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_cards);
         contexto = ListaEventos.this;
-        //Intent in = new Intent(ListaEventos.this,ServicioActualizacionBD.class);
-        //startService(in);
+
         //Ocultamos el action bar.
         getSupportActionBar().hide();
+
+        //Verificamos la conexión a internet.
+        if(!ConexionInternet.verificarConexion(contexto))
+        {
+            Toast.makeText(contexto, contexto.getResources().getString(R.string
+                    .conexion_fallida), Toast.LENGTH_SHORT).show();
+        }
 
         /******************************* ListView Drawer *****************************/
 

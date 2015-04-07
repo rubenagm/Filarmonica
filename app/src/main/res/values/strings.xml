@@ -16,4 +16,10 @@
     <string name="title_activity_noticias">Noticias</string>
     <string name="title_activity_facebook">Facebook</string>
 
+    <!--Mensajes de conexión.-->
+    <string name="conexion_fallida">No hay conexión a internet, es posible que ciertas
+        funciones no estén disponibles.</string>
+    <string name="conexion_requerida">Se necesita conexión a internet para configurar
+        la aplicación por primera vez. Verifica tu conexión.</string>
+
 </resources>

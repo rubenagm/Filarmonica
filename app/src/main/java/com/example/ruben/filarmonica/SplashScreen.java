@@ -8,10 +8,13 @@ import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import conexion.ConexionInternet;
 
 
 public class SplashScreen extends ActionBarActivity {
@@ -36,12 +39,19 @@ public class SplashScreen extends ActionBarActivity {
                 Context.MODE_PRIVATE);
         respuesta = sharedPreferences.getString("DatosInsertados","NoInsertados");
 
-        new Thread( new Runnable() {
+        new Thread( new Runnable()
+        {
             @Override
             public void run() {
                 if(respuesta.equals("NoInsertados")){
-                    Intent in = new Intent(SplashScreen.this, ServicioActualizacionBD.class);
-                    startService(in);
+                    //Verificamos la conexión a internet para la primera vez que se corre la app.
+                    //Si no hay internet cierra la app desde la MainActivity.
+                    if(ConexionInternet.verificarConexion(contexto))
+                    {
+                        respuesta = "Insertados";
+                        Intent in = new Intent(SplashScreen.this, ServicioActualizacionBD.class);
+                        startService(in);
+                    }
                 }
                 //ObtenerEventos hilo = new ObtenerEventos(contexto,sharedPreferences);
                 //hilo.execute();
@@ -52,12 +62,13 @@ public class SplashScreen extends ActionBarActivity {
             public void run() {
 
                 Intent in = new Intent().setClass(SplashScreen.this,MainActivity.class);
+                in.putExtra("DatosInsertados", respuesta);
                 startActivity(in);
                 finish();
             }
         };
 
-        //Creamos el splash y el hilo que esperarà el tiempo definido
+        //Creamos el splash y el hilo que esperará el tiempo definido
         Timer timer = new Timer();
 
         //Cargamos el video.
@@ -68,7 +79,7 @@ public class SplashScreen extends ActionBarActivity {
         videoView.setVideoURI(video);
         videoView.start();
 
-        timer.schedule(task,1);
+        timer.schedule(task, TIEMPO_DURACION_VIDEO);
     }
 
 }

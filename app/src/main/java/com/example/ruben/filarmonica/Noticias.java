@@ -19,10 +19,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import conexion.ConexionInternet;
 import tabs.SlidingTabLayout;
 
 
@@ -72,6 +74,13 @@ public class Noticias extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabs);
         getSupportActionBar().hide();
+
+        //Verificamos la conexión a internet.
+        if(!ConexionInternet.verificarConexion(contexto))
+        {
+            Toast.makeText(contexto, contexto.getResources().getString(R.string
+                    .conexion_fallida), Toast.LENGTH_SHORT).show();
+        }
 
         //Obtenemos el contexto.
         contexto = getApplicationContext();
@@ -232,7 +241,7 @@ public class Noticias extends ActionBarActivity
             RecyclerView mRecyclerView = (RecyclerView) layout.findViewById(R.id.lista_cards);
 
             //Configuramos el recycler view.
-            RecyclerView.Adapter adapter = new AdapterListaTwitter(twitterArray);
+            RecyclerView.Adapter adapter = new AdapterListaTwitter(contexto, twitterArray);
             mRecyclerView.setAdapter(adapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(contexto));
             mRecyclerView.setItemAnimator( new DefaultItemAnimator());
