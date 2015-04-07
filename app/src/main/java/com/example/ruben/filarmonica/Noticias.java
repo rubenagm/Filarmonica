@@ -66,14 +66,12 @@ public class Noticias extends ActionBarActivity
         }
         ft.addToBackStack(null);
 
-        // Create and show the dialog.
-
-
-        ///
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabs);
         getSupportActionBar().hide();
+
+        //Obtenemos el contexto.
+        contexto = getApplicationContext();
 
         //Verificamos la conexión a internet.
         if(!ConexionInternet.verificarConexion(contexto))
@@ -82,8 +80,6 @@ public class Noticias extends ActionBarActivity
                     .conexion_fallida), Toast.LENGTH_SHORT).show();
         }
 
-        //Obtenemos el contexto.
-        contexto = getApplicationContext();
         //Obtenemos las referencias.
         mPager = (ViewPager) findViewById(R.id.pager);
         mTabs  = new SlidingTabLayout(contexto);
