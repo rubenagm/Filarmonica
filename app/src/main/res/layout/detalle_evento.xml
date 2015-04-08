@@ -86,11 +86,16 @@
                         android:textSize="15sp"
                         />
                     </LinearLayout>
-
-
-
-                </LinearLayout>
+             </LinearLayout>
             <!--- Termina layout titulo, fechas y programa -->
+
+            <!-- Línea separación.-->
+            <View
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height= "1dp"
+                android:background="#C0C0C0" />
+
             <LinearLayout
                 android:layout_marginTop="18dp"
                 android:layout_width="fill_parent"
@@ -101,7 +106,7 @@
 
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/person_icon"
+                    android:src="@drawable/descripcion_icon"
                     />
                 <LinearLayout
                     android:layout_marginLeft="20dp"
@@ -128,6 +133,13 @@
                     </LinearLayout>
 
                 </LinearLayout>
+
+            <!-- Línea separación.-->
+            <View
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height= "1dp"
+                android:background="#C0C0C0" />
             <LinearLayout
                 android:layout_marginTop="20dp"
                 android:layout_width="fill_parent"
@@ -195,6 +207,13 @@
                 </LinearLayout>
             </LinearLayout>
 
+        <ImageView
+            android:id="@+id/comprar"
+            android:layout_marginTop="180dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/icon_buy"
+            android:layout_width="65dp"
+            android:layout_height="65dp" />
     </RelativeLayout>
     </ScrollView>
 

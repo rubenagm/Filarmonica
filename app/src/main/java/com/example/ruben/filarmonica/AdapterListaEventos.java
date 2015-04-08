@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Time;
@@ -45,6 +46,7 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
         public TextView textViewCompartir;
         public RelativeLayout progressCargandoImagen;
         public TextView textEventoCulminado;
+        public ImageView imageViewComprar;
         public ViewHolder(View v){
             super(v);
             textViewCompartir      = (TextView) v.findViewById(R.id.texto_compartir);
@@ -54,7 +56,8 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
             textViewFechasEvento   = (TextView) v.findViewById(R.id.fechas_evento);
             imageViewImagenEvento  = (ImageView) v.findViewById(R.id.imagen_evento);
             progressCargandoImagen = (RelativeLayout) v.findViewById(R.id.relative_progress);
-            textEventoCulminado      = (TextView) v.findViewById(R.id.text_evento_culminado);
+            textEventoCulminado    = (TextView) v.findViewById(R.id.text_evento_culminado);
+            imageViewComprar       = (ImageView) v.findViewById(R.id.comprar);
         }
     }
     //Termina clase ViewHolder
@@ -143,6 +146,17 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
                 compartir.putExtra(Intent.EXTRA_TEXT, urlEfectiva);
                 compartir.setType( "text/plain");
                 contextoView.startActivity(compartir);
+            }
+        });
+
+        holder.imageViewComprar.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(contexto.getResources().getString(R.string.ticketmaster)));
+                contexto.startActivity(intent);
             }
         });
 

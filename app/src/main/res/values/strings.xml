@@ -22,4 +22,7 @@
     <string name="conexion_requerida">Se necesita conexión a internet para configurar
         la aplicación por primera vez. Verifica tu conexión.</string>
 
+    <!-- Url ticketmaster -->
+    <string name="ticketmaster">http://www.ticketmaster.com.mx/Orquesta-Filarmonica-de-Jalisco-boletos/artist/1179212?tm_link=artist_artistvenue_module</string>
+
 </resources>

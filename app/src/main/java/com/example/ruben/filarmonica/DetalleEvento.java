@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,6 +31,7 @@ public class DetalleEvento extends ActionBarActivity {
     TextView textViewLocalidades;
     TextView textViewCostos;
     TextView textViewDescripcion;
+    ImageView imageViewComprar;
     String DIRECTORIO = Environment.getExternalStorageDirectory().getAbsolutePath() +
             "/Imagenes/Eventos/";
     int idEvento;
@@ -40,6 +43,7 @@ public class DetalleEvento extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detalle_evento);
+        contexto = getApplicationContext();
 
         final Intent intent = getIntent();
         final String action = intent.getAction();
@@ -63,16 +67,28 @@ public class DetalleEvento extends ActionBarActivity {
         //Ocultamos el ActionBar.
         getSupportActionBar().hide();
 
-        textViewTitulo = (TextView) findViewById(R.id.titulo_evento_detalle);
+        textViewTitulo        = (TextView) findViewById(R.id.titulo_evento_detalle);
         imageViewImagenEvento = (ImageView) findViewById(R.id.imagen_evento);
-        textViewPrograma = (TextView) findViewById(R.id.detalle_programa_evento);
-        textViewFechas = (TextView) findViewById(R.id.detalle_fechas_evento);
-        textViewDirector = (TextView) findViewById(R.id.detalle_nombre_director);
-        textViewLocalidades = (TextView) findViewById(R.id.localidades);
-        textViewCostos = (TextView) findViewById(R.id.costos);
-        textViewDescripcion = (TextView) findViewById(R.id.detalle_descripcion_evento);
+        textViewPrograma      = (TextView) findViewById(R.id.detalle_programa_evento);
+        textViewFechas        = (TextView) findViewById(R.id.detalle_fechas_evento);
+        textViewDirector      = (TextView) findViewById(R.id.detalle_nombre_director);
+        textViewLocalidades   = (TextView) findViewById(R.id.localidades);
+        textViewCostos        = (TextView) findViewById(R.id.costos);
+        textViewDescripcion   = (TextView) findViewById(R.id.detalle_descripcion_evento);
+        imageViewComprar      = (ImageView) findViewById(R.id.comprar);
 
-        contexto = getApplicationContext();
+        //Click Listeners.
+        imageViewComprar.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setData(Uri.parse(contexto.getResources().getString(R.string.ticketmaster)));
+                contexto.startActivity(intent);
+            }
+        });
 
         /******************************* ListView Drawer *****************************/
 

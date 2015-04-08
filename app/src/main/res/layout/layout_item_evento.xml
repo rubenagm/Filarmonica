@@ -108,7 +108,8 @@
                 </LinearLayout>
             </LinearLayout>
         <ImageView
-            android:layout_marginTop="165dp"
+            android:id="@+id/comprar"
+            android:layout_marginTop="200dp"
             android:layout_alignParentRight="true"
             android:src="@drawable/icon_buy"
             android:layout_width="65dp"

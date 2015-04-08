@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
@@ -99,6 +100,12 @@ public class MainActivity extends Activity
         lblReloj		    = (TextView) findViewById(R.id.lbl_contador_proximo_concierto);
         lblDHMS             = (TextView) findViewById(R.id.lbl_dias_horas_minutos_segundos);
         lblProximoConcierto = (TextView) findViewById(R.id.lbl_proximo_concierto);
+
+        //Colocamos la fuente al contador.
+        Typeface roboto = Typeface.createFromAsset(getAssets(), "fonts/Roboto/Roboto-Bold.ttf");
+        lblReloj.setTypeface(roboto);
+        lblDHMS.setTypeface(roboto);
+        lblProximoConcierto.setTypeface(roboto);
 
         /******************************* ListView Drawer *****************************/
         list_view_drawer = (ListView) findViewById(R.id.drawer_listView);
