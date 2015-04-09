@@ -8,7 +8,6 @@ import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.View;
 import android.widget.VideoView;
 
 import java.util.Timer;
@@ -75,7 +74,7 @@ public class SplashScreen extends ActionBarActivity {
         videoView = (VideoView) findViewById(R.id.video_view);
         videoView.setZOrderOnTop(true);
         Uri video = Uri.parse("android.resource://" + getPackageName() + "/"
-                + R.raw.intro);
+                + R.raw.video_intro);
 
         videoView.setVideoURI(video);
         videoView.start();
