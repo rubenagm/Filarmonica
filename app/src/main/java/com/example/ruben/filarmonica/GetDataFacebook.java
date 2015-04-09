@@ -46,10 +46,10 @@ public class GetDataFacebook extends AsyncTask<Void,Void,ArrayList<ItemFacebook>
                 if(!jsonArray.getJSONObject(x).isNull("name")){
                     contenido = jsonArray.getJSONObject(x).getString("name");
                     urlImagen = jsonArray.getJSONObject(x).getString("source");
-                    FtpDownload ftp = new FtpDownload();
+                    //FtpDownload ftp = new FtpDownload();
                     //ftp.descargarArchivo(3,urlImagen);
-                    urlImagen= nombreImagen(urlImagen);
-                    publicaciones.add(new ItemFacebook(contenido,urlImagen+"NotFacebook.png"));
+                    //urlImagen= nombreImagen(urlImagen);
+                    publicaciones.add(new ItemFacebook(contenido,urlImagen+".png"));
                 }
                 Log.i("JSON Facebook", contenido + " ---- "+urlImagen);
 

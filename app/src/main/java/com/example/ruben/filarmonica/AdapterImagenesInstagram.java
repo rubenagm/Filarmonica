@@ -1,10 +1,9 @@
 package com.example.ruben.filarmonica;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -13,12 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
+import android.widget.RelativeLayout;
+
+import java.io.File;
 import java.util.ArrayList;
+
+import conexion.DescargarImagen;
 
 /**
  * Created by macmini3cuceimobile on 2/27/15.
@@ -26,7 +25,11 @@ import java.util.ArrayList;
 public class AdapterImagenesInstagram extends RecyclerView.Adapter<AdapterImagenesInstagram.ViewHolder> {
     static ArrayList<ItemImagenInstagram> imagenes = new ArrayList<>();
     int POSITION;
-    String DIRECTORIO = "/storage/emulated/0/Imagenes/imagenes";
+    String DIRECTORIO = Environment.getExternalStorageDirectory().getAbsolutePath() +
+            "/Imagenes/Instagram/";
+
+    private final static int IMAGEN_TIPO_INSTAGRAM = 4;
+
     static Context contexto;
     static DialogoMostrarImagenInstagram newFragment ;
     static int position2 = 0;
@@ -47,12 +50,18 @@ public class AdapterImagenesInstagram extends RecyclerView.Adapter<AdapterImagen
         ImageView imageViewImagen1;
         ImageView imageViewImagen2;
         ImageView imageViewImagen3;
+        RelativeLayout progressCargandoImagen1;
+        RelativeLayout progressCargandoImagen2;
+        RelativeLayout progressCargandoImagen3;
 
         public ViewHolder(View itemView) {
             super(itemView);
             imageViewImagen1 = (ImageView) itemView.findViewById(R.id.imagen_instagram_1);
             imageViewImagen2 = (ImageView) itemView.findViewById(R.id.imagen_instagram_2);
             imageViewImagen3 = (ImageView) itemView.findViewById(R.id.imagen_instagram_3);
+            progressCargandoImagen1 = (RelativeLayout) itemView.findViewById(R.id.relative_progress1);
+            progressCargandoImagen2 = (RelativeLayout) itemView.findViewById(R.id.relative_progress2);
+            progressCargandoImagen3 = (RelativeLayout) itemView.findViewById(R.id.relative_progress3);
         }
     }
 
@@ -67,13 +76,70 @@ public class AdapterImagenesInstagram extends RecyclerView.Adapter<AdapterImagen
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        Bitmap bit1 = BitmapFactory.decodeFile(DIRECTORIO+"Instagram_"+imagenes.get(position).getUrlImagenNd1()+".png");
-        Bitmap bit2 = BitmapFactory.decodeFile(DIRECTORIO+"Instagram_"+imagenes.get(position).getUrlImagenNd2()+".png");
-        Bitmap bit3 = BitmapFactory.decodeFile(DIRECTORIO+"Instagram_"+imagenes.get(position).getUrlImagenNd3()+".png");
-        holder.imageViewImagen1.setImageBitmap(bit1);
-        holder.imageViewImagen2.setImageBitmap(bit2);
-        holder.imageViewImagen3.setImageBitmap(bit3);
+        holder.setIsRecyclable(false);
 
+        //Imagen 1 del listview
+        {
+            //Cargamos la imagen. Comprobamos si existe, sino la descargamos.
+            String imagen = imagenes.get(position).getUrlImagenNd1();
+            if(imagen!= null){
+
+                String rutaAccesoImagen = DIRECTORIO + DescargarImagen.nombreImagenUrl(imagen) + ".png";
+                File archivoImagen = new File(rutaAccesoImagen);
+                if(!archivoImagen.exists())
+                {
+                    DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_INSTAGRAM,
+                            holder.progressCargandoImagen1, holder.imageViewImagen1,contexto);
+                    descargarImagen.execute(imagen);
+                }
+                else
+                {
+                    Bitmap bitmap = BitmapFactory.decodeFile(rutaAccesoImagen);
+                    holder.imageViewImagen1.setImageBitmap(bitmap);
+                }
+            }
+        }
+        //Imagen 2 del listview
+        {
+            String imagen = imagenes.get(position).getUrlImagenNd2();
+            if(!imagen.equals("")){
+
+                String rutaAccesoImagen = DIRECTORIO + DescargarImagen.nombreImagenUrl(imagen) + ".png";
+                File archivoImagen = new File(rutaAccesoImagen);
+                if(!archivoImagen.exists())
+                {
+                    DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_INSTAGRAM,
+                            holder.progressCargandoImagen2, holder.imageViewImagen2,contexto);
+                    descargarImagen.execute(imagen);
+                }
+                else
+                {
+                    Bitmap bitmap = BitmapFactory.decodeFile(rutaAccesoImagen);
+                    holder.imageViewImagen2.setImageBitmap(bitmap);
+                }
+            }
+        }
+        //Imagen 3 del listview
+        {
+            //Cargamos la imagen. Comprobamos si existe, sino la descargamos.
+            String imagen = imagenes.get(position).getUrlImagenNd3();
+            if(!imagen.equals("")){
+
+                String rutaAccesoImagen = DIRECTORIO + DescargarImagen.nombreImagenUrl(imagen) + ".png";
+                File archivoImagen = new File(rutaAccesoImagen);
+                if(!archivoImagen.exists())
+                {
+                    DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_INSTAGRAM,
+                            holder.progressCargandoImagen3, holder.imageViewImagen3,contexto);
+                    descargarImagen.execute(imagen);
+                }
+                else
+                {
+                    Bitmap bitmap = BitmapFactory.decodeFile(rutaAccesoImagen);
+                    holder.imageViewImagen3.setImageBitmap(bitmap);
+                }
+            }
+        }
         holder.imageViewImagen1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,7 +150,6 @@ public class AdapterImagenesInstagram extends RecyclerView.Adapter<AdapterImagen
                     ft.remove(prev);
                 }
                 ft.addToBackStack(null);
-
                 newFragment = DialogoMostrarImagenInstagram.newInstance(position*3,getArrayImagenes(imagenes),getArrayTexto(imagenes),getArrayLinks(imagenes));
                 newFragment.show(ft,"dialog");
 
@@ -99,7 +164,6 @@ public class AdapterImagenesInstagram extends RecyclerView.Adapter<AdapterImagen
                     ft.remove(prev);
                 }
                 ft.addToBackStack(null);
-
                 newFragment = DialogoMostrarImagenInstagram.newInstance(position*3+1,getArrayImagenes(imagenes),getArrayTexto(imagenes),getArrayLinks(imagenes));
                 newFragment.show(ft,"dialog");
             }
@@ -113,7 +177,6 @@ public class AdapterImagenesInstagram extends RecyclerView.Adapter<AdapterImagen
                     ft.remove(prev);
                 }
                 ft.addToBackStack(null);
-
                 newFragment = DialogoMostrarImagenInstagram.newInstance(position*3+2,getArrayImagenes(imagenes),getArrayTexto(imagenes),getArrayLinks(imagenes));
                 newFragment.show(ft,"dialog");
 
@@ -156,6 +219,7 @@ public class AdapterImagenesInstagram extends RecyclerView.Adapter<AdapterImagen
         }
         return string;
     }
+
 
 
 }

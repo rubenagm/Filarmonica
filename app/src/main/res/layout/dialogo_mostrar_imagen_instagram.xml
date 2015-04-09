@@ -7,14 +7,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <TextView
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:layout_marginRight="20dp"
-        android:textSize="30sp"
-        android:layout_alignParentRight="true"
-        android:text="X"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:layout_marginRight="20dp"
+            android:textSize="30sp"
+            android:layout_alignParentRight="true"
+            android:text="X"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:background="#E6E6E6"
+        android:id="@+id/relative_progress"
+        android:layout_width="fill_parent"
+        android:layout_height="350dp"
+        android:visibility="gone">
+        <ProgressBar
+            android:id="@+id/progress_cargando_imagen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            style="?android:attr/progressBarStyleLarge"/>
     </RelativeLayout>
     <ImageView
         android:scaleType="centerCrop"
@@ -32,7 +47,7 @@
             android:text="Ver en Instagram"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-        </RelativeLayout>
+    </RelativeLayout>
     <TextView
         android:layout_marginTop="5dp"
         android:textColor="#FFFFFF"

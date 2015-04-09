@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,8 +13,11 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -21,24 +25,42 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+
+import java.io.File;
 import java.util.ArrayList;
+
+import conexion.DescargarImagen;
 
 /**
  * Created by macmini3cuceimobile on 3/6/15.
  */
-public class DialogoMostrarImagenInstagram extends DialogFragment {
+public class DialogoMostrarImagenInstagram extends DialogFragment  {
 
     int position = 0;
+
+    //Arreglos necesario para guardar los datos a mostrar en caso de querer ver otra imagen
     ArrayList<String> imagenes;
     ArrayList<String> links;
     ArrayList<String> texto;
+
+    //Imagen
     ImageView imageViewimagen;
-    String DIRECTORIO = "/storage/emulated/0/Imagenes/imagenes";
+
+    //Directorio
+    String DIRECTORIO = Environment.getExternalStorageDirectory().getAbsolutePath() +
+            "/Imagenes/Instagram/";
+
+    private final static int IMAGEN_TIPO_INSTAGRAM = 4;
+
     TextView textViewtexto;
     TextView textViewverEnInstagram;
     Context contexto;
     RelativeLayout layoutCerrar = null;
+
+    //El progres bar de cargando
+    RelativeLayout progressCargandoImagen;
     static DialogoMostrarImagenInstagram newInstance(int position, ArrayList<String> imagenes, ArrayList<String> texto, ArrayList<String> links) {
         DialogoMostrarImagenInstagram f = new DialogoMostrarImagenInstagram();
 
@@ -56,23 +78,57 @@ public class DialogoMostrarImagenInstagram extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        //Se hace transparente el dialogo
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+        //se obtiene el contexto
+        contexto = getDialog().getContext();
+
+        //Se obtiene por parametros los datos a mostrar
         position = getArguments().getInt("position");
         imagenes = getArguments().getStringArrayList("imagenes");
         texto = getArguments().getStringArrayList("texto");
         links = getArguments().getStringArrayList("links");
+
+        //Se crea el dialogo
         View v = inflater.inflate(R.layout.dialogo_mostrar_imagen_instagram, container, false);
+
+
+        //se inicializa el botón de cerrar el drawer (Es un layout)
         layoutCerrar = (RelativeLayout) v.findViewById(R.id.layout_cerrar_dialogo);
+
+        //Se ponen las propiedades de transparencia y se quita el titulo
         getDialog().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
+        //Se inicializa el objeto para mostrar la imagen
         imageViewimagen = (ImageView) v.findViewById(R.id.dialogo_imagen_instagram);
-        String archivo = DIRECTORIO + "Instagram_" + imagenes.get(position)+".png";
-        Bitmap bit1 = BitmapFactory.decodeFile(archivo);
+
+        //Inicializar el progress bar
+        progressCargandoImagen = (RelativeLayout) v.findViewById(R.id.relative_progress);
+
+        //
+        //Cargamos la imagen. Comprobamos si existe, sino la descargamos.
+        String imagen = imagenes.get(position);
+        if(imagen!= null){
+
+            String rutaAccesoImagen = DIRECTORIO + DescargarImagen.nombreImagenUrl(imagen) + ".png";
+            File archivoImagen = new File(rutaAccesoImagen);
+            if(!archivoImagen.exists())
+            {
+                DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_INSTAGRAM,
+                        progressCargandoImagen, imageViewimagen,contexto);
+                descargarImagen.execute(imagen);
+            }
+            else
+            {
+                Bitmap bitmap = BitmapFactory.decodeFile(rutaAccesoImagen);
+                imageViewimagen.setImageBitmap(bitmap);
+            }
+        }
+
         textViewtexto = (TextView) v.findViewById(R.id.dialogo_informacion_instagram);
         textViewtexto.setText(texto.get(position));
-        imageViewimagen.setImageBitmap(bit1);
         layoutCerrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,5 +148,8 @@ public class DialogoMostrarImagenInstagram extends DialogFragment {
     public void setContexto(Context contexto){
         this.contexto = contexto;
     }
+
+
+
 
 }

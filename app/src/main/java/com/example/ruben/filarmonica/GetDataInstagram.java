@@ -26,7 +26,7 @@ public class GetDataInstagram extends AsyncTask<Void,Void,ArrayList<ItemImagenIn
     public GetDataInstagram(Context contexto){
         this.contexto = contexto;
     }
-        FtpDownload ftp;
+    FtpDownload ftp;
     @Override
     protected ArrayList<ItemImagenInstagram> doInBackground(Void... params) {
         ArrayList<ItemImagenInstagram> imagenes = new ArrayList<ItemImagenInstagram>();
@@ -61,9 +61,9 @@ public class GetDataInstagram extends AsyncTask<Void,Void,ArrayList<ItemImagenIn
 
                 //ftp.descargarArchivo(4,urlImagenHd[contador]);
                 //ftp.descargarArchivo(4,urlImagenNd[contador]);
-                db.insertarImagenInstagram(nombreImagen(urlImagenHd[contador]),nombreImagen(urlImagenNd[contador]),texto[contador],link[contador]);
+                db.insertarImagenInstagram(urlImagenNd[contador],urlImagenHd[contador],texto[contador],link[contador]);
                 if(contador ==2){
-                   // imagenes.add(new ItemImagenInstagram(urlImagenHd,urlImagenNd,texto));
+                    // imagenes.add(new ItemImagenInstagram(urlImagenHd,urlImagenNd,texto));
                     contador =-1;
                     Log.i("JSON Instagram", "Fila insertada");
                 }

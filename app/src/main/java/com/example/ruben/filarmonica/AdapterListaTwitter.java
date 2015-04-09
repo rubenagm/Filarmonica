@@ -12,12 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
 
-import conexion.ConexionInternet;
 import conexion.DescargarImagen;
 
 /**
@@ -26,19 +24,19 @@ import conexion.DescargarImagen;
 public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitter.ViewHolder>
 {
     private final static int IMAGEN_TIPO_TWITTER   = 2;
-    private Context contexto;
 
     ArrayList<ItemTwitter> tweets;
     String DIRECTORIO = Environment.getExternalStorageDirectory().getAbsolutePath() +
             "/Imagenes/Twitter/";
     final String COLOR_INICIO = "<font color='#AD731C'>";
     final String COLOR_FIN = "</font>";
-
-
-    public AdapterListaTwitter(Context contexto, ArrayList<ItemTwitter> tweets)
+    Context contexto;
+    //variable que muestra el contenido del twitter con colores en caso de haber
+    String contenido = "";
+    public AdapterListaTwitter(ArrayList<ItemTwitter> tweets,Context contexto)
     {
-        this.tweets   = tweets;
         this.contexto = contexto;
+        this.tweets = tweets;
     }
 
 
@@ -56,13 +54,6 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i)
     {
-        //Verificamos la conexión a internet.
-        if(!ConexionInternet.verificarConexion(contexto))
-        {
-            Toast.makeText(contexto, contexto.getResources().getString(R.string
-                    .conexion_fallida), Toast.LENGTH_SHORT).show();
-        }
-
         viewHolder.setIsRecyclable(false);
 
         String contenido = tweets.get(i).getText();
@@ -70,7 +61,7 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
 
         String imagen = tweets.get(i).getUrlImagen();
         if(imagen.equals("")){
-           viewHolder.imageViewImagenTwitter.setVisibility(View.GONE);
+            viewHolder.imageViewImagenTwitter.setVisibility(View.GONE);
         }
         else
         {
@@ -80,8 +71,7 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
             if(!archivoImagen.exists())
             {
                 DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_TWITTER,
-                        viewHolder.progressCargandoImagen, viewHolder.imageViewImagenTwitter,
-                        contexto);
+                        viewHolder.progressCargandoImagen, viewHolder.imageViewImagenTwitter,contexto);
                 descargarImagen.execute(imagen);
             }
             else
@@ -138,15 +128,17 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
 
         //Se obtiene la posicion donde comienza la palabra a pintar
         int inicio = original.indexOf(palabraPintar);
-
+        String resultado = original;
         //Se obtiene lo que hay antes de la palabra que se quiere pintar
-        String resultado = original.substring(0,inicio);
+        if(inicio > 0){
+            resultado = original.substring(0,inicio);
 
-        //Se agrega lo necesario para que la palabra se pinte
-        resultado+= COLOR_INICIO + palabraPintar + COLOR_FIN;
+            //Se agrega lo necesario para que la palabra se pinte
+            resultado+= COLOR_INICIO + palabraPintar + COLOR_FIN;
 
-        resultado += original.substring(inicio+palabraPintar.length());
+            resultado += original.substring(inicio+palabraPintar.length());
 
+        }
         return resultado;
 
     }
