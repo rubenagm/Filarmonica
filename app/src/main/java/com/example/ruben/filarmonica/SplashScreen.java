@@ -84,6 +84,7 @@ public class SplashScreen extends ActionBarActivity {
             videoView.setZOrderOnTop(false);
         }
 
+        //Ejecutamos el task.
         timer.schedule(task, TIEMPO_DURACION_VIDEO);
     }
 
