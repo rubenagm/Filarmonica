@@ -70,7 +70,7 @@ public class Streaming extends ActionBarActivity
     private static Context contexto;
 
     //Número de tabs que contiene la actividad.
-    private static final int NUMERO_TABS = 2;
+    private static final int NUMERO_TABS = 3;
 
     //Pager que controla los eventos del ViewPager.
     private ViewPager mPager;
@@ -114,8 +114,11 @@ public class Streaming extends ActionBarActivity
     {
         R.drawable.video_icon,
         R.drawable.musica_icon_off,
+        R.drawable.live_icon,
         R.drawable.video_icon_off,
-        R.drawable.musica_icon
+        R.drawable.musica_icon,
+        R.drawable.live_icon_on
+
     };
 
     @Override
@@ -194,7 +197,8 @@ public class Streaming extends ActionBarActivity
         {
             /*Regresamos el Fragment en base a la posición.
              0.- Youtube.
-             1.- Música. */
+             1.- Música.
+             2.- Streaming.*/
             switch(position)
             {
                 case 0:
@@ -208,6 +212,12 @@ public class Streaming extends ActionBarActivity
                     MyMusicPlayerFragment myMusicPlayerFragment =
                             MyMusicPlayerFragment.newInstance(position);
                     return myMusicPlayerFragment;
+                }
+                case 2:
+                {
+                    MyStreamingFragment myStreamingFragment =
+                            MyStreamingFragment.newInstance(position);
+                    return myStreamingFragment;
                 }
             }
 
@@ -233,6 +243,30 @@ public class Streaming extends ActionBarActivity
             ImageSpan imageSpan = new ImageSpan(imagenTab, ImageSpan.ALIGN_BOTTOM);
             spannableString.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             return spannableString;
+        }
+    }
+
+    //Clase que crea el fragmento del streaming.
+    public static class MyStreamingFragment extends Fragment
+    {
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                                 @Nullable Bundle savedInstanceState)
+        {
+            View layout = inflater.inflate(R.layout.fragment_streaming, container, false);
+            return layout;
+        }
+
+        //Método que regresa un fragmento.
+        static MyStreamingFragment newInstance(int position)
+        {
+            MyStreamingFragment streamingFragment = new MyStreamingFragment();
+            Bundle args = new Bundle();
+            args.putInt("position", position);
+            streamingFragment.setArguments(args);
+            return streamingFragment;
+
+
         }
     }
 

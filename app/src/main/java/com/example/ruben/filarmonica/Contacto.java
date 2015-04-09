@@ -2,9 +2,11 @@ package com.example.ruben.filarmonica;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.widget.ListView;
+import android.widget.VideoView;
 
 
 public class Contacto extends Activity
@@ -24,6 +26,22 @@ public class Contacto extends Activity
 
         //Obtenemos el contexto.
         contexto = getApplicationContext();
+
+        //Obtenemos las refererencias.
+        VideoView videoView = (VideoView) findViewById(R.id.video_contacto);
+
+        //Cargamos el video.
+        videoView = (VideoView) findViewById(R.id.video_contacto);
+        videoView.setZOrderOnTop(true);
+        Uri video = Uri.parse("android.resource://" + getPackageName() + "/"
+                + R.raw.video_contacto);
+
+        videoView.setVideoURI(video);
+        videoView.start();
+        if(videoView.isPlaying())
+        {
+            videoView.setZOrderOnTop(false);
+        }
 
         /******************************* ListView Drawer *****************************/
         list_view_drawer = (ListView) findViewById(R.id.drawer_listView);
