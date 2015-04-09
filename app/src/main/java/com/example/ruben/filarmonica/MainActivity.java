@@ -70,22 +70,26 @@ public class MainActivity extends Activity
         //Trigger para salir de la aplicación en caso de que no haya datos insertados debido a la
         // conexión a internet.
         Intent intent = getIntent();
-        if(intent.getExtras().getString("DatosInsertados").equals("NoInsertados"))
+        Bundle extras = intent.getExtras();
+        if(extras != null)
         {
-            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-            alertDialog.setTitle("Configuración Necesaria");
-            alertDialog.setMessage(getResources().getString(R.string.conexion_requerida));
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Ok", new DialogInterface
-                    .OnClickListener()
+            if(extras.getString("DatosInsertados").equals("NoInsertados"))
             {
-                @Override
-                public void onClick(DialogInterface dialog, int which)
+                AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                alertDialog.setTitle("Configuración Necesaria");
+                alertDialog.setMessage(getResources().getString(R.string.conexion_requerida));
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Ok", new DialogInterface
+                        .OnClickListener()
                 {
-                    finish();
-                    System.exit(0);
-                }
-            });
-            alertDialog.show();
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        finish();
+                        System.exit(0);
+                    }
+                });
+                alertDialog.show();
+            }
         }
 
 

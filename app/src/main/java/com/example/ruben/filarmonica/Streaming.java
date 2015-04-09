@@ -479,7 +479,9 @@ public class Streaming extends ActionBarActivity
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed()
+    {
+        finish();
         Intent i = new Intent(Streaming.this, MainActivity.class);
         startActivity(i);
     }
