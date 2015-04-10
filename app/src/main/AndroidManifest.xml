@@ -5,8 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -30,22 +30,27 @@
             android:name=".DetalleEvento"
             android:label="@string/title_activity_detalle_evento" >
             <intent-filter>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="http"
-                      android:host="ofj.com.mx"
-                        android:pathPrefix="/conciertos-eventos/"/>
-                <data android:scheme="http"
-                      android:host="www.ofj.com.mx"
-                      android:pathPrefix="/conciertos-eventos/"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="ofj.com.mx"
+                    android:pathPrefix="/conciertos-eventos/"
+                    android:scheme="http" />
+                <data
+                    android:host="www.ofj.com.mx"
+                    android:pathPrefix="/conciertos-eventos/"
+                    android:scheme="http" />
+
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
         <activity
             android:name=".Noticias"
-            android:label="@string/title_activity_noticias">
+            android:label="@string/title_activity_noticias" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -56,15 +61,22 @@
         <activity
             android:name=".Streaming"
             android:configChanges="orientation|screenSize"
-            android:label="StreamingFull">
+            android:label="StreamingFull" >
         </activity>
-        <activity android:name=".MainActivity"
-            android:label="Splash"
-            />
-        <activity android:name=".Contacto"
-            android:label="Contacto"/>
-        <service android:name=".ServicioActualizacionBD"/>
-        <service android:name=".ServicioMusica"/>
+        <activity
+            android:name=".MainActivity"
+            android:label="Splash" />
+        <activity
+            android:name=".Contacto"
+            android:label="Contacto" />
+
+        <service android:name=".ServicioActualizacionBD" />
+        <service android:name=".ServicioMusica" />
+
+        <activity
+            android:name=".Patronato"
+            android:label="@string/title_activity_patronato" >
+        </activity>
     </application>
 
 </manifest>

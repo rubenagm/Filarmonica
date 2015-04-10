@@ -1,8 +1,10 @@
 package com.example.ruben.filarmonica;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -23,7 +25,7 @@ import conexion.DescargarImagen;
  */
 public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitter.ViewHolder>
 {
-    private final static int IMAGEN_TIPO_TWITTER   = 2;
+    private final static int IMAGEN_TIPO_TWITTER = 2;
 
     ArrayList<ItemTwitter> tweets;
     String DIRECTORIO = Environment.getExternalStorageDirectory().getAbsolutePath() +
@@ -32,7 +34,6 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
     final String COLOR_FIN = "</font>";
     Context contexto;
     //variable que muestra el contenido del twitter con colores en caso de haber
-    String contenido = "";
     public AdapterListaTwitter(ArrayList<ItemTwitter> tweets,Context contexto)
     {
         this.contexto = contexto;
@@ -54,12 +55,16 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i)
     {
+        //Quitamos el reciclado.
         viewHolder.setIsRecyclable(false);
 
-        String contenido = tweets.get(i).getText();
+        //Obtenemos el tweet.
+        ItemTwitter tweet = tweets.get(i);
+
+        String contenido = tweet.getText();
         //viewHolder.textViewContenido.setText(contenido);
 
-        String imagen = tweets.get(i).getUrlImagen();
+        String imagen = tweet.getUrlImagen();
         if(imagen.equals("")){
             viewHolder.imageViewImagenTwitter.setVisibility(View.GONE);
         }
@@ -80,8 +85,6 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
                 viewHolder.imageViewImagenTwitter.setImageBitmap(bitmap);
             }
         }
-
-        contenido = tweets.get(i).getText();
         //Pintar links
         for(int x = 0; x<tweets.get(i).getLinks().size();x++){
             contenido = pintarPalabras(contenido,tweets.get(i).getLinks().get(x));
@@ -96,12 +99,17 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
         }
 
         viewHolder.textViewContenido.setText(Html.fromHtml(contenido));
+        viewHolder.fecha.setText(tweet.getFecha());
+
+        //Asignamos la URL de Twitter.
+       asignarUrlTwitter(viewHolder.textViewVerEnTwitter, tweet.getUrlTwitter());
     }
 
     //Número de items del arreglo.
     @Override
-    public int getItemCount() {
-        return tweets.size();
+    public int getItemCount()
+    {
+       return tweets.size();
     }
 
     //Clase contenedor de las vistas.
@@ -109,14 +117,15 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
         TextView textViewContenido;
         ImageView imageViewImagenTwitter;
         TextView textViewVerEnTwitter;
+        TextView fecha;
         RelativeLayout progressCargandoImagen;
         public ViewHolder(View v){
             super(v);
-            textViewVerEnTwitter = (TextView) v.findViewById(R.id.lista_twitter_ver_en_twitter);
+            textViewVerEnTwitter = (TextView) v.findViewById(R.id.ver_en_twitter);
             textViewContenido = (TextView) v.findViewById(R.id.lista_twitter_contenido);
             imageViewImagenTwitter = (ImageView) v.findViewById(R.id.lista_twitter_imagen_tweet);
             progressCargandoImagen = (RelativeLayout) v.findViewById(R.id.relative_progress);
-            //linearLayoutTwitter = (LinearLayout) v.findViewById(R.id.linear_layout_twitter);
+            fecha = (TextView) v.findViewById(R.id.lista_twitter_tiempo);
         }
 
     }
@@ -141,6 +150,22 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
         }
         return resultado;
 
+    }
+
+    //Método para poner la url de twitter en la etiqueta de "ver en twitter".
+    public void asignarUrlTwitter(TextView textViewVerEnTwitter, final String url)
+    {
+        textViewVerEnTwitter.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setData(Uri.parse(url));
+                contexto.startActivity(intent);
+            }
+        });
     }
 
 }

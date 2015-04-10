@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,10 @@ public class AdapterImagenesInstagram extends RecyclerView.Adapter<AdapterImagen
     static FragmentTransaction ft;
     static Fragment prev;
     static FragmentActivity activity;
-    public AdapterImagenesInstagram(ArrayList<ItemImagenInstagram> imagenes,Context contexto,DialogoMostrarImagenInstagram newFragment,FragmentTransaction ft,Fragment prev,FragmentActivity activity) {
+    public AdapterImagenesInstagram(ArrayList<ItemImagenInstagram> imagenes,Context contexto,
+               DialogoMostrarImagenInstagram newFragment,FragmentTransaction ft,Fragment prev,
+               FragmentActivity activity)
+    {
         this.imagenes = imagenes;
         this.contexto = contexto;
         this.newFragment = newFragment;
@@ -182,6 +186,14 @@ public class AdapterImagenesInstagram extends RecyclerView.Adapter<AdapterImagen
 
             }
         });
+
+        //Colocamos el ancho de las imágenes.
+        DisplayMetrics display_metrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
+        int width = display_metrics.widthPixels / 3;
+        holder.imageViewImagen1.getLayoutParams().width = width;
+        holder.imageViewImagen2.getLayoutParams().width = width;
+        holder.imageViewImagen3.getLayoutParams().width = width;
     }
 
 

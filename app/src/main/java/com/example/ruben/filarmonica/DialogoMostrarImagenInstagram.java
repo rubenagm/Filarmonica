@@ -1,23 +1,16 @@
 package com.example.ruben.filarmonica;
 
-import android.app.Notification;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Environment;
-import android.support.v4.app.Fragment;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -25,8 +18,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,7 +46,7 @@ public class DialogoMostrarImagenInstagram extends DialogFragment  {
     private final static int IMAGEN_TIPO_INSTAGRAM = 4;
 
     TextView textViewtexto;
-    TextView textViewverEnInstagram;
+    TextView textViewVerEnInstagram;
     Context contexto;
     RelativeLayout layoutCerrar = null;
 
@@ -129,6 +120,21 @@ public class DialogoMostrarImagenInstagram extends DialogFragment  {
 
         textViewtexto = (TextView) v.findViewById(R.id.dialogo_informacion_instagram);
         textViewtexto.setText(texto.get(position));
+
+        //Configuramos el ver en instagram.
+        textViewVerEnInstagram = (TextView) v.findViewById(R.id.dialogo_ver_en_instagram);
+        textViewVerEnInstagram.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setData(Uri.parse(links.get(position)));
+                contexto.startActivity(intent);
+            }
+        });
+
         layoutCerrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

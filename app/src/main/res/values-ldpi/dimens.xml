@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="alto_item_drawer">51dp</dimen>
-    <dimen name="alto_item_drawer_doble">50dp</dimen>
+    <dimen name="margen_superior_dhms">375dp</dimen>
+    <dimen name="margen_superior_contador">315dp</dimen>
+    <dimen name="margen_inferior_contador">30dp</dimen>
+    <dimen name="margen_inferior_proximo_concierto">60dp</dimen>
+    <dimen name="margen_izquierdo_dias">20dp</dimen>
+    <dimen name="margen_izquierdo_horas">35dp</dimen>
+    <dimen name="margen_izquierdo_minutos">30dp</dimen>
+    <dimen name="margen_izquierdo_segundos">15dp</dimen>
 
 </resources>

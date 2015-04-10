@@ -86,8 +86,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     private static Context contexto;
 
-    //Imágenes de las tabs.
-    private static int[] imagenesTab =
+    //Imágenes de las tabs de Streaming.
+    private static int[] imagenesStreaming =
     {
             R.drawable.video_icon,
             R.drawable.musica_icon_off,
@@ -96,6 +96,31 @@ public class SlidingTabLayout extends HorizontalScrollView {
             R.drawable.live_icon,
             R.drawable.live_icon_on
     };
+
+    //Imágenes de las tabs de noticias.
+    private static int[] imagenesNoticias =
+    {
+            R.drawable.fb_on,
+            R.drawable.fb,
+            R.drawable.tw_on,
+            R.drawable.tw,
+            R.drawable.insta_on,
+            R.drawable.insta
+    };
+
+    /********************** CONSTANTES NOTICIAS *************************/
+    //ÍNDICES DE IMÁGENES.
+    private static final int FACEBOOK_ON   = 0;
+    private static final int FACEBOOK_OFF  = 1;
+    private static final int TWITTER_ON    = 2;
+    private static final int TWITTER_OFF   = 3;
+    private static final int INSTAGRAM_ON  = 4;
+    private static final int INSTAGRAM_OFF = 5;
+
+    //ÍNDICES DE POSICIONES DE TABS.
+    private static final int POSICION_FACEBOOK  = 0;
+    private final static int POSICION_TWITTER   = 1;
+    private final static int POSICION_INSTAGRAM = 2;
 
     public SlidingTabLayout(Context context) {
         this(context, null);
@@ -342,7 +367,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                     case 0:
                     {
                         Drawable imagenTabVideo = contexto.getResources().
-                                getDrawable(imagenesTab[0]);
+                                getDrawable(imagenesStreaming[0]);
                         imagenTabVideo.setBounds(0, 0, 60, 60);
                         SpannableString spannableStringVideo = new SpannableString(" ");
                         ImageSpan imageSpanVideo = new ImageSpan(imagenTabVideo,
@@ -355,7 +380,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                         viewTabVideo.setText(spannableStringVideo);
 
                         Drawable imagenTabMusica = contexto.getResources().
-                                getDrawable(imagenesTab[1]);
+                                getDrawable(imagenesStreaming[1]);
                         imagenTabMusica.setBounds(0, 0, 60, 60);
                         SpannableString spannableStringMusica = new SpannableString(" ");
                         ImageSpan imageSpanMusica = new ImageSpan(imagenTabMusica,
@@ -368,7 +393,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                         viewTabMusica.setText(spannableStringMusica);
 
                         Drawable imagenTabStreaming = contexto.getResources().
-                                getDrawable(imagenesTab[4]);
+                                getDrawable(imagenesStreaming[4]);
                         imagenTabStreaming.setBounds(0, 0, 60, 60);
                         SpannableString spannableStringStreaming = new SpannableString(" ");
                         ImageSpan imageSpanStreaming = new ImageSpan(imagenTabStreaming,
@@ -386,7 +411,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                     case 1:
                     {
                         Drawable imagenTabMusica = contexto.getResources().
-                                getDrawable(imagenesTab[3]);
+                                getDrawable(imagenesStreaming[3]);
                         imagenTabMusica.setBounds(0, 0, 60, 60);
                         SpannableString spannableStringMusica = new SpannableString(" ");
                         ImageSpan imageSpanMusica = new ImageSpan(imagenTabMusica,
@@ -399,7 +424,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                         viewTabMusica.setText(spannableStringMusica);
 
                         Drawable imagenTabVideo = contexto.getResources().
-                                getDrawable(imagenesTab[2]);
+                                getDrawable(imagenesStreaming[2]);
                         imagenTabVideo.setBounds(0, 0, 60, 60);
                         SpannableString spannableStringVideo = new SpannableString(" ");
                         ImageSpan imageSpanVideo = new ImageSpan(imagenTabVideo,
@@ -412,7 +437,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                         viewTabVideo.setText(spannableStringVideo);
 
                         Drawable imagenTabStreaming = contexto.getResources().
-                                getDrawable(imagenesTab[4]);
+                                getDrawable(imagenesStreaming[4]);
                         imagenTabStreaming.setBounds(0, 0, 60, 60);
                         SpannableString spannableStringStreaming = new SpannableString(" ");
                         ImageSpan imageSpanStreaming = new ImageSpan(imagenTabStreaming,
@@ -430,7 +455,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                     case 2:
                     {
                         Drawable imagenTabMusica = contexto.getResources().
-                                getDrawable(imagenesTab[1]);
+                                getDrawable(imagenesStreaming[1]);
                         imagenTabMusica.setBounds(0, 0, 60, 60);
                         SpannableString spannableStringMusica = new SpannableString(" ");
                         ImageSpan imageSpanMusica = new ImageSpan(imagenTabMusica,
@@ -443,7 +468,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                         viewTabMusica.setText(spannableStringMusica);
 
                         Drawable imagenTabVideo = contexto.getResources().
-                                getDrawable(imagenesTab[2]);
+                                getDrawable(imagenesStreaming[2]);
                         imagenTabVideo.setBounds(0, 0, 60, 60);
                         SpannableString spannableStringVideo = new SpannableString(" ");
                         ImageSpan imageSpanVideo = new ImageSpan(imagenTabVideo,
@@ -456,7 +481,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                         viewTabVideo.setText(spannableStringVideo);
 
                         Drawable imagenTabStreaming = contexto.getResources().
-                                getDrawable(imagenesTab[5]);
+                                getDrawable(imagenesStreaming[5]);
                         imagenTabStreaming.setBounds(0, 0, 60, 60);
                         SpannableString spannableStringStreaming = new SpannableString(" ");
                         ImageSpan imageSpanStreaming = new ImageSpan(imagenTabStreaming,
@@ -477,51 +502,140 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 //Cambiamos el texto.
                 switch(position)
                 {
+                    /*
+                     * Facebook  - ON
+                     * Twitter   - OFF
+                     * Instagram - OFF
+                     */
                     case 0:
                     {
-                        TextView tabNoticias  = (TextView) mTabStrip.getChildAt(0);
-                        TextView tabFacebook  = (TextView) mTabStrip.getChildAt(1);
-                        TextView tabGaleria   = (TextView) mTabStrip.getChildAt(2);
+                        //Facebook.
+                        Drawable imagenTabFacebook = contexto.getResources().
+                                getDrawable(imagenesNoticias[FACEBOOK_ON]);
+                        imagenTabFacebook.setBounds(0, 0, 60, 60);
+                        SpannableString spannableStringFacebook = new SpannableString(" ");
+                        ImageSpan imageSpanFacebook = new ImageSpan(imagenTabFacebook,
+                                ImageSpan.ALIGN_BOTTOM);
+                        spannableStringFacebook.setSpan(imageSpanFacebook, 0, 1,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        TextView viewTabFacebook = (TextView) mTabStrip.getChildAt(POSICION_FACEBOOK);
+                        viewTabFacebook.setText(spannableStringFacebook);
 
-                        tabNoticias.setText("NOTICIAS");
-                        tabFacebook.setText("FACEBOOK");
-                        tabGaleria.setText("GALERIA");
+                        //Twitter.
+                        Drawable imagenTabTwitter = contexto.getResources().
+                                getDrawable(imagenesNoticias[TWITTER_OFF]);
+                        imagenTabTwitter.setBounds(0, 0, 60, 60);
+                        SpannableString spannableStringTwitter = new SpannableString(" ");
+                        ImageSpan imageSpanTwitter = new ImageSpan(imagenTabTwitter,
+                                ImageSpan.ALIGN_BOTTOM);
+                        spannableStringTwitter.setSpan(imageSpanTwitter, 0, 1,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        TextView viewTabTwitter = (TextView) mTabStrip.getChildAt(POSICION_TWITTER);
+                        viewTabTwitter.setText(spannableStringTwitter);
 
-                        tabNoticias.setTextColor(Color.parseColor("#E31836"));
-                        tabFacebook.setTextColor(-1979711488);
-                        tabGaleria.setTextColor(-1979711488);
+                        //Instagram.
+                        Drawable imagenTabInstagram = contexto.getResources().
+                                getDrawable(imagenesNoticias[INSTAGRAM_OFF]);
+                        imagenTabInstagram.setBounds(0, 0, 60, 60);
+                        SpannableString spannableStringInstagram = new SpannableString(" ");
+                        ImageSpan imageSpanInstagram = new ImageSpan(imagenTabInstagram,
+                                ImageSpan.ALIGN_BOTTOM);
+                        spannableStringInstagram.setSpan(imageSpanInstagram, 0, 1,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        TextView viewTabInstagram = (TextView) mTabStrip.getChildAt(POSICION_INSTAGRAM);
+                        viewTabInstagram.setText(spannableStringInstagram);
 
                         break;
                     }
+
+                    /*
+                     * Facebook  - OFF
+                     * Twitter   - ON
+                     * Instagram - OFF
+                     */
                     case 1:
                     {
-                        TextView tabNoticias  = (TextView) mTabStrip.getChildAt(0);
-                        TextView tabFacebook  = (TextView) mTabStrip.getChildAt(1);
-                        TextView tabGaleria   = (TextView) mTabStrip.getChildAt(2);
+                        //Facebook.
+                        Drawable imagenTabFacebook = contexto.getResources().
+                                getDrawable(imagenesNoticias[FACEBOOK_OFF]);
+                        imagenTabFacebook.setBounds(0, 0, 60, 60);
+                        SpannableString spannableStringFacebook = new SpannableString(" ");
+                        ImageSpan imageSpanFacebook = new ImageSpan(imagenTabFacebook,
+                                ImageSpan.ALIGN_BOTTOM);
+                        spannableStringFacebook.setSpan(imageSpanFacebook, 0, 1,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        TextView viewTabFacebook = (TextView) mTabStrip.getChildAt(POSICION_FACEBOOK);
+                        viewTabFacebook.setText(spannableStringFacebook);
 
-                        tabNoticias.setText("NOTICIAS");
-                        tabFacebook.setText("FACEBOOK");
-                        tabGaleria.setText("GALERIA");
+                        //Twitter.
+                        Drawable imagenTabTwitter = contexto.getResources().
+                                getDrawable(imagenesNoticias[TWITTER_ON]);
+                        imagenTabTwitter.setBounds(0, 0, 60, 60);
+                        SpannableString spannableStringTwitter = new SpannableString(" ");
+                        ImageSpan imageSpanTwitter = new ImageSpan(imagenTabTwitter,
+                                ImageSpan.ALIGN_BOTTOM);
+                        spannableStringTwitter.setSpan(imageSpanTwitter, 0, 1,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        TextView viewTabTwitter = (TextView) mTabStrip.getChildAt(POSICION_TWITTER);
+                        viewTabTwitter.setText(spannableStringTwitter);
 
-                        tabNoticias.setTextColor(-1979711488);
-                        tabFacebook.setTextColor(Color.parseColor("#E31836"));
-                        tabGaleria.setTextColor(-1979711488);
+                        //Instagram.
+                        Drawable imagenTabInstagram = contexto.getResources().
+                                getDrawable(imagenesNoticias[INSTAGRAM_OFF]);
+                        imagenTabInstagram.setBounds(0, 0, 60, 60);
+                        SpannableString spannableStringInstagram = new SpannableString(" ");
+                        ImageSpan imageSpanInstagram = new ImageSpan(imagenTabInstagram,
+                                ImageSpan.ALIGN_BOTTOM);
+                        spannableStringInstagram.setSpan(imageSpanInstagram, 0, 1,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        TextView viewTabInstagram = (TextView) mTabStrip.getChildAt(POSICION_INSTAGRAM);
+                        viewTabInstagram.setText(spannableStringInstagram);
 
                         break;
                     }
+
+                    /*
+                     * Facebook  - OFF
+                     * Twitter   - OFF
+                     * Instagram - ON
+                     */
                     case 2:
                     {
-                        TextView tabNoticias  = (TextView) mTabStrip.getChildAt(0);
-                        TextView tabFacebook  = (TextView) mTabStrip.getChildAt(1);
-                        TextView tabGaleria   = (TextView) mTabStrip.getChildAt(2);
+                        //Facebook.
+                        Drawable imagenTabFacebook = contexto.getResources().
+                                getDrawable(imagenesNoticias[FACEBOOK_OFF]);
+                        imagenTabFacebook.setBounds(0, 0, 60, 60);
+                        SpannableString spannableStringFacebook = new SpannableString(" ");
+                        ImageSpan imageSpanFacebook = new ImageSpan(imagenTabFacebook,
+                                ImageSpan.ALIGN_BOTTOM);
+                        spannableStringFacebook.setSpan(imageSpanFacebook, 0, 1,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        TextView viewTabFacebook = (TextView) mTabStrip.getChildAt(POSICION_FACEBOOK);
+                        viewTabFacebook.setText(spannableStringFacebook);
 
-                        tabNoticias.setText("NOTICIAS");
-                        tabFacebook.setText("FACEBOOK");
-                        tabGaleria.setText("GALERIA");
+                        //Twitter.
+                        Drawable imagenTabTwitter = contexto.getResources().
+                                getDrawable(imagenesNoticias[TWITTER_OFF]);
+                        imagenTabTwitter.setBounds(0, 0, 60, 60);
+                        SpannableString spannableStringTwitter = new SpannableString(" ");
+                        ImageSpan imageSpanTwitter = new ImageSpan(imagenTabTwitter,
+                                ImageSpan.ALIGN_BOTTOM);
+                        spannableStringTwitter.setSpan(imageSpanTwitter, 0, 1,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        TextView viewTabTwitter = (TextView) mTabStrip.getChildAt(POSICION_TWITTER);
+                        viewTabTwitter.setText(spannableStringTwitter);
 
-                        tabNoticias.setTextColor(-1979711488);
-                        tabFacebook.setTextColor(-1979711488);
-                        tabGaleria.setTextColor(Color.parseColor("#E31836"));
+                        //Instagram.
+                        Drawable imagenTabInstagram = contexto.getResources().
+                                getDrawable(imagenesNoticias[INSTAGRAM_ON]);
+                        imagenTabInstagram.setBounds(0, 0, 60, 60);
+                        SpannableString spannableStringInstagram = new SpannableString(" ");
+                        ImageSpan imageSpanInstagram = new ImageSpan(imagenTabInstagram,
+                                ImageSpan.ALIGN_BOTTOM);
+                        spannableStringInstagram.setSpan(imageSpanInstagram, 0, 1,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        TextView viewTabInstagram = (TextView) mTabStrip.getChildAt(POSICION_INSTAGRAM);
+                        viewTabInstagram.setText(spannableStringInstagram);
 
                         break;
                     }
@@ -547,7 +661,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                             case 0:
                             {
                                 Drawable imagenTabVideo = contexto.getResources().
-                                        getDrawable(imagenesTab[0]);
+                                        getDrawable(imagenesStreaming[0]);
                                 imagenTabVideo.setBounds(0, 0, 60, 60);
                                 SpannableString spannableStringVideo = new SpannableString(" ");
                                 ImageSpan imageSpanVideo = new ImageSpan(imagenTabVideo,
@@ -557,7 +671,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                                 ((TextView) v).setText(spannableStringVideo);
 
                                 Drawable imagenTabMusica = contexto.getResources().
-                                        getDrawable(imagenesTab[1]);
+                                        getDrawable(imagenesStreaming[1]);
                                 imagenTabMusica.setBounds(0, 0, 60, 60);
                                 SpannableString spannableStringMusica = new SpannableString(" ");
                                 ImageSpan imageSpanMusica = new ImageSpan(imagenTabMusica,
@@ -570,7 +684,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                                 viewTabMusica.setText(spannableStringMusica);
 
                                 Drawable imagenTabStreaming = contexto.getResources().
-                                        getDrawable(imagenesTab[4]);
+                                        getDrawable(imagenesStreaming[4]);
                                 imagenTabStreaming.setBounds(0, 0, 60, 60);
                                 SpannableString spannableStringStreaming = new SpannableString(" ");
                                 ImageSpan imageSpanStreaming = new ImageSpan(imagenTabStreaming,
@@ -588,7 +702,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                             case 1:
                             {
                                 Drawable imagenTabMusica = contexto.getResources().
-                                        getDrawable(imagenesTab[3]);
+                                        getDrawable(imagenesStreaming[3]);
                                 imagenTabMusica.setBounds(0, 0, 60, 60);
                                 SpannableString spannableStringMusica = new SpannableString(" ");
                                 ImageSpan imageSpanMusica = new ImageSpan(imagenTabMusica,
@@ -598,7 +712,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                                 ((TextView) v).setText(spannableStringMusica);
 
                                 Drawable imagenTabVideo = contexto.getResources().
-                                        getDrawable(imagenesTab[2]);
+                                        getDrawable(imagenesStreaming[2]);
                                 imagenTabVideo.setBounds(0, 0, 60, 60);
                                 SpannableString spannableStringVideo = new SpannableString(" ");
                                 ImageSpan imageSpanVideo = new ImageSpan(imagenTabVideo,
@@ -611,7 +725,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                                 viewTabVideo.setText(spannableStringVideo);
 
                                 Drawable imagenTabStreaming = contexto.getResources().
-                                        getDrawable(imagenesTab[4]);
+                                        getDrawable(imagenesStreaming[4]);
                                 imagenTabStreaming.setBounds(0, 0, 60, 60);
                                 SpannableString spannableStringStreaming = new SpannableString(" ");
                                 ImageSpan imageSpanStreaming = new ImageSpan(imagenTabStreaming,
@@ -629,7 +743,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                             case 2:
                             {
                                 Drawable imagenTabMusica = contexto.getResources().
-                                        getDrawable(imagenesTab[1]);
+                                        getDrawable(imagenesStreaming[1]);
                                 imagenTabMusica.setBounds(0, 0, 60, 60);
                                 SpannableString spannableStringMusica = new SpannableString(" ");
                                 ImageSpan imageSpanMusica = new ImageSpan(imagenTabMusica,
@@ -642,7 +756,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                                 viewTabMusica.setText(spannableStringMusica);
 
                                 Drawable imagenTabVideo = contexto.getResources().
-                                        getDrawable(imagenesTab[2]);
+                                        getDrawable(imagenesStreaming[2]);
                                 imagenTabVideo.setBounds(0, 0, 60, 60);
                                 SpannableString spannableStringVideo = new SpannableString(" ");
                                 ImageSpan imageSpanVideo = new ImageSpan(imagenTabVideo,
@@ -655,7 +769,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                                 viewTabVideo.setText(spannableStringVideo);
 
                                 Drawable imagenTabStreaming = contexto.getResources().
-                                        getDrawable(imagenesTab[5]);
+                                        getDrawable(imagenesStreaming[5]);
                                 imagenTabStreaming.setBounds(0, 0, 60, 60);
                                 SpannableString spannableStringStreaming = new SpannableString(" ");
                                 ImageSpan imageSpanStreaming = new ImageSpan(imagenTabStreaming,

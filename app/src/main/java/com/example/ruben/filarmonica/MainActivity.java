@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -56,7 +57,10 @@ public class MainActivity extends Activity
     //Variables del layout.
     private TextView lblReloj;
     private TextView lblProximoConcierto;
-    private TextView lblDHMS;//Dias, horas, minutos, segundos.
+    private TextView lblDias;
+    private TextView lblHoras;
+    private TextView lblMinutos;
+    private TextView lblSegundos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -102,14 +106,20 @@ public class MainActivity extends Activity
 
         //Obtenemos las referencias del layout.
         lblReloj		    = (TextView) findViewById(R.id.lbl_contador_proximo_concierto);
-        lblDHMS             = (TextView) findViewById(R.id.lbl_dias_horas_minutos_segundos);
         lblProximoConcierto = (TextView) findViewById(R.id.lbl_proximo_concierto);
+        lblDias             = (TextView) findViewById(R.id.dias);
+        lblHoras            = (TextView) findViewById(R.id.horas);
+        lblMinutos          = (TextView) findViewById(R.id.minutos);
+        lblSegundos         = (TextView) findViewById(R.id.segundos);
 
         //Colocamos la fuente al contador.
-        Typeface roboto = Typeface.createFromAsset(getAssets(), "fonts/Roboto/Roboto-Bold.ttf");
+        Typeface roboto = Typeface.createFromAsset(getAssets(), "fonts/Roboto/Roboto-Light.ttf");
         lblReloj.setTypeface(roboto);
-        lblDHMS.setTypeface(roboto);
         lblProximoConcierto.setTypeface(roboto);
+        lblDias.setTypeface(roboto);
+        lblHoras.setTypeface(roboto);
+        lblMinutos.setTypeface(roboto);
+        lblSegundos.setTypeface(roboto);
 
         /******************************* ListView Drawer *****************************/
         list_view_drawer = (ListView) findViewById(R.id.drawer_listView);
@@ -176,7 +186,10 @@ public class MainActivity extends Activity
         {
             super.onPreExecute();
             lblProximoConcierto.setVisibility(View.INVISIBLE);
-            lblDHMS.setVisibility(View.INVISIBLE);
+            lblDias.setVisibility(View.INVISIBLE);
+            lblHoras.setVisibility(View.INVISIBLE);
+            lblMinutos.setVisibility(View.INVISIBLE);
+            lblSegundos.setVisibility(View.INVISIBLE);
             progressDialog = new ProgressDialog(contexto, R.style.MyTheme);
             progressDialog.setIndeterminate(false);
             progressDialog.setCancelable(false);
@@ -291,7 +304,10 @@ public class MainActivity extends Activity
         {
             progressDialog.dismiss();
             lblProximoConcierto.setVisibility(View.VISIBLE);
-            lblDHMS.setVisibility(View.VISIBLE);
+            lblDias.setVisibility(View.VISIBLE);
+            lblHoras.setVisibility(View.VISIBLE);
+            lblMinutos.setVisibility(View.VISIBLE);
+            lblSegundos.setVisibility(View.VISIBLE);
             if(result.get(0).equals("tocandoAhora"))
             {
 
@@ -316,7 +332,10 @@ public class MainActivity extends Activity
         {
             super.onPreExecute();
             lblProximoConcierto.setVisibility(View.INVISIBLE);
-            lblDHMS.setVisibility(View.INVISIBLE);
+            lblDias.setVisibility(View.INVISIBLE);
+            lblHoras.setVisibility(View.INVISIBLE);
+            lblMinutos.setVisibility(View.INVISIBLE);
+            lblSegundos.setVisibility(View.INVISIBLE);
             progressDialog = new ProgressDialog(contexto, R.style.MyTheme);
             progressDialog.setIndeterminate(false);
             progressDialog.setCancelable(false);
@@ -345,7 +364,10 @@ public class MainActivity extends Activity
             {
                 progressDialog.dismiss();
                 lblProximoConcierto.setVisibility(View.VISIBLE);
-                lblDHMS.setVisibility(View.VISIBLE);
+                lblDias.setVisibility(View.VISIBLE);
+                lblHoras.setVisibility(View.VISIBLE);
+                lblMinutos.setVisibility(View.VISIBLE);
+                lblSegundos.setVisibility(View.VISIBLE);
                 //Mandamos la fecha y la hora al parser.
                 DateControl dateControl = new DateControl(result);
                 DateDifference countdownTimer = dateControl.startCountdown();
@@ -395,7 +417,11 @@ public class MainActivity extends Activity
                         //Una vez el concierto empezado, colocar mensaje y después de determinado tiempo
                         //volver a hacer una consulta en busca del próximo concierto.
                         lblReloj.setText(getText(R.string.en_concierto));
-                        lblDHMS.setVisibility(View.GONE);
+                        lblReloj.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                        lblDias.setVisibility(View.GONE);
+                        lblHoras.setVisibility(View.GONE);
+                        lblMinutos.setVisibility(View.GONE);
+                        lblSegundos.setVisibility(View.GONE);
                         lblProximoConcierto.setVisibility(View.GONE);
                     }
                 });

@@ -50,6 +50,7 @@ public class ListViewAdapter extends BaseAdapter
         ImageView imgNoticias;
         ImageView imgStreaming;
         ImageView imgContacto;
+        ImageView imgPatronato;
         LinearLayout linearLayout;
     }
 
@@ -72,6 +73,8 @@ public class ListViewAdapter extends BaseAdapter
             view.imgContacto   = (ImageView) convertView.findViewById(R.id.icono_contacto);
             view.imgStreaming  = (ImageView) convertView.findViewById(R.id.icono_streaming);
             view.imgNoticias   = (ImageView) convertView.findViewById(R.id.icono_noticias);
+            view.imgPatronato  = (ImageView) convertView.findViewById(R.id.icono_patronato);
+
             view.linearLayout  = (LinearLayout) convertView.findViewById(R.id.linear_layout_drawer);
 
             //Colocamos la altura del linear layout.
@@ -117,6 +120,15 @@ public class ListViewAdapter extends BaseAdapter
                 public void onClick(View v)
                 {
                     Intent i = new Intent(activity, Contacto.class);
+                    activity.startActivity(i);
+                }
+            });
+            view.imgPatronato.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Intent i = new Intent(activity, Patronato.class);
                     activity.startActivity(i);
                 }
             });

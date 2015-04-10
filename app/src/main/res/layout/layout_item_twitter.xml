@@ -107,7 +107,7 @@
         <TextView
             android:textSize="15sp"
             android:layout_alignParentRight="true"
-            android:id="@+id/lista_twitter_ver_en_twitter"
+            android:id="@+id/ver_en_twitter"
             android:layout_marginRight="25dp"
             android:layout_gravity="right"
             android:text="Ver en Twitter"

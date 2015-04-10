@@ -8,15 +8,11 @@ import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-
-import com.example.ruben.filarmonica.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ContentHandler;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -75,12 +71,6 @@ public class DescargarImagen extends AsyncTask<String, Void, Boolean>
         super.onPreExecute();
         imagen.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
-
-        //Verificamos la conextion a internet.
-        if(! ConexionInternet.verificarConexion(contexto))
-        {
-            cancel(true);
-        }
     }
 
     @Override
@@ -105,7 +95,10 @@ public class DescargarImagen extends AsyncTask<String, Void, Boolean>
             }
             case TIPO_FACEBOOK:
             {
+                urlDescarga = urlDescarga.substring(0, urlDescarga.lastIndexOf('.'));
+
                 archivo = DIRECTORIO_FACEBOOK + nombreImagen(urlDescarga) + ".png";
+
                 break;
             }
             case TIPO_INSTAGRAM:

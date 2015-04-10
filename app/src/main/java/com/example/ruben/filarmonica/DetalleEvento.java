@@ -167,8 +167,12 @@ public class DetalleEvento extends ActionBarActivity {
         String año = "";
         String mes = "";
         String dia = "";
+        String hora = "";
+        String minutos = "";
         StringTokenizer token = new StringTokenizer(fecha,"/");
         fechaFinal = token.nextToken();
+        hora = token.nextToken();
+        minutos = token.nextToken();
         StringTokenizer token2 = new StringTokenizer(fechaFinal,"-");
         año = token2.nextToken();
         mes = token2.nextToken();
@@ -213,6 +217,6 @@ public class DetalleEvento extends ActionBarActivity {
                 break;
         }
 
-        return dia + " de " + mes + " del " + año ;
+        return dia + " de " + mes + " del " + año + "  - " + hora + ":" + minutos + " hrs.";
     }
 }

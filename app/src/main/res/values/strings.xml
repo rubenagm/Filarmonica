@@ -4,8 +4,7 @@
     <string name="app_name">Filarmónica</string>
     <string name="action_settings">prueba</string>
     <string name="hello_world">Hello world!</string>
-    <string name="proximo_concierto">Próximo Concierto</string>
-    <string name="dias_horas_minutos_segundos"> Días Horas Minutos Segundos</string>
+    <string name="proximo_concierto">PRÓXIMO CONCIERTO</string>
     <string name="ofj">Orquesta Filarmónica de Jalisco</string>
     <string name="ver_en_facebook">Ver en Facebook</string>
     <string name="en_concierto">En Concierto Ahora</string>
@@ -24,5 +23,6 @@
 
     <!-- Url ticketmaster -->
     <string name="ticketmaster">http://www.ticketmaster.com.mx/Orquesta-Filarmonica-de-Jalisco-boletos/artist/1179212?tm_link=artist_artistvenue_module</string>
+    <string name="title_activity_patronato">Patronato</string>
 
 </resources>

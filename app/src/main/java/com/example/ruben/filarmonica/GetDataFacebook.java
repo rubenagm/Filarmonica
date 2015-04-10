@@ -1,6 +1,11 @@
 package com.example.ruben.filarmonica;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
@@ -20,8 +25,24 @@ import java.util.StringTokenizer;
 /**
  * Created by root on 19/01/15.
  */
-public class GetDataFacebook extends AsyncTask<Void,Void,ArrayList<ItemFacebook>>{
+public class GetDataFacebook extends AsyncTask<Void,Void,ArrayList<ItemFacebook>>
+{
 
+    private RecyclerView recyclerView;
+    private Context contexto;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    //Constructor que recibirá el contexto y el RecyclerView en donde se insertarán los estados
+    // de Facebook.
+    public GetDataFacebook(RecyclerView recyclerView, SwipeRefreshLayout swipeRefreshLayout,
+                          Context contexto)
+    {
+        this.recyclerView       = recyclerView;
+        this.swipeRefreshLayout = swipeRefreshLayout;
+        this.contexto           = contexto;
+    }
+
+    public GetDataFacebook(){}
 
     @Override
     protected ArrayList<ItemFacebook> doInBackground(Void... params) {
@@ -41,15 +62,16 @@ public class GetDataFacebook extends AsyncTask<Void,Void,ArrayList<ItemFacebook>
 
             JSONArray jsonArray = json.getJSONArray("data");
             for(int x = 0; x<jsonArray.length();x++){
-                String contenido = "", urlImagen = "";
+                String contenido = "";
+                String urlImagen = "";
+                String urlFacebook = "";
 
                 if(!jsonArray.getJSONObject(x).isNull("name")){
-                    contenido = jsonArray.getJSONObject(x).getString("name");
-                    urlImagen = jsonArray.getJSONObject(x).getString("source");
-                    //FtpDownload ftp = new FtpDownload();
-                    //ftp.descargarArchivo(3,urlImagen);
-                    //urlImagen= nombreImagen(urlImagen);
-                    publicaciones.add(new ItemFacebook(contenido,urlImagen+".png"));
+                    contenido   = jsonArray.getJSONObject(x).getString("name");
+                    urlImagen   = jsonArray.getJSONObject(x).getString("source");
+                    urlFacebook = jsonArray.getJSONObject(x).getString("link");
+
+                    publicaciones.add(new ItemFacebook(contenido,urlImagen+".png", urlFacebook));
                 }
                 Log.i("JSON Facebook", contenido + " ---- "+urlImagen);
 
@@ -66,6 +88,18 @@ public class GetDataFacebook extends AsyncTask<Void,Void,ArrayList<ItemFacebook>
         return publicaciones;
     }
 
+    @Override
+    protected void onPostExecute(ArrayList<ItemFacebook> itemsFacebook)
+    {
+        if(recyclerView != null)
+        {
+            RecyclerView.Adapter adapter = new AdapterListaFacebook(itemsFacebook,contexto);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(contexto));
+            recyclerView.setItemAnimator( new DefaultItemAnimator());
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
 
     public String nombreImagen (String urlImagen){
         String id="";

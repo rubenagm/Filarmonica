@@ -11,14 +11,17 @@ public class ItemTwitter {
     String fecha = "";
     String urlImagen = "";
     String id = "";
+    String urlTwitter;
     ArrayList<String> hashtags = new ArrayList<>();
     ArrayList<String> links = new ArrayList<>();
     ArrayList<String> users = new ArrayList<>();
 
-    public ItemTwitter(String id,String text,String fecha) {
+    public ItemTwitter(String id,String text,String fecha, String urlTwitter)
+    {
         this.id = id;
         this.text = text;
         this.fecha = fecha;
+        this.urlTwitter = urlTwitter;
     }
 
     public void setUrlImagen(String urlImagen){
@@ -39,6 +42,11 @@ public class ItemTwitter {
 
     public String getFecha(){
         return fecha;
+    }
+
+    public String getUrlTwitter()
+    {
+        return urlTwitter;
     }
 
     public void addHashTags(String tag){

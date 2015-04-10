@@ -6,9 +6,12 @@ package com.example.ruben.filarmonica;
 public class ItemFacebook {
     String contenido;
     String urlImagen;
-    public ItemFacebook(String contenido,String urlImagen){
-        this.contenido = contenido;
-        this.urlImagen = urlImagen;
+    String urlFacebook;
+    public ItemFacebook(String contenido,String urlImagen, String urlFacebook)
+    {
+        this.contenido   = contenido;
+        this.urlImagen   = urlImagen;
+        this.urlFacebook = urlFacebook;
     }
 
     public String getContenido(){
@@ -17,5 +20,10 @@ public class ItemFacebook {
 
     public String getUrlImagen(){
         return urlImagen;
+    }
+
+    public String getUrlFacebook()
+    {
+        return urlFacebook;
     }
 }

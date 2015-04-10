@@ -19,40 +19,73 @@
             android:src="@drawable/logo_filarmonica"
             />
 
-
-
-	    <TextView
-	        android:id="@+id/lbl_dias_horas_minutos_segundos"
-	        android:layout_width="wrap_content"
-	    	android:layout_height="wrap_content"
-	    	android:textColor="#FFFFFF"
-	    	android:text="@string/dias_horas_minutos_segundos"
-	    	android:textSize="16sp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="370dp" />
-
 	    <TextView
 	        android:id="@+id/lbl_contador_proximo_concierto"
 	        android:layout_width="wrap_content"
 	    	android:layout_height="wrap_content"
 	    	android:textColor="#FFFFFF"
-	    	android:textSize="40sp"
+	    	android:textSize="50sp"
 	    	android:layout_centerHorizontal="true"
-            android:layout_marginTop="315dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginTop="@dimen/margen_superior_contador"
+            android:layout_marginBottom="@dimen/margen_inferior_contador"
             />
 
 	    <TextView
-            android:layout_marginBottom="45dp"
+            android:layout_marginBottom="@dimen/margen_inferior_proximo_concierto"
 	        android:id="@+id/lbl_proximo_concierto"
 	        android:layout_width="wrap_content"
 	    	android:layout_height="wrap_content"
 	    	android:textColor="#FFFFFF"
 	    	android:text="@string/proximo_concierto"
-	    	android:textSize="25sp"
+	    	android:textSize="22sp"
 	    	android:layout_centerHorizontal="true"
             android:layout_alignBottom="@+id/lbl_contador_proximo_concierto"
             />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margen_superior_dhms"
+            android:orientation="horizontal"
+            android:layout_alignLeft="@id/lbl_contador_proximo_concierto">
+
+            <TextView
+                android:id="@+id/dias"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DÍAS"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:layout_marginLeft="@dimen/margen_izquierdo_dias"/>
+
+            <TextView
+                android:id="@+id/horas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HORAS"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:layout_marginLeft="@dimen/margen_izquierdo_horas"/>
+
+            <TextView
+                android:id="@+id/minutos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MINUTOS"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:layout_marginLeft="@dimen/margen_izquierdo_minutos"/>
+
+            <TextView
+                android:id="@+id/segundos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SEGUNDOS"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:layout_marginLeft="@dimen/margen_izquierdo_segundos"/>
+
+        </LinearLayout>
 	    
     </RelativeLayout>
 	

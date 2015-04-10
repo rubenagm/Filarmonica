@@ -1,8 +1,10 @@
 package com.example.ruben.filarmonica;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,8 +27,9 @@ public class AdapterListaFacebook extends RecyclerView.Adapter<AdapterListaFaceb
     ArrayList<ItemFacebook> publicaciones;
     String DIRECTORIO = Environment.getExternalStorageDirectory().getAbsolutePath() +
             "/Imagenes/Facebook/";
-    private final static int IMAGEN_TIPO_FACEBOOK   = 3;
+    private final static int IMAGEN_TIPO_FACEBOOK = 3;
     Context contexto;
+
     public AdapterListaFacebook(ArrayList<ItemFacebook> publicaciones,Context contexto)
     {
         this.contexto = contexto;
@@ -39,6 +42,7 @@ public class AdapterListaFacebook extends RecyclerView.Adapter<AdapterListaFaceb
         TextView textViewContenido;
         ImageView imageViewImagenFacebook;
         RelativeLayout progressCargandoImagen;
+        TextView lblVerEnFacebook;
 
         public ViewHolder (View v)
         {
@@ -46,6 +50,7 @@ public class AdapterListaFacebook extends RecyclerView.Adapter<AdapterListaFaceb
             textViewContenido = (TextView) v.findViewById(R.id.contenido_publicacion);
             imageViewImagenFacebook = (ImageView) v.findViewById(R.id.imagen_publicacion);
             progressCargandoImagen = (RelativeLayout) v.findViewById(R.id.relative_progress);
+            lblVerEnFacebook = (TextView) v.findViewById(R.id.ver_en_facebook);
         }
     }
 
@@ -53,6 +58,7 @@ public class AdapterListaFacebook extends RecyclerView.Adapter<AdapterListaFaceb
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
     {
+
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_item_facebook,
                 viewGroup, false);
         ViewHolder holder = new ViewHolder(v);
@@ -63,15 +69,18 @@ public class AdapterListaFacebook extends RecyclerView.Adapter<AdapterListaFaceb
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i)
     {
+        //Desactivamos el reciclaje del RecyclerView.
         viewHolder.setIsRecyclable(false);
 
-        viewHolder.textViewContenido.setText(publicaciones.get(i).getContenido());
-        //Bitmap bitmap = BitmapFactory.decodeFile(DIRECTORIO+publicaciones.get(i).getUrlImagen());
-        //viewHolder.imageViewImagenFacebook.setImageBitmap(bitmap);
+        //Obtenemos la publicación.
+        ItemFacebook publicacion = publicaciones.get(i);
+
+        viewHolder.textViewContenido.setText(publicacion.getContenido());
 
         //Cargamos la imagen. Comprobamos si existe, sino la descargamos.
-        String rutaAccesoImagen = DIRECTORIO + DescargarImagen.nombreImagenUrl(publicaciones.get(i).getUrlImagen()) + ".png";
-        String imagen = publicaciones.get(i).getUrlImagen();
+        String rutaAccesoImagen = DIRECTORIO + DescargarImagen.nombreImagenUrl(publicacion
+                .getUrlImagen()) + ".png";
+        String imagen = publicacion.getUrlImagen();
         File archivoImagen = new File(rutaAccesoImagen);
         if(!archivoImagen.exists())
         {
@@ -84,11 +93,30 @@ public class AdapterListaFacebook extends RecyclerView.Adapter<AdapterListaFaceb
             Bitmap bitmap = BitmapFactory.decodeFile(rutaAccesoImagen);
             viewHolder.imageViewImagenFacebook.setImageBitmap(bitmap);
         }
+
+        //Asignamos la url.
+        asignarUrlFacebook(viewHolder.lblVerEnFacebook, publicacion.getUrlFacebook());
     }
 
     @Override
     public int getItemCount() {
         return publicaciones.size();
+    }
+
+    //Método para poner la url de facebook en l etiquete de "ver en facebook".
+    public void asignarUrlFacebook(TextView lblVerEnFacebook, final String url)
+    {
+        lblVerEnFacebook.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setData(Uri.parse(url));
+                contexto.startActivity(intent);
+            }
+        });
     }
 
 }

@@ -13,7 +13,7 @@ public class Date
     private static final int MARCH     = 3;
     private static final int APRIL     = 4;
     private static final int MAY       = 5;
-    private static final int JUNE	      = 6;
+    private static final int JUNE	   = 6;
     private static final int JULY      = 7;
     private static final int AUGUST    = 8;
     private static final int SEPTEMBER = 9;
@@ -242,7 +242,35 @@ public class Date
         //Second.
         if(second > date.second)
         {
-            minuteDifference--;
+
+            if(minuteDifference > 0)
+            {
+                minuteDifference--;
+            }
+            else
+            {
+                if(hourDifference > 0)
+                {
+                    hourDifference--;
+                    minuteDifference = 59;
+                }
+                else
+                {
+                    if(dayDifference > 0)
+                    {
+                        dayDifference--;
+                        hourDifference = 23;
+                        minuteDifference = 59;
+                    }
+                    else
+                    {
+                        hourDifference = -1;
+                        minuteDifference = -1;
+                        dayDifference = -1;
+                    }
+                }
+            }
+
             secondDifference = 60 - (second - date.second);
 
             //Trigger para indicar que un concierto ya ha comenzado.

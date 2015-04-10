@@ -1,24 +1,28 @@
 package com.example.ruben.filarmonica;
 
-import android.app.Activity;
-import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -37,6 +41,14 @@ public class Noticias extends ActionBarActivity
     private static Context contexto;
     private final static int NUMERO_TABS = 3;
 
+    //Imágenes de las tabs al iniciar la activity.
+    private static int[] imagenesTab =
+    {
+            R.drawable.fb_on,
+            R.drawable.tw,
+            R.drawable.insta,
+    };
+
     //Pager que controla los eventos del ViewPager.
     private ViewPager mPager;
 
@@ -51,6 +63,9 @@ public class Noticias extends ActionBarActivity
     private static ArrayList<ItemFacebook> facebookArray;
     private static  ArrayList<ItemImagenInstagram> imagenesInstagram;
 
+    //Progress bar de los hilos al obtener la información.
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -63,11 +78,6 @@ public class Noticias extends ActionBarActivity
             ft.remove(prev);
         }
         ft.addToBackStack(null);
-
-        // Create and show the dialog.
-
-
-        ///
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabs);
@@ -91,20 +101,18 @@ public class Noticias extends ActionBarActivity
         //Colocamos el ViewPager a las Tabs.
         mTabs.setViewPager(mPager);
 
+        //Obtenemos los datos.
 
-        /******** Parte de twitter ******/
-        GetDataTwitter twitterThread = new GetDataTwitter();
-        twitterThread.execute();
 
+        GetDataTwitter hiloTwitter = new GetDataTwitter();
+        hiloTwitter.execute();
         try {
-            twitterArray = twitterThread.get();
+            twitterArray = hiloTwitter.get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-
-        /////////****////////////////
 
         //Obtenemos los datos de facebook.
         GetDataFacebook facebookThread = new GetDataFacebook();
@@ -157,11 +165,11 @@ public class Noticias extends ActionBarActivity
             {
                 case 0:
                 {
-                    return FragmentNoticias.newInstance(position);
+                    return FragmentFacebook.newInstance(position);
                 }
                 case 1:
                 {
-                    return FragmentFacebook.newInstance(position);
+                    return FragmentTwitter.newInstance(position);
                 }
                 case 2:
                 {
@@ -185,33 +193,23 @@ public class Noticias extends ActionBarActivity
         @Override
         public CharSequence getPageTitle(int position)
         {
-            switch(position)
-            {
-                case 0:
-                {
-                    return "NOTICIAS";
-                }
-                case 1:
-                {
-                    return "FACEBOOK";
-                }
-                case 2:
-                {
-                    return "GALERÍA";
-                }
-            }
-
-            return null;
+            //Cargamos la imagen en base a la posición de la tab.
+            Drawable imagenTab = contexto.getResources().getDrawable(imagenesTab[position]);
+            imagenTab.setBounds(0, 0, 60, 60);
+            SpannableString spannableString = new SpannableString(" ");
+            ImageSpan imageSpan = new ImageSpan(imagenTab, ImageSpan.ALIGN_BOTTOM);
+            spannableString.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return spannableString;
         }
     }//MyPagerAdapter.
 
-    //Fragment de Noticias.
-    public static class FragmentNoticias extends Fragment
+    //Fragment de Twitter.
+    public static class FragmentTwitter extends Fragment
     {
         //Método que regresa un fragmento.
-        static FragmentNoticias newInstance(int position)
+        static FragmentTwitter newInstance(int position)
         {
-            FragmentNoticias fragment = new FragmentNoticias();
+            FragmentTwitter fragment = new FragmentTwitter();
             Bundle args = new Bundle();
             args.putInt("position", position);
             fragment.setArguments(args);
@@ -229,13 +227,27 @@ public class Noticias extends ActionBarActivity
             layout = inflater.inflate(R.layout.activity_lista_cards, container, false);
 
             //Obtenemos las referencias.
-            RecyclerView mRecyclerView = (RecyclerView) layout.findViewById(R.id.lista_cards);
+            final RecyclerView mRecyclerView = (RecyclerView) layout.findViewById(R.id.lista_cards);
+            final SwipeRefreshLayout mSwipeRefreshLayout = (SwipeRefreshLayout) layout
+                   .findViewById(R.id.swipe_refresh);
 
-            //Configuramos el recycler view.
             RecyclerView.Adapter adapter = new AdapterListaTwitter(twitterArray,contexto);
             mRecyclerView.setAdapter(adapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(contexto));
             mRecyclerView.setItemAnimator( new DefaultItemAnimator());
+
+            //Configuramos el swipe.
+            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+            {
+                @Override
+                public void onRefresh()
+                {
+                    GetDataTwitter twitterThread = new GetDataTwitter(mRecyclerView, mSwipeRefreshLayout,
+                            contexto);
+                    twitterThread.execute();
+                }
+            });
+
             return layout;
         }
     }//Fragment de Noticias.
@@ -264,12 +276,26 @@ public class Noticias extends ActionBarActivity
             layout = inflater.inflate(R.layout.activity_lista_cards, container, false);
 
             //Obtenemos las referencias.
-            RecyclerView mRecyclerView = (RecyclerView)layout.findViewById(R.id.lista_cards);
+            final RecyclerView mRecyclerView = (RecyclerView)layout.findViewById(R.id.lista_cards);
+            final SwipeRefreshLayout mSwipeRefreshLayout = (SwipeRefreshLayout) layout
+                    .findViewById(R.id.swipe_refresh);
 
             //Configuramos el RecyclerView.
             mRecyclerView.setLayoutManager(new LinearLayoutManager(contexto));
             mRecyclerView.setAdapter(new AdapterListaFacebook(facebookArray,contexto));
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+            //Configuramos el swipe.
+            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+            {
+                @Override
+                public void onRefresh()
+                {
+                    GetDataFacebook facebookThread = new GetDataFacebook(mRecyclerView, mSwipeRefreshLayout,
+                            contexto);
+                    facebookThread.execute();
+                }
+            });
 
             return layout;
         }
@@ -311,5 +337,4 @@ public class Noticias extends ActionBarActivity
             return layout;
         }
     }//Fragment de Galería
-
 }//Noticias
