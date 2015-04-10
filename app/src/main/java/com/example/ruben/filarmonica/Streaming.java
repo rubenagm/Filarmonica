@@ -1,5 +1,8 @@
 package com.example.ruben.filarmonica;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +10,7 @@ import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -22,11 +26,14 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -37,7 +44,11 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
+import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.StringTokenizer;
 import java.util.concurrent.ExecutionException;
 
 import tabs.SlidingTabLayout;
@@ -47,6 +58,15 @@ import tabs.SlidingTabLayout;
  */
 public class Streaming extends ActionBarActivity
 {
+
+    //Varibles para el streaming
+    static final String LINK_STREAMING = "http://74.63.97.188:1935/gnode05/videognode05/playlist.m3u8?DVR";
+    static final String DIA_DE_STREAMING = "domingo";
+    static VideoView videoViewStreaming = null;
+    static final int ID_NOTIFICACION_MUSICA = 145261271;
+    static final String DIA_NOCHE = "PM";
+    static final int HORA_INICIO = 12; //Hora puesta en formato de 24hrs
+    static final int HORA_FIN = 14; //Hora puesta en formato de 24hrs
 
     //Declaracion de controles para el reproductor
     static ImageButton botonPlay;
@@ -127,6 +147,7 @@ public class Streaming extends ActionBarActivity
         super.onCreate(savedInstanceState);
        setContentView(R.layout.activity_tabs);
         //
+
         audioManager =(AudioManager) getSystemService(Context.AUDIO_SERVICE);
         //Obtenemos el contexto.
         contexto = getApplicationContext();
@@ -254,6 +275,69 @@ public class Streaming extends ActionBarActivity
                                  @Nullable Bundle savedInstanceState)
         {
             View layout = inflater.inflate(R.layout.fragment_streaming, container, false);
+
+            //Se obtiene el día actual
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+            Date d = new Date();
+            String dayOfTheWeek = sdf.format(d);
+
+            //Log.i("Streaming dia de la semana",dayOfTheWeek);
+
+            //Se obtiene la hora
+            Date now = new Date();
+            SimpleDateFormat sdf2 = new SimpleDateFormat("kk:mm");
+            String formattedTime = sdf2.format(now);
+
+            Log.i("Streaming hora",formattedTime);
+
+            //se inicializa el boton de play
+            final ImageView imageViewBotonPlay = (ImageView) layout.findViewById(R.id.streaming_live_play_streaming);
+
+            //En caso de no ser el día que se reproduzca el streaming.
+            if(dayOfTheWeek.equals(DIA_DE_STREAMING)&& validarHoraStreaming(formattedTime)){
+
+                //Ocultar el layout que muestra que el streaming no está disponible
+                RelativeLayout layoutStreaming = (RelativeLayout) layout.findViewById(R.id.streaming_layout_no_mostrar_video);
+
+                //Ocultarlo
+                layoutStreaming.setVisibility(View.GONE);
+
+                //Habilitar el botón de play
+                videoViewStreaming = (VideoView) layout.findViewById(R.id.video_streaming);
+                imageViewBotonPlay.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        //En caso de estar reproduciendo
+                        if(videoViewStreaming.isPlaying()){
+                            imageViewBotonPlay.setImageResource(R.drawable.reproductor_boton_play);
+                            videoPlayer.pause();
+                        }
+                        //En caso de no estar reproduciendo el video
+                        else
+                        {
+                            imageViewBotonPlay.setImageResource(R.drawable.reproductor_boton_pause);
+                            Charset.forName("UTF-8").encode(LINK_STREAMING);
+                            Uri vidUri = Uri.parse(LINK_STREAMING);
+                            videoViewStreaming.setVideoURI(vidUri);
+                            MediaController vidControl = new MediaController(contexto);
+                            vidControl.setAnchorView(videoViewStreaming);
+                            videoViewStreaming.setMediaController(vidControl);
+                            videoViewStreaming.start();
+                        }
+                    }
+                });
+            }
+            else{
+                //Mostrar mensaje de que el streaming no está disponible
+                imageViewBotonPlay.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(contexto,"El streaming solo está disponible los domingos",Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
             return layout;
         }
 
@@ -299,6 +383,7 @@ public class Streaming extends ActionBarActivity
             layoutVolumen.setVisibility(View.GONE);
 
             botonMostrarControlVolumen = (ImageButton) layout.findViewById(R.id.boton_volumen);
+            /*
             botonMostrarControlVolumen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -306,6 +391,7 @@ public class Streaming extends ActionBarActivity
                     layoutVolumen.setVisibility(View.VISIBLE);
                 }
             });
+            */
             controlVolumen.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -382,14 +468,14 @@ public class Streaming extends ActionBarActivity
             });
 
             //checar si la conexión con el servicio ya existe
-            if(banderaConexion == true){
+            if(banderaConexion){
                 musicSrv.setItems(textViewTituloCancion,textViewDirector,textViewduracion);
                 //Si ya existe y se está reproduciendo
-                if(musicSrv.getReproduccion()){
-                    botonPlay.setImageResource(R.drawable.reproductor_boton_pause);
+                if(musicSrv != null){
+
+                    adapterStreaming = new AdapterListaStreaming(contexto,canciones,musicSrv);
+                    mRecyclerViewStreaming.setAdapter(adapterStreaming);
                 }
-                adapterStreaming = new AdapterListaStreaming(contexto,canciones,musicSrv);
-                mRecyclerViewStreaming.setAdapter(adapterStreaming);
             }
             //Retornamos la vista.
             return layout;
@@ -515,8 +601,36 @@ public class Streaming extends ActionBarActivity
     @Override
     public void onBackPressed()
     {
+        Intent intent = new Intent(this, Streaming.class);
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+// build notification
+// the addAction re-use the same intent to keep the example short
+        Notification n  = new Notification.Builder(this)
+                .setContentTitle("Reproduciendo")
+                .setContentText("Presiona para ir al preproductor")
+                .setSmallIcon(R.drawable.reproductor_boton_play)
+                .setContentIntent(pIntent)
+                .setAutoCancel(true).build();
+
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        notificationManager.notify(ID_NOTIFICACION_MUSICA, n);
         finish();
         Intent i = new Intent(Streaming.this, MainActivity.class);
         startActivity(i);
+    }
+
+    static public boolean validarHoraStreaming(String hora){
+
+        //En caso de ser el tiempo correcto se obtiene la hora
+        StringTokenizer token = new StringTokenizer(hora,":");
+        int horaActual =  Integer.parseInt(token.nextToken());
+        if(horaActual>=HORA_INICIO && horaActual<=HORA_FIN){
+            return true;
+        }
+        return false;
     }
 }
