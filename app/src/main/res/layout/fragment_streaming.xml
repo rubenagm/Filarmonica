@@ -58,6 +58,7 @@
             android:layout_height="27dp" />
         </LinearLayout>
     <RelativeLayout
+        android:visibility="gone"
         android:id="@+id/streaming_layout_control_volumen"
         android:background="#E31836"
         android:layout_marginBottom="70dp"
