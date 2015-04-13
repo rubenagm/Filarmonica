@@ -63,7 +63,7 @@ public class Streaming extends ActionBarActivity
 
     //Varibles para el streaming
     static final String LINK_STREAMING = "http://74.63.97.188:1935/gnode05/videognode05/playlist.m3u8?DVR";
-    static final String DIA_DE_STREAMING = "lunes";
+    static final String DIA_DE_STREAMING = "domingo";
     static VideoView videoViewStreaming = null;
     static final int ID_NOTIFICACION_MUSICA = 145261271;
     static final String DIA_NOCHE = "PM";
