@@ -1,8 +1,8 @@
 package com.example.ruben.filarmonica;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +22,7 @@ import conexion.ConexionInternet;
 public class ListaEventos extends ActionBarActivity {
     RecyclerView mRecyclerView;
     Context contexto;
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     //Variables del Drawer.
     private ListView list_view_drawer;
@@ -61,7 +62,20 @@ public class ListaEventos extends ActionBarActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator( new DefaultItemAnimator());
         ArrayList<ItemEvento> lista = new ArrayList<>();
-        ConexionBD db = new ConexionBD(contexto);
+        final ConexionBD db = new ConexionBD(contexto);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                ArrayList<ItemEvento> lista = db.obtenerEventos();
+                RecyclerView.Adapter adapter = new AdapterListaEventos(contexto,lista);
+                mRecyclerView.setAdapter(adapter);
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         lista = db.obtenerEventos();
         Log.i("InformacionLista",lista.size()+"!");

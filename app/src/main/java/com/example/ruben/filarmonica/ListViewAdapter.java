@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -49,8 +50,7 @@ public class ListViewAdapter extends BaseAdapter
         ImageView imgConciertos;
         ImageView imgNoticias;
         ImageView imgStreaming;
-        ImageView imgContacto;
-        ImageView imgPatronato;
+        ImageView imgContactoPatrocinadores;
         LinearLayout linearLayout;
     }
 
@@ -70,17 +70,17 @@ public class ListViewAdapter extends BaseAdapter
 
             //Obtenemos las referencias.
             view.imgConciertos = (ImageView) convertView.findViewById(R.id.icono_conciertos);
-            view.imgContacto   = (ImageView) convertView.findViewById(R.id.icono_contacto);
+            view.imgContactoPatrocinadores   = (ImageView) convertView.findViewById
+                    (R.id.icono_contacto_patrocinadores);
             view.imgStreaming  = (ImageView) convertView.findViewById(R.id.icono_streaming);
             view.imgNoticias   = (ImageView) convertView.findViewById(R.id.icono_noticias);
-            view.imgPatronato  = (ImageView) convertView.findViewById(R.id.icono_patronato);
 
             view.linearLayout  = (LinearLayout) convertView.findViewById(R.id.linear_layout_drawer);
 
             //Colocamos la altura del linear layout.
             DisplayMetrics display_metrics = new DisplayMetrics();
             activity.getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
-            int height = display_metrics.heightPixels;
+            final int height = display_metrics.heightPixels;
             view.linearLayout.getLayoutParams().height = height;
 
             //Colocamos los ClickListeners.
@@ -114,22 +114,27 @@ public class ListViewAdapter extends BaseAdapter
                 }
             });
 
-            view.imgContacto.setOnClickListener(new View.OnClickListener()
+            view.imgContactoPatrocinadores.setOnTouchListener(new View.OnTouchListener()
             {
                 @Override
-                public void onClick(View v)
+                public boolean onTouch(View v, MotionEvent event)
                 {
-                    Intent i = new Intent(activity, Contacto.class);
-                    activity.startActivity(i);
-                }
-            });
-            view.imgPatronato.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    Intent i = new Intent(activity, Patronato.class);
-                    activity.startActivity(i);
+                    Intent i;
+                    if(event.getAction() == MotionEvent.ACTION_DOWN)
+                    {
+                        if(event.getY() <= height / 6)
+                        {
+                            i = new Intent(activity, Contacto.class);
+                        }
+                        else
+                        {
+                            i = new Intent(activity, Patronato.class);
+                        }
+
+                        activity.startActivity(i);
+                    }
+
+                    return true;
                 }
             });
 

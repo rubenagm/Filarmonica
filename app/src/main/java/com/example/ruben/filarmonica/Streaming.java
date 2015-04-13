@@ -565,6 +565,7 @@ public class Streaming extends ActionBarActivity
             musicSrv = binder.getService();
             //pass list
             musicSrv.setList(canciones);
+            musicSrv.setItems(textViewTituloCancion,textViewDirector,textViewduracion);
             musicBound = true;
             //Cuando la conexión se realiza, se manda el objeto del servicio para que pueda ser utilizado por la lista de canciones
             adapterStreaming = new AdapterListaStreaming(contexto,canciones,musicSrv);

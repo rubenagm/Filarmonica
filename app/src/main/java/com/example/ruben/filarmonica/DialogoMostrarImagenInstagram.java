@@ -52,7 +52,9 @@ public class DialogoMostrarImagenInstagram extends DialogFragment  {
 
     //El progres bar de cargando
     RelativeLayout progressCargandoImagen;
-    static DialogoMostrarImagenInstagram newInstance(int position, ArrayList<String> imagenes, ArrayList<String> texto, ArrayList<String> links) {
+    static DialogoMostrarImagenInstagram newInstance(int position, ArrayList<String> imagenes,
+                                ArrayList<String> texto, ArrayList<String> links)
+    {
         DialogoMostrarImagenInstagram f = new DialogoMostrarImagenInstagram();
 
         // Supply num input as an argument.
