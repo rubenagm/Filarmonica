@@ -23,7 +23,7 @@
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content">
-                <com.example.ruben.filarmonica.SelectableRoundedImageView
+                <mx.com.filarmonica.SelectableRoundedImageView
                     android:id="@+id/imagen_evento"
                     android:layout_width="fill_parent"
                     android:src="@drawable/menu_concierto"

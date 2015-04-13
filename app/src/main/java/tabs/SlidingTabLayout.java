@@ -36,7 +36,6 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.ruben.filarmonica.R;
 
 /**
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as to
@@ -89,23 +88,23 @@ public class SlidingTabLayout extends HorizontalScrollView {
     //Imágenes de las tabs de Streaming.
     private static int[] imagenesStreaming =
     {
-            R.drawable.video_icon,
-            R.drawable.musica_icon_off,
-            R.drawable.video_icon_off,
-            R.drawable.musica_icon,
-            R.drawable.live_icon,
-            R.drawable.live_icon_on
+            mx.com.filarmonica.R.drawable.video_icon,
+            mx.com.filarmonica.R.drawable.musica_icon_off,
+            mx.com.filarmonica.R.drawable.video_icon_off,
+            mx.com.filarmonica.R.drawable.musica_icon,
+            mx.com.filarmonica.R.drawable.live_icon,
+            mx.com.filarmonica.R.drawable.live_icon_on
     };
 
     //Imágenes de las tabs de noticias.
     private static int[] imagenesNoticias =
     {
-            R.drawable.fb_on,
-            R.drawable.fb,
-            R.drawable.tw_on,
-            R.drawable.tw,
-            R.drawable.insta_on,
-            R.drawable.insta
+            mx.com.filarmonica.R.drawable.fb_on,
+            mx.com.filarmonica.R.drawable.fb,
+            mx.com.filarmonica.R.drawable.tw_on,
+            mx.com.filarmonica.R.drawable.tw,
+            mx.com.filarmonica.R.drawable.insta_on,
+            mx.com.filarmonica.R.drawable.insta
     };
 
     /********************** CONSTANTES NOTICIAS *************************/
