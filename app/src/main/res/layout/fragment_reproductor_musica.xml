@@ -109,7 +109,7 @@
         android:id="@+id/reproductor_layout_control_volumen"
         android:background="#E31836"
         android:layout_width="fill_parent"
-        android:layout_height="20dp">
+        android:layout_height="40dp">
         <SeekBar
             android:progressDrawable="@drawable/progressbar_volumen_reproductor"
             android:max="20"

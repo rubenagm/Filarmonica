@@ -112,7 +112,9 @@
             android:layout_gravity="right"
             android:text="Ver en Twitter"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="@color/link"
+            />
     </RelativeLayout>
     <TextView
         android:alpha=".12"

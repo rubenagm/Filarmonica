@@ -45,8 +45,10 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 import java.nio.charset.Charset;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.concurrent.ExecutionException;
@@ -61,12 +63,16 @@ public class Streaming extends ActionBarActivity
 
     //Varibles para el streaming
     static final String LINK_STREAMING = "http://74.63.97.188:1935/gnode05/videognode05/playlist.m3u8?DVR";
-    static final String DIA_DE_STREAMING = "domingo";
+    static final String DIA_DE_STREAMING = "lunes";
     static VideoView videoViewStreaming = null;
     static final int ID_NOTIFICACION_MUSICA = 145261271;
     static final String DIA_NOCHE = "PM";
     static final int HORA_INICIO = 12; //Hora puesta en formato de 24hrs
     static final int HORA_FIN = 14; //Hora puesta en formato de 24hrs
+    static final int MINUTOS_INICIO = 30;
+    static String fechaProximoStreaming = "";
+    static RelativeLayout layoutControlVolumenStreaming = null;
+    static SeekBar controlVolumenStreaming = null;
 
     //Declaracion de controles para el reproductor
     static ImageButton botonPlay;
@@ -293,6 +299,16 @@ public class Streaming extends ActionBarActivity
             //se inicializa el boton de play
             final ImageView imageViewBotonPlay = (ImageView) layout.findViewById(R.id.streaming_live_play_streaming);
 
+            //saber que días faltan para el concierto
+            int diasfaltantes = retornarDiasFaltantes(dayOfTheWeek);
+
+            {
+                Calendar c = Calendar.getInstance();
+                c.add(Calendar.DATE, diasfaltantes);  // number of days to add, can also use Calendar.DAY_OF_MONTH in place of Calendar.DATE
+                SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
+                fechaProximoStreaming = sdf1.format(c.getTime());
+            }
+
             //En caso de no ser el día que se reproduzca el streaming.
             if(dayOfTheWeek.equals(DIA_DE_STREAMING)&& validarHoraStreaming(formattedTime)){
 
@@ -311,7 +327,7 @@ public class Streaming extends ActionBarActivity
                         //En caso de estar reproduciendo
                         if(videoViewStreaming.isPlaying()){
                             imageViewBotonPlay.setImageResource(R.drawable.reproductor_boton_play);
-                            videoPlayer.pause();
+                            videoViewStreaming.pause();
                         }
                         //En caso de no estar reproduciendo el video
                         else
@@ -320,11 +336,44 @@ public class Streaming extends ActionBarActivity
                             Charset.forName("UTF-8").encode(LINK_STREAMING);
                             Uri vidUri = Uri.parse(LINK_STREAMING);
                             videoViewStreaming.setVideoURI(vidUri);
-                            MediaController vidControl = new MediaController(contexto);
-                            vidControl.setAnchorView(videoViewStreaming);
-                            videoViewStreaming.setMediaController(vidControl);
                             videoViewStreaming.start();
                         }
+                    }
+                });
+
+                //Control de volumen de streaming
+                controlVolumenStreaming = (SeekBar) layout.findViewById(R.id.streaming_control_volumen);
+                layoutControlVolumenStreaming = (RelativeLayout) layout.findViewById(R.id.streaming_layout_control_volumen);
+                layoutControlVolumenStreaming.setVisibility(View.GONE);//Se oculta
+
+                controlVolumenStreaming.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+                controlVolumenStreaming.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,progress,0);
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        layoutControlVolumenStreaming.setVisibility(View.GONE);
+                    }
+                });
+
+                ImageView botonVolumenStreaming = (ImageView) layout.findViewById(R.id.streaming_live_volumen_streaming);
+                botonVolumenStreaming.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        layoutControlVolumenStreaming.setVisibility(View.VISIBLE);
                     }
                 });
             }
@@ -336,6 +385,11 @@ public class Streaming extends ActionBarActivity
                         Toast.makeText(contexto,"El streaming solo está disponible los domingos",Toast.LENGTH_SHORT).show();
                     }
                 });
+
+                //validar la fecha para colocarla en el textview
+                TextView textViewTextOStreamingProximoStreaming = (TextView) layout.findViewById(R.id.texto_streaming_proximo_streaming);
+
+                textViewTextOStreamingProximoStreaming.setText("Disfruta del streaming de la Filarmonica de Jalisco el próximo domingo: "+fechaProximoStreaming);
             }
 
             return layout;
@@ -383,7 +437,7 @@ public class Streaming extends ActionBarActivity
             layoutVolumen.setVisibility(View.GONE);
 
             botonMostrarControlVolumen = (ImageButton) layout.findViewById(R.id.boton_volumen);
-            /*
+
             botonMostrarControlVolumen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -391,7 +445,7 @@ public class Streaming extends ActionBarActivity
                     layoutVolumen.setVisibility(View.VISIBLE);
                 }
             });
-            */
+            controlVolumen.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
             controlVolumen.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -515,7 +569,7 @@ public class Streaming extends ActionBarActivity
             fragmentTransaction.commit();
 
             //Colocamos el nombre del video.
-            textViewTituloVideo.setText(listaVideos.get(0).getTitulo());
+        if(listaVideos!=null)     textViewTituloVideo.setText(listaVideos.get(0).getTitulo());
 
             //Configuramos el RecyclerView.
             mRecyclerView.setLayoutManager(new LinearLayoutManager(contexto));
@@ -633,5 +687,26 @@ public class Streaming extends ActionBarActivity
             return true;
         }
         return false;
+    }
+
+    static public int retornarDiasFaltantes(String dia ){
+        switch(dia){
+            case "lunes":
+                return 6;
+            case "martes":
+                return 5;
+            case "miercoles":
+                return 4;
+            case "jueves":
+                return 3;
+            case "viernes":
+                return 2;
+            case "sabado":
+                return 1;
+            case "domingo":
+                return 0;
+            default:
+                return 0;
+        }
     }
 }

@@ -7,6 +7,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <TextView
+            android:alpha=".5"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:layout_marginRight="20dp"
@@ -31,17 +32,36 @@
             android:layout_centerVertical="true"
             style="?android:attr/progressBarStyleLarge"/>
     </RelativeLayout>
-    <ImageView
-        android:scaleType="centerCrop"
-        android:id="@+id/dialogo_imagen_instagram"
-        android:src="@drawable/icon_buy"
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="350dp" />
+        android:layout_height="wrap_content">
+        <ImageView
+            android:scaleType="centerCrop"
+            android:id="@+id/dialogo_imagen_instagram"
+            android:src="@drawable/icon_buy"
+            android:layout_width="fill_parent"
+            android:layout_height="350dp" />
+        <ImageView
+            android:alpha=".5"
+            android:id="@+id/boton_imagen_anterior_instagram"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_hardware_keyboard_arrow_left"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+        <ImageView
+            android:id="@+id/boton_imagen_siguiente_instagram"
+            android:alpha=".5"
+            android:src="@drawable/ic_hardware_keyboard_arrow_right"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+        </RelativeLayout>
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:textColor="#FFFFFF"
+            android:textColor="@color/link"
             android:id="@+id/dialogo_ver_en_instagram"
             android:layout_alignParentRight="true"
             android:text="Ver en Instagram"

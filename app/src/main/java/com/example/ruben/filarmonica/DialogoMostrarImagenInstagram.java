@@ -30,7 +30,7 @@ import conexion.DescargarImagen;
 public class DialogoMostrarImagenInstagram extends DialogFragment  {
 
     int position = 0;
-
+    int contador = 0;
     //Arreglos necesario para guardar los datos a mostrar en caso de querer ver otra imagen
     ArrayList<String> imagenes;
     ArrayList<String> links;
@@ -39,6 +39,9 @@ public class DialogoMostrarImagenInstagram extends DialogFragment  {
     //Imagen
     ImageView imageViewimagen;
 
+    //Botones de imagenes siguiente y anterior en instagram
+    ImageView imageViewImagenSiguiente = null;
+    ImageView imageViewImagenAnterior = null;
     //Directorio
     String DIRECTORIO = Environment.getExternalStorageDirectory().getAbsolutePath() +
             "/Imagenes/Instagram/";
@@ -77,14 +80,21 @@ public class DialogoMostrarImagenInstagram extends DialogFragment  {
         //se obtiene el contexto
         contexto = getDialog().getContext();
 
+
         //Se obtiene por parametros los datos a mostrar
         position = getArguments().getInt("position");
         imagenes = getArguments().getStringArrayList("imagenes");
         texto = getArguments().getStringArrayList("texto");
         links = getArguments().getStringArrayList("links");
 
+        contador = position; //Se igualan para saber la posicion
+
         //Se crea el dialogo
         View v = inflater.inflate(R.layout.dialogo_mostrar_imagen_instagram, container, false);
+
+        //Inicializar los botones de imagen anterior u siguiente
+        imageViewImagenAnterior = (ImageView) v.findViewById(R.id.boton_imagen_anterior_instagram);
+        imageViewImagenSiguiente = (ImageView) v.findViewById(R.id.boton_imagen_siguiente_instagram);
 
 
         //se inicializa el botón de cerrar el drawer (Es un layout)
@@ -141,6 +151,76 @@ public class DialogoMostrarImagenInstagram extends DialogFragment  {
             @Override
             public void onClick(View v) {
                 getDialog().dismiss();
+            }
+        });
+
+        //Comportamiento botones
+        imageViewImagenSiguiente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 //se aumenta una posicion
+                if(contador>imagenes.size()-3){
+                    contador = 0;
+                }
+                else{
+                    contador ++;
+                    //se carga la imagen
+                    String imagen = imagenes.get(contador);
+                    if(imagen!= null){
+
+                        String rutaAccesoImagen = DIRECTORIO + DescargarImagen.nombreImagenUrl(imagen) + ".png";
+                        File archivoImagen = new File(rutaAccesoImagen);
+                        if(!archivoImagen.exists())
+                        {
+                            DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_INSTAGRAM,
+                                    progressCargandoImagen, imageViewimagen,contexto);
+                            descargarImagen.execute(imagen);
+                        }
+                        else
+                        {
+                            Bitmap bitmap = BitmapFactory.decodeFile(rutaAccesoImagen);
+                            imageViewimagen.setImageBitmap(bitmap);
+                        }
+                    }
+                }
+
+                textViewtexto.setText(texto.get(contador));
+
+            }
+        });
+
+        //Imagen anterior
+        imageViewImagenAnterior.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //se resta una posicion
+                if(contador<1){
+                    contador = imagenes.size()-2;
+                }
+                else{
+                    contador --;
+                    //se carga la imagen
+                    String imagen = imagenes.get(contador);
+                    if(imagen!= null){
+
+                        String rutaAccesoImagen = DIRECTORIO + DescargarImagen.nombreImagenUrl(imagen) + ".png";
+                        File archivoImagen = new File(rutaAccesoImagen);
+                        if(!archivoImagen.exists())
+                        {
+                            DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_INSTAGRAM,
+                                    progressCargandoImagen, imageViewimagen,contexto);
+                            descargarImagen.execute(imagen);
+                        }
+                        else
+                        {
+                            Bitmap bitmap = BitmapFactory.decodeFile(rutaAccesoImagen);
+                            imageViewimagen.setImageBitmap(bitmap);
+                        }
+                    }
+                }
+
+                textViewtexto.setText(texto.get(contador));
+
             }
         });
         return v;
