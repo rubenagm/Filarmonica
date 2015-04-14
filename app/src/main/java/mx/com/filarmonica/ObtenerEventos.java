@@ -56,6 +56,7 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
 	protected ArrayList<ItemEvento> doInBackground(String... params) {
 		ArrayList<ItemEvento> eventos = new ArrayList<ItemEvento>();
         SharedPreferences.Editor editor = sharedPreferences.edit();
+        boolean error = false;
 		ConexionBD mDB = new ConexionBD(contexto);
 		try {
 			List<NameValuePair> mNameValuePairs = new ArrayList<NameValuePair>(1);
@@ -103,11 +104,13 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
 		catch(JSONException e)
 		{
 			Log.e("JSON", "Error al leer el JSON\n" + e);
+            error = true;
 		}
 		catch(IOException e)
 		{
 			Log.e("HTTP", "Error con la conexi�n HTTP");
-		}
+            error = true;
+        }
 		
 		Log.i("Eventos", "Comienza a guardar fechas");
 		
@@ -149,10 +152,12 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
 		catch(JSONException e)
 		{
 			Log.e("JSON", "Error al leer el JSON\n" + e);
+            error = true;
 		}
 		catch(IOException e)
 		{
 			Log.e("HTTP", "Error con la conexi�n HTTP");
+            error = true;
 		}
 
         //Se comienzan a guardar las localidades
@@ -194,61 +199,23 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
         catch(JSONException e)
         {
             Log.e("JSON", "Error al leer el JSON\n" + e);
+            error = true;
         }
         catch(IOException e)
         {
             Log.e("HTTP", "Error con la conexi�n HTTP");
+            error = true;
         }
 
-        //Se comienza a guardar las Noticias
-        try {
-
-            List<NameValuePair> mNameValuePairs = new ArrayList<NameValuePair>(1);
-            mNameValuePairs.add(new BasicNameValuePair("query", QUERY_NOTICIA));
-            mHttPost.setEntity(new UrlEncodedFormEntity(mNameValuePairs));
-
-            HttpResponse response = mHttpClient.execute(mHttPost);
-
-            HttpEntity entity = response.getEntity();
-            String resultado = EntityUtils.toString(entity,"UTF-8");
-            //ftpDownload = new FtpDownload();
-            //Log.i("JSON",resultado);
-            resultado = resultado.substring(9);
-            Log.i("JSON",resultado);
-            JSONObject jsonObject = new JSONObject(resultado);
-            JSONArray jsonArray = jsonObject.getJSONArray("data");
-            int longitud = jsonArray.length();
-            for(int i = 0; i < jsonArray.length(); i++)
-            {
-                JSONObject jsonElement = jsonArray.getJSONObject(i);
-                displayNotification(createBasicNotification("OFJ","Actualizando noticias",i+1,
-                        longitud));
-                int id = jsonElement.getInt("id");
-                //ftpDownload.descargarArchivo(2,id+"");
-                String titulo = jsonElement.getString("titulo");
-                String titulo_en = jsonElement.getString("titulo_en");
-                String contenido = jsonElement.getString("contenido");
-                String contenido_en = jsonElement.getString("contenido_en");
-                String fecha = jsonElement.getString("fecha");
-                String publicada = jsonElement.getString("publicada");
-                String fecha_creacion = jsonElement.getString("fecha_creacion");
-
-                mDB.insertNoticia(id,titulo,titulo_en,contenido,contenido_en,fecha,publicada,
-                        fecha_creacion);
-
-            }
-        }
-        catch(JSONException e)
+        if(error == false)
         {
-            Log.e("JSON", "Error al leer el JSON\n" + e);
+            editor.putString("DatosInsertados","Insertados");
         }
-        catch(IOException e)
+        else
         {
-            Log.e("HTTP", "Error con la conexi�n HTTP");
+            editor.putString("DatosInsertados","NoInsertados");
+
         }
-
-
-        editor.putString("DatosInsertados","Insertados");
         editor.commit();
 		return eventos;
 	}

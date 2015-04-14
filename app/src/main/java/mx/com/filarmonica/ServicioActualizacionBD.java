@@ -35,8 +35,8 @@ public class ServicioActualizacionBD extends Service {
             hilo.execute("");
         }
         else{
-            ActualizarBD hilo = new ActualizarBD(contexto);
-            hilo.execute();
+           // ActualizarBD hilo = new ActualizarBD(contexto);
+            //hilo.execute();
         }
         return 0;
     }

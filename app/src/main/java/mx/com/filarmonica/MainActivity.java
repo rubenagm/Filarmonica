@@ -139,9 +139,9 @@ public class MainActivity extends Activity
         //Buscamos en la base de datos local, sino accedemos a la base de datos remota.
         SharedPreferences sharedPreferences = getSharedPreferences("Filarmonica",
             Context.MODE_PRIVATE);
-        String resultadoSharedPreferences = sharedPreferences.getString("DatosInsertados", "false");
+        String resultadoSharedPreferences = sharedPreferences.getString("DatosInsertados", "NoInsertados");
 
-        if(!resultadoSharedPreferences.equals("false"))
+        if(!resultadoSharedPreferences.equals("NoInsertados"))
         {
             ConexionLocalProximoConcierto conexionLocal = new ConexionLocalProximoConcierto();
             conexionLocal.execute("");
@@ -308,18 +308,27 @@ public class MainActivity extends Activity
             lblHoras.setVisibility(View.VISIBLE);
             lblMinutos.setVisibility(View.VISIBLE);
             lblSegundos.setVisibility(View.VISIBLE);
-            if(result.get(0).equals("tocandoAhora"))
-            {
 
-                DateDifference countdownTimer = DateDifference.getDateDifferenceCompletedTime();
-                iniciarReloj(countdownTimer);
+            if(result.size() > 0)
+            {
+                if(result.get(0).equals("tocandoAhora"))
+                {
+
+                    DateDifference countdownTimer = DateDifference.getDateDifferenceCompletedTime();
+                    iniciarReloj(countdownTimer);
+                }
+                else
+                {
+                    //Mandamos la fecha y la hora al parser.
+                    DateControl dateControl = new DateControl(result);
+                    DateDifference countdownTimer = dateControl.startCountdown();
+                    iniciarReloj(countdownTimer);
+                }
             }
             else
             {
-                //Mandamos la fecha y la hora al parser.
-                DateControl dateControl = new DateControl(result);
-                DateDifference countdownTimer = dateControl.startCountdown();
-                iniciarReloj(countdownTimer);
+                Toast.makeText(contexto, "Verifica tu conexión a internet. Intensidad baja.", Toast.LENGTH_LONG).show();
+                cancel(true);
             }
         }
     }

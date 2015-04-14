@@ -456,6 +456,7 @@ public class ConexionBD extends SQLiteOpenHelper{
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(SQL_PROXIMO_EVENTO, null);
         cursor.moveToFirst();
+
         fecha.add(cursor.getString(INDEX_COLUMNA_FECHA));
         fecha.add(cursor.getString(INDEX_COLUMNA_HORA) + ":" + cursor.getString(INDEX_COLUMNA_MINUTO));
 
