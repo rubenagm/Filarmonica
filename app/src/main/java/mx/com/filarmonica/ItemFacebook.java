@@ -7,8 +7,10 @@ public class ItemFacebook {
     String contenido;
     String urlImagen;
     String urlFacebook;
-    public ItemFacebook(String contenido,String urlImagen, String urlFacebook)
+    String id;
+    public ItemFacebook(String id, String contenido,String urlImagen, String urlFacebook)
     {
+        this.id = id;
         this.contenido   = contenido;
         this.urlImagen   = urlImagen;
         this.urlFacebook = urlFacebook;
@@ -26,4 +28,6 @@ public class ItemFacebook {
     {
         return urlFacebook;
     }
+
+    public String getId(){return id;}
 }

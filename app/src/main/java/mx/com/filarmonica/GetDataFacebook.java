@@ -65,13 +65,14 @@ public class GetDataFacebook extends AsyncTask<Void,Void,ArrayList<ItemFacebook>
                 String contenido = "";
                 String urlImagen = "";
                 String urlFacebook = "";
-
+                String id = "";
+                id = jsonArray.getJSONObject(x).getString("id");
                 if(!jsonArray.getJSONObject(x).isNull("name")){
                     contenido   = jsonArray.getJSONObject(x).getString("name");
                     urlImagen   = jsonArray.getJSONObject(x).getString("source");
                     urlFacebook = jsonArray.getJSONObject(x).getString("link");
 
-                    publicaciones.add(new ItemFacebook(contenido,urlImagen+".png", urlFacebook));
+                    publicaciones.add(new ItemFacebook(id, contenido,urlImagen+".png", urlFacebook));
                 }
                 Log.i("JSON Facebook", contenido + " ---- "+urlImagen);
 
