@@ -51,6 +51,7 @@ import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.concurrent.ExecutionException;
 
+import conexion.ConexionInternet;
 import tabs.SlidingTabLayout;
 
 /**
@@ -427,7 +428,7 @@ public class Streaming extends ActionBarActivity
             View layout = null;
 
             layout = inflater.inflate(mx.com.filarmonica.R.layout.fragment_reproductor_musica, container, false);
-            SeekBar barra = (SeekBar) layout.findViewById(mx.com.filarmonica.R.id.reproductor_barra_posicion);
+            //SeekBar barra = (SeekBar) layout.findViewById(mx.com.filarmonica.R.id.reproductor_barra_posicion);
 
             //Control de volumen
             controlVolumen = (SeekBar) layout.findViewById(mx.com.filarmonica.R.id.reproductor_control_volumen);
@@ -492,9 +493,16 @@ public class Streaming extends ActionBarActivity
                         botonPlay.setImageResource(mx.com.filarmonica.R.drawable.reproductor_boton_play);
                     }
                     else{
-                        musicSrv.setSong(0);
-                        musicSrv.playSong();
-                        botonPlay.setImageResource(mx.com.filarmonica.R.drawable.reproductor_boton_pause);
+
+                        //verificar si hay conexión a internet
+                        if(ConexionInternet.verificarConexion(contexto)){
+                            musicSrv.setSong(0);
+                            musicSrv.playSong();
+                            botonPlay.setImageResource(mx.com.filarmonica.R.drawable.reproductor_boton_pause);
+                        }
+                        else{
+                            Toast.makeText(contexto,"Se necesita conexion a internet para poder escuchar música",Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
             });
@@ -525,7 +533,7 @@ public class Streaming extends ActionBarActivity
                 //Si ya existe y se está reproduciendo
                 if(musicSrv != null){
 
-                    adapterStreaming = new AdapterListaStreaming(contexto,canciones,musicSrv);
+                    adapterStreaming = new AdapterListaStreaming(contexto,canciones,musicSrv,botonPlay);
                     mRecyclerViewStreaming.setAdapter(adapterStreaming);
                 }
             }
@@ -567,7 +575,7 @@ public class Streaming extends ActionBarActivity
             fragmentTransaction.commit();
 
             //Colocamos el nombre del video.
-            if(listaVideos!=null)     textViewTituloVideo.setText(listaVideos.get(0).getTitulo());
+            if(listaVideos!=null  && listaVideos.size()>0)     textViewTituloVideo.setText(listaVideos.get(0).getTitulo());
 
             //Configuramos el RecyclerView.
             mRecyclerView.setLayoutManager(new LinearLayoutManager(contexto));
@@ -588,7 +596,8 @@ public class Streaming extends ActionBarActivity
             mRecyclerView.setAdapter(adapter);
             if(!b)
             {
-                youTubePlayer.cueVideo(listaVideos.get(0).getUrlYouTube());
+                //En caso de haber videos de youtube
+        if(listaVideos.size()>0)                youTubePlayer.cueVideo(listaVideos.get(0).getUrlYouTube());
             }
         }
 
@@ -620,7 +629,7 @@ public class Streaming extends ActionBarActivity
             musicSrv.setItems(textViewTituloCancion,textViewDirector,textViewduracion);
             musicBound = true;
             //Cuando la conexión se realiza, se manda el objeto del servicio para que pueda ser utilizado por la lista de canciones
-            adapterStreaming = new AdapterListaStreaming(contexto,canciones,musicSrv);
+            adapterStreaming = new AdapterListaStreaming(contexto,canciones,musicSrv,botonPlay);
             mRecyclerViewStreaming.setAdapter(adapterStreaming);
         }
 

@@ -30,6 +30,9 @@ public class ServicioMusica extends Service implements MediaPlayer.OnPreparedLis
     TextView textViewDirector;
     TextView textViewDuracion;
 
+    //bandera cambio de posicion
+    boolean banderaCambioPosicion = false;
+
     private final IBinder musicBind = new MusicBinder();
     boolean banderaPause = false;
     @Override
@@ -89,7 +92,7 @@ public class ServicioMusica extends Service implements MediaPlayer.OnPreparedLis
     public void playSong(){
         textViewTituloCancion.setText(songs.get(songPosn).getTitulo());
         textViewDirector.setText(songs.get(songPosn).getDirector());
-        if(banderaPause){
+        if(banderaPause && banderaCambioPosicion == false){
             player.start();
         }
         else{
@@ -101,9 +104,12 @@ public class ServicioMusica extends Service implements MediaPlayer.OnPreparedLis
                 e.printStackTrace();
             }
             banderaPause = false;
+            banderaCambioPosicion = true;
         }
     }
-
+    public void setBanderaCambioPosicion(boolean posicion){
+        banderaCambioPosicion = posicion;
+    }
     public int getPosition(){
         return player.getCurrentPosition();
     }

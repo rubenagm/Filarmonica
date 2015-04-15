@@ -29,7 +29,7 @@
             android:layout_marginLeft="45dp"
             android:layout_marginRight="45dp"
             android:gravity="center"
-            android:text="Disfruta del streaming de la Filarmonica de Jalisco el próximo domingo"
+            android:text="Disfruta del streaming de la Filarmónica de Jalisco el próximo domingo"
             android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -68,7 +68,6 @@
         <SeekBar
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:progressDrawable="@drawable/progressbar_volumen_reproductor"
             android:max="20"
             android:id="@+id/streaming_control_volumen"
             android:layout_width="fill_parent"

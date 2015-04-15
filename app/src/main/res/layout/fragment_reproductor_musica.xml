@@ -41,12 +41,14 @@
             android:layout_marginRight="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <!--
         <SeekBar
             android:layout_marginBottom="10dp"
             android:layout_alignParentBottom="true"
             android:id="@+id/reproductor_barra_posicion"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
+            -->
 
         </RelativeLayout>
     <!-- Contenido de los controles -->
@@ -110,8 +112,8 @@
         android:background="#E31836"
         android:layout_width="fill_parent"
         android:layout_height="40dp">
+        <!--android:progressDrawable="@drawable/progressbar_volumen_reproductor"-->
         <SeekBar
-            android:progressDrawable="@drawable/progressbar_volumen_reproductor"
             android:max="20"
             android:id="@+id/reproductor_control_volumen"
             android:layout_width="fill_parent"
