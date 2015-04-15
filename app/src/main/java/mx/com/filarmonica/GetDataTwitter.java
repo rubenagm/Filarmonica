@@ -46,6 +46,7 @@ public class GetDataTwitter extends AsyncTask<Void,Void,ArrayList<ItemTwitter>>
         HttpClient httpclient = new DefaultHttpClient();
         httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
         HttpGet request = new HttpGet("http://ofj.com.mx/App/twitter.php");
+        ConexionBD db = new ConexionBD(contexto);
 
         try {
 
@@ -61,11 +62,15 @@ public class GetDataTwitter extends AsyncTask<Void,Void,ArrayList<ItemTwitter>>
                 String fecha = parsearFecha(json.getJSONObject(x).getString("created_at"));
                 String urlTwitter = "https://twitter.com/OFilarmonicaJal/status/" + id;
                 tweets.add(new ItemTwitter(id,contenido,fecha, urlTwitter));
+
                 //Si existen imagenes
                 if(!json.getJSONObject(x).getJSONObject("entities").isNull("media")){
                     urlImagen = json.getJSONObject(x).getJSONObject("entities").getJSONArray("media").getJSONObject(0).getString("media_url");
                     tweets.get(x).setUrlImagen(urlImagen);
                 }
+                //Agregamos el tweet a la base de datos.
+                db.insertarTweet(id,contenido,fecha, urlTwitter, urlImagen);
+
                 //Si existen links
                 if(!json.getJSONObject(x).getJSONObject("entities").isNull("urls")){
                     int urlsCount = json.getJSONObject(x).getJSONObject("entities").getJSONArray("urls").length();
@@ -74,6 +79,8 @@ public class GetDataTwitter extends AsyncTask<Void,Void,ArrayList<ItemTwitter>>
                         for(int y=0;y<urlsCount;y++){
                             String url = json.getJSONObject(x).getJSONObject("entities").getJSONArray("urls").getJSONObject(y).getString("url");
                             tweets.get(x).addLinks(url); //se agrega al objeto
+                            //Agregamos el link a la base de datos.
+                            db.insertarTwitterLink(id, url);
                         }
                     }
                 }
@@ -85,6 +92,8 @@ public class GetDataTwitter extends AsyncTask<Void,Void,ArrayList<ItemTwitter>>
                         for(int y=0;y<hashTagsCount;y++){
                             String hashtag = json.getJSONObject(x).getJSONObject("entities").getJSONArray("hashtags").getJSONObject(y).getString("text");
                             tweets.get(x).addHashTags("#"+hashtag); //se agrega al objeto
+                            //Agregamos el hashtag a la base de datos.
+                            db.insertarTwitterLink(id, "#"+hashtag);
                         }
                     }
                 }
@@ -96,6 +105,8 @@ public class GetDataTwitter extends AsyncTask<Void,Void,ArrayList<ItemTwitter>>
                         for(int y=0;y<usersCount;y++){
                             String user = json.getJSONObject(x).getJSONObject("entities").getJSONArray("user_mentions").getJSONObject(y).getString("screen_name");
                             tweets.get(x).addUsers("@"+user); //se agrega al objeto
+                            //Agregamos el user a la base de datos.
+                            db.insertarTwitterLink(id, "@"+user);
                         }
                     }
                 }

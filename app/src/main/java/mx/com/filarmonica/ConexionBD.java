@@ -57,9 +57,23 @@ public class ConexionBD extends SQLiteOpenHelper{
             "PRIMARY KEY, contenido text, url_imagen text, url_facebook text);";
     private final static String SQL_CREATE_TABLA_TWITTER  = "CREATE TABLE twitter (id text " +
             "PRIMARY KEY, text text, fecha text, url_imagen text, url_twitter text);";
-    private final static String SQL_CREATE_TABLA_TWITTER_EXTRA = "CREATE TABLE twitter_extra (id " +
-            "text, extra text);";
+    private final static String SQL_CREATE_TABLA_TWITTER_HASHTAG = "CREATE TABLE twitter_hashtag (id " +
+            "text, hashtag text);";
+    private final static String SQL_CREATE_TABLA_TWITTER_USER = "CREATE TABLE twitter_user (id " +
+            "text, user text);";
+    private final static String SQL_CREATE_TABLA_TWITTER_LINK = "CREATE TABLE twitter_link (id " +
+            "text, link text);";
 
+    //SELECT
+    private final static String SQL_SELECT_FACEBOOK       = "SELECT * FROM facebook;";
+    private final static String SQL_SELECT_TWITTER        = "SELECT * FROM twitter;";
+    private final static String SQL_SELECT_TWITTER_HASTAG = "SELECT * FROM twitter_hashtag WHERE ID = ";
+    private final static String SQL_SELECT_TWITTER_USER   = "SELECT * FROM twitter_user WHERE ID = ";
+    private final static String SQL_SELECT_TWITTER_LINK   = "SELECT * FROM twitter_link WHERE ID = ";
+
+    //DELETE
+    private final static String SQL_LIMPIAR_FACEBOOK = "TRUNCATE TABLE facebook;";
+    private final static String SQL_LIMPIAR_TWITTER  = "TRUNCATE TABLE twitter;";
 
     /*********************************** QUERYS NOTICIAS **********************************/
 
@@ -84,8 +98,10 @@ public class ConexionBD extends SQLiteOpenHelper{
         db.execSQL(SQL_CREATE_TABLE_INSTAGRAM);
         db.execSQL(SQL_CREATE_TABLA_FACEBOOK);
         db.execSQL(SQL_CREATE_TABLA_TWITTER);
-        db.execSQL(SQL_CREATE_TABLA_TWITTER_EXTRA);
-	}
+        db.execSQL(SQL_CREATE_TABLA_TWITTER_HASHTAG);
+        db.execSQL(SQL_CREATE_TABLA_TWITTER_USER);
+        db.execSQL(SQL_CREATE_TABLA_TWITTER_LINK);
+    }
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		
@@ -518,15 +534,127 @@ public class ConexionBD extends SQLiteOpenHelper{
         return true;
     }
 
-    public boolean insertarTwitterExtra(String id, String extra)
+    public boolean insertarTwitterHashtag(String id, String hashtag)
     {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("id", id);
-        contentValues.put("extra", extra);
-        db.insert("twitter_extra", null, contentValues);
-        Log.i("InsertDB", "Extra Tweet Insertado.");
+        contentValues.put("hashtag", hashtag);
+        db.insert("twitter_hashtag", null, contentValues);
+        Log.i("InsertDB", "Hashtag Tweet Insertado.");
 
         return true;
+    }
+
+    public boolean insertarTwitterUser(String id, String user)
+    {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("id", id);
+        contentValues.put("user", user);
+        db.insert("twitter_user", null, contentValues);
+        Log.i("InsertDB", "User Tweet Insertado.");
+
+        return true;
+    }
+
+    public boolean insertarTwitterLink(String id, String link)
+    {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("id", id);
+        contentValues.put("link", link);
+        db.insert("twitter_link", null, contentValues);
+        Log.i("InsertDB", "Link Tweet Insertado.");
+
+        return true;
+    }
+
+    public ArrayList<ItemFacebook> obtenerEstadosFacebook()
+    {
+        ArrayList<ItemFacebook> estadosFacebook = new ArrayList<>();
+        String id;
+        String contenido;
+        String urlImagen;
+        String urlFacebook;
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor resultado = db.rawQuery(SQL_SELECT_FACEBOOK, null);
+        resultado.moveToFirst();
+
+        while(!resultado.isAfterLast())
+        {
+            id          = resultado.getString(resultado.getColumnIndex("id"));
+            contenido   = resultado.getString(resultado.getColumnIndex("contenido"));
+            urlImagen   = resultado.getString(resultado.getColumnIndex("url_imagen"));
+            urlFacebook = resultado.getString(resultado.getColumnIndex("url_facebook"));
+            estadosFacebook.add(new ItemFacebook(id, contenido, urlImagen, urlFacebook));
+            resultado.moveToNext();
+        }
+
+        return estadosFacebook;
+    }
+
+    public ArrayList<ItemTwitter> obtenerTweets()
+    {
+        ArrayList<ItemTwitter> tweets = new ArrayList<>();
+        String id;
+        String text;
+        String fecha;
+        String urlImagen;
+        String urlTwitter;
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor resultado = db.rawQuery(SQL_SELECT_TWITTER, null);
+        resultado.moveToFirst();
+
+        while(!resultado.isAfterLast())
+        {
+            id         = resultado.getString(resultado.getColumnIndex("id"));
+            text       = resultado.getString(resultado.getColumnIndex("text"));
+            fecha      = resultado.getString(resultado.getColumnIndex("fecha"));
+            urlImagen  = resultado.getString(resultado.getColumnIndex("url_imagen"));
+            urlTwitter = resultado.getString(resultado.getColumnIndex("url_twitter"));
+
+            //Creamos el tweet, obtenemos todos los extras, se los insertamos y colocamos el tweet
+            //en el arreglo.
+            ItemTwitter tweet = new ItemTwitter(id, text, fecha, urlTwitter);
+            tweet.setUrlImagen(urlImagen);
+
+            //Hashtag
+            Cursor resultadoTwitterHashtag = db.rawQuery(SQL_SELECT_TWITTER_HASTAG + id, null);
+            resultadoTwitterHashtag.moveToFirst();
+            while(!resultadoTwitterHashtag.isAfterLast())
+            {
+                tweet.addHashTags(resultadoTwitterHashtag.getString(resultadoTwitterHashtag
+                    .getColumnIndex("hashtag")));
+                resultadoTwitterHashtag.moveToNext();
+            }
+
+            //User
+            Cursor resultadoTwitterUser = db.rawQuery(SQL_SELECT_TWITTER_USER + id, null);
+            resultadoTwitterUser.moveToFirst();
+            while(!resultadoTwitterUser.isAfterLast())
+            {
+                tweet.addUsers(resultadoTwitterUser.getString(resultadoTwitterUser
+                        .getColumnIndex("user")));
+                resultadoTwitterUser.moveToNext();
+            }
+
+            //Link
+            Cursor resultadoTwitterLink = db.rawQuery(SQL_SELECT_TWITTER_LINK + id, null);
+            resultadoTwitterLink.moveToFirst();
+            while(!resultadoTwitterLink.isAfterLast())
+            {
+                tweet.addLinks(resultadoTwitterLink.getString(resultadoTwitterLink
+                        .getColumnIndex("link")));
+                resultadoTwitterLink.moveToNext();
+            }
+
+            tweets.add(tweet);
+            resultado.moveToNext();
+        }
+
+        return tweets;
     }
 }

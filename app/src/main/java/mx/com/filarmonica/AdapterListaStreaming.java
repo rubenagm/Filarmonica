@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,8 +19,9 @@ public class AdapterListaStreaming extends RecyclerView.Adapter<AdapterListaStre
     ArrayList<ItemStreamingMusica> lista;
     Context contexto;
     ServicioMusica musicService;
-
-    public AdapterListaStreaming(Context contexto, ArrayList<ItemStreamingMusica> lista,ServicioMusica musicService){
+    ImageButton imageButtonBotonPlay;
+    public AdapterListaStreaming(Context contexto, ArrayList<ItemStreamingMusica> lista,ServicioMusica musicService,ImageButton imageButtonBotonPlay){
+        this.imageButtonBotonPlay = imageButtonBotonPlay;
         this.contexto = contexto;
         this.lista = lista;
         this.musicService = musicService;
@@ -39,6 +41,8 @@ public class AdapterListaStreaming extends RecyclerView.Adapter<AdapterListaStre
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                imageButtonBotonPlay.setImageResource(R.drawable.reproductor_boton_pause);
+                musicService.setBanderaCambioPosicion(true);
                 musicService.setSong(position);
                 musicService.playSong();
             }

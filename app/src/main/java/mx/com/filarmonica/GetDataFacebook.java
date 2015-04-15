@@ -73,6 +73,8 @@ public class GetDataFacebook extends AsyncTask<Void,Void,ArrayList<ItemFacebook>
                     urlFacebook = jsonArray.getJSONObject(x).getString("link");
 
                     publicaciones.add(new ItemFacebook(id, contenido,urlImagen+".png", urlFacebook));
+                    ConexionBD db = new ConexionBD(contexto);
+                    db.insertarEstadoFacebook(id, contenido,urlImagen+".png", urlFacebook);
                 }
                 Log.i("JSON Facebook", contenido + " ---- "+urlImagen);
 

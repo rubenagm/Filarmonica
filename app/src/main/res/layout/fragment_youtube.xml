@@ -22,7 +22,7 @@
             android:id="@+id/titulo_video"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Nombre del video"
+            android:text="Necesitas de conexión a internet para poder ver los videos"
             android:textColor="#FFFFFF"
             android:textSize="18sp"/>
         <ImageView

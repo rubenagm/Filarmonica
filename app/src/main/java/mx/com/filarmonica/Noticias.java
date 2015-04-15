@@ -1,6 +1,7 @@
 package mx.com.filarmonica;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,10 +24,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import conexion.ConexionInternet;
 import tabs.SlidingTabLayout;
 
 
@@ -62,6 +65,10 @@ public class Noticias extends ActionBarActivity
     private static ArrayList<ItemTwitter> twitterArray;
     private static ArrayList<ItemFacebook> facebookArray;
     private static  ArrayList<ItemImagenInstagram> imagenesInstagram;
+
+    //Bandera que indicará si ya hay noticias en la Base de Datos y únicamente es necesario
+    //actualizar.
+    private static boolean hayNoticiasEnBD = false;
 
     //Progress bar de los hilos al obtener la información.
     private ProgressBar progressBar;
@@ -101,33 +108,67 @@ public class Noticias extends ActionBarActivity
         //Colocamos el ViewPager a las Tabs.
         mTabs.setViewPager(mPager);
 
-        //Obtenemos los datos.
+        //Comprobamos si tiene hay noticas insertadas en la base de datos.
+        SharedPreferences sharedPreferences = getSharedPreferences("Noticias",
+                Context.MODE_PRIVATE);
+        String resultadoSharedPreferences = sharedPreferences.getString("NoticiasInsertadas",
+                "NoInsertadas");
 
+        if(resultadoSharedPreferences.equals("NoInsertadas"))
+        {
+            boolean noticiasInsertadas = true;
 
-        GetDataTwitter hiloTwitter = new GetDataTwitter();
-        hiloTwitter.execute();
-        try {
-            twitterArray = hiloTwitter.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+            GetDataTwitter hiloTwitter = new GetDataTwitter();
+            hiloTwitter.execute();
+            try {
+                twitterArray = hiloTwitter.get();
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+                noticiasInsertadas = false;
+            }
+            catch (ExecutionException e)
+            {
+                e.printStackTrace();
+                noticiasInsertadas = false;
+            }
 
-        //Obtenemos los datos de facebook.
-        GetDataFacebook facebookThread = new GetDataFacebook();
-        facebookThread.execute();
-        try
-        {
-            facebookArray = facebookThread.get();
+            //Obtenemos los datos de facebook.
+            GetDataFacebook facebookThread = new GetDataFacebook();
+            facebookThread.execute();
+            try
+            {
+                facebookArray = facebookThread.get();
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+                noticiasInsertadas = false;
+            }
+            catch (ExecutionException e)
+            {
+                e.printStackTrace();
+                noticiasInsertadas = false;
+            }
+
+            //Marcamos las noticias como insertadas.
+            if(noticiasInsertadas)
+            {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("NoticiasInsertadas","Insertadas");
+                editor.commit();
+            }
         }
-        catch (InterruptedException e)
+        else
         {
-            e.printStackTrace();
-        }
-        catch (ExecutionException e)
-        {
-            e.printStackTrace();
+            //Prendemos la bandera de actualización.
+            hayNoticiasEnBD = true;
+
+            //Cargamos las noticias.
+            ConexionBD db = new ConexionBD(contexto);
+            facebookArray = db.obtenerEstadosFacebook();
+            twitterArray  = db.obtenerTweets();
         }
 
         GetDataInstagram instragramThread = new GetDataInstagram(contexto);
@@ -236,15 +277,32 @@ public class Noticias extends ActionBarActivity
             mRecyclerView.setLayoutManager(new LinearLayoutManager(contexto));
             mRecyclerView.setItemAnimator( new DefaultItemAnimator());
 
+            //Actualizamos si es necesario.
+            if(hayNoticiasEnBD && ConexionInternet.verificarConexion(contexto))
+            {
+                GetDataTwitter twitterThread = new GetDataTwitter(mRecyclerView, mSwipeRefreshLayout,
+                        contexto);
+                twitterThread.execute();
+            }
+
             //Configuramos el swipe.
             mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
             {
                 @Override
                 public void onRefresh()
                 {
-                    GetDataTwitter twitterThread = new GetDataTwitter(mRecyclerView, mSwipeRefreshLayout,
-                            contexto);
-                    twitterThread.execute();
+                    if(ConexionInternet.verificarConexion(contexto))
+                    {
+                        GetDataTwitter twitterThread = new GetDataTwitter(mRecyclerView, mSwipeRefreshLayout,
+                                contexto);
+                        twitterThread.execute();
+                    }
+                    else
+                    {
+                        Toast.makeText(contexto, "No hay conexión a Internet.", Toast.LENGTH_SHORT)
+                                .show();
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
                 }
             });
 
@@ -272,7 +330,7 @@ public class Noticias extends ActionBarActivity
             //Vista que contendrá el layout a retornar.
             View layout = null;
 
-            //Inflamos el layout.(PRUEBA, CAMBIAR EL LAYOUT).
+            //Inflamos el layout.
             layout = inflater.inflate(R.layout.activity_lista_cards, container, false);
 
             //Obtenemos las referencias.
@@ -285,15 +343,32 @@ public class Noticias extends ActionBarActivity
             mRecyclerView.setAdapter(new AdapterListaFacebook(facebookArray,contexto));
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+            //Actualizamos, si es necesario.
+            if(hayNoticiasEnBD && ConexionInternet.verificarConexion(contexto))
+            {
+                GetDataFacebook facebookThread = new GetDataFacebook(mRecyclerView, mSwipeRefreshLayout,
+                        contexto);
+                facebookThread.execute();
+            }
+
             //Configuramos el swipe.
             mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
             {
                 @Override
                 public void onRefresh()
                 {
-                    GetDataFacebook facebookThread = new GetDataFacebook(mRecyclerView, mSwipeRefreshLayout,
-                            contexto);
-                    facebookThread.execute();
+                    if(ConexionInternet.verificarConexion(contexto))
+                    {
+                        GetDataFacebook facebookThread = new GetDataFacebook(mRecyclerView, mSwipeRefreshLayout,
+                                contexto);
+                        facebookThread.execute();
+                    }
+                    else
+                    {
+                        Toast.makeText(contexto, "No hay conexión a Internet.", Toast.LENGTH_SHORT)
+                                .show();
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
                 }
             });
 
