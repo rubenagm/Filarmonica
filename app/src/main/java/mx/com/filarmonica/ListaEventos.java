@@ -1,6 +1,8 @@
 package mx.com.filarmonica;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -11,18 +13,24 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import conexion.ConexionInternet;
+import thread.RespuestaAsyncTask;
 
 
-public class ListaEventos extends ActionBarActivity {
+public class ListaEventos extends ActionBarActivity
+{
     RecyclerView mRecyclerView;
     Context contexto;
     SwipeRefreshLayout mSwipeRefreshLayout;
+    TextView lblNoHayInformacion;
+    ConexionBD db;
 
     //Variables del Drawer.
     private ListView list_view_drawer;
@@ -62,7 +70,7 @@ public class ListaEventos extends ActionBarActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator( new DefaultItemAnimator());
         ArrayList<ItemEvento> lista = new ArrayList<>();
-        final ConexionBD db = new ConexionBD(contexto);
+        db = new ConexionBD(contexto);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
@@ -70,19 +78,41 @@ public class ListaEventos extends ActionBarActivity {
             @Override
             public void onRefresh()
             {
-                ArrayList<ItemEvento> lista = db.obtenerEventos();
-                RecyclerView.Adapter adapter = new AdapterListaEventos(contexto,lista);
-                mRecyclerView.setAdapter(adapter);
-                mSwipeRefreshLayout.setRefreshing(false);
+                SharedPreferences sharedPreferences = getSharedPreferences("Filarmonica",
+                        Context.MODE_PRIVATE);
+                String respuesta = sharedPreferences.getString("DatosInsertados","NoInsertados");
+
+                if(respuesta.equals("Insertados"))
+                {
+                    ArrayList<ItemEvento> lista = db.obtenerEventos();
+                    RecyclerView.Adapter adapter = new AdapterListaEventos(contexto,lista);
+                    lblNoHayInformacion = (TextView) findViewById(R.id.lblNoHayInformacion);
+                    lblNoHayInformacion.setVisibility(View.INVISIBLE);
+                    mRecyclerView.setAdapter(adapter);
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+                else
+                {
+                    ActualizarEventos actualizarEventos = new ActualizarEventos(mSwipeRefreshLayout,
+                            mRecyclerView, lblNoHayInformacion, sharedPreferences);
+                    actualizarEventos.execute();
+                }
             }
         });
 
         lista = db.obtenerEventos();
-        Log.i("InformacionLista",lista.size()+"!");
-        RecyclerView.Adapter adapter = new AdapterListaEventos(contexto,lista);
-        mRecyclerView.setAdapter(adapter);
 
-
+        //Si tenemos eventos colocamos el Adapter, sino mostramos el TexrView de vacío.
+        if(lista.size() > 0)
+        {
+            RecyclerView.Adapter adapter = new AdapterListaEventos(contexto,lista);
+            mRecyclerView.setAdapter(adapter);
+        }
+        else
+        {
+            lblNoHayInformacion = (TextView) findViewById(R.id.lblNoHayInformacion);
+            lblNoHayInformacion.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -106,5 +136,71 @@ public class ListaEventos extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //Clase para atualziar los eventos cuando no hay datos en la Base de Datos.
+    private class ActualizarEventos extends AsyncTask<Void, Integer, ArrayList<ItemEvento>>
+        implements RespuestaAsyncTask
+    {
+
+        private SwipeRefreshLayout swipeRefreshLayout;
+        private RecyclerView recyclerView;
+        private TextView lblNoHayInformacion;
+        private SharedPreferences sharedPreferences;
+
+        public ActualizarEventos(SwipeRefreshLayout swipeRefreshLayout, RecyclerView recyclerView,
+                                 TextView lblNoHayInformacion, SharedPreferences sharedPreferences)
+        {
+            this.swipeRefreshLayout = swipeRefreshLayout;
+            this.recyclerView = recyclerView;
+            this.lblNoHayInformacion = lblNoHayInformacion;
+            this.sharedPreferences = sharedPreferences;
+        }
+
+        @Override
+        protected void onPreExecute()
+        {
+            //Comprobar conexión a internet.
+        }
+
+        @Override
+        protected ArrayList<ItemEvento> doInBackground(Void... params)
+        {
+            Log.i("frank.frank", "Entró al AsyncTask");
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<ItemEvento> itemEventos)
+        {
+            ObtenerEventos obtenerEventos = new ObtenerEventos(contexto, sharedPreferences, this);
+            obtenerEventos.execute();
+        }
+
+        @Override
+        public void procesoTerminado(ArrayList resultado)
+        {
+            if(resultado !=null)
+            {
+                if(resultado.size() > 0)
+                {
+                    //Si el resultado es mayor que 0, concluimos que los eventos están en la
+                    //base de datos, por lo que podremos obtenerlos.
+                    resultado = db.obtenerEventos();
+                    RecyclerView.Adapter adapter = new AdapterListaEventos(contexto, resultado);
+                    lblNoHayInformacion.setVisibility(View.INVISIBLE);
+                    recyclerView.setAdapter(adapter);
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+                else
+                {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+            else
+            {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }
     }
 }

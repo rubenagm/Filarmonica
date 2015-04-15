@@ -51,6 +51,19 @@ public class ConexionBD extends SQLiteOpenHelper{
     private static final String SQL_PROXIMO_EVENTO = "SELECT * FROM evento as e JOIN fecha as f ON"
             + " e.id=f.evento_id WHERE f.fecha >= date('now' , '-1 days') ORDER BY f.fecha ASC LIMIT 2";
 
+    /*********************************** QUERYS NOTICIAS **********************************/
+    //CREATE
+    private final static String SQL_CREATE_TABLA_FACEBOOK = "CREATE TABLE facebook (id text " +
+            "PRIMARY KEY, contenido text, url_imagen text, url_facebook text);";
+    private final static String SQL_CREATE_TABLA_TWITTER  = "CREATE TABLE twitter (id text " +
+            "PRIMARY KEY, text text, fecha text, url_imagen text, url_twitter text);";
+    private final static String SQL_CREATE_TABLA_TWITTER_EXTRA = "CREATE TABLE twitter_extra (id " +
+            "text, extra text);";
+
+
+    /*********************************** QUERYS NOTICIAS **********************************/
+
+
     // Base de datos de Instagram
 
     private final String SQL_CREATE_TABLE_INSTAGRAM = "CREATE TABLE Instagram (ImagenNd TEXT UNIQUE," +
@@ -69,6 +82,9 @@ public class ConexionBD extends SQLiteOpenHelper{
         db.execSQL(SQL_CREATE_TABLA_VIDEOS);
         db.execSQL(SQL_CREATE_TABLA_NOTICIA);
         db.execSQL(SQL_CREATE_TABLE_INSTAGRAM);
+        db.execSQL(SQL_CREATE_TABLA_FACEBOOK);
+        db.execSQL(SQL_CREATE_TABLA_TWITTER);
+        db.execSQL(SQL_CREATE_TABLA_TWITTER_EXTRA);
 	}
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -468,5 +484,49 @@ public class ConexionBD extends SQLiteOpenHelper{
         {
             return fecha;
         }
+    }
+
+    //Funciones de Noticias.
+    public boolean insertarEstadoFacebook(String id, String contenido, String urlImagen,
+                           String urlFacebook)
+    {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("id", id);
+        contentValues.put("contenido", contenido);
+        contentValues.put("url_imagen", urlImagen);
+        contentValues.put("url_facebook", urlFacebook);
+        db.insert("facebook", null, contentValues);
+        Log.i("InsertDB", "Estado de Facebook Insertado.");
+
+        return true;
+    }
+
+    public boolean insertarTweet(String id, String text, String fecha, String urlImagen,
+                                 String urlTwitter)
+    {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("id", id);
+        contentValues.put("text", text);
+        contentValues.put("fecha", fecha);
+        contentValues.put("url_imagen", urlImagen);
+        contentValues.put("url_twitter", urlTwitter);
+        db.insert("twitter", null, contentValues);
+        Log.i("InsertDB", "Tweet Insertado.");
+
+        return true;
+    }
+
+    public boolean insertarTwitterExtra(String id, String extra)
+    {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("id", id);
+        contentValues.put("extra", extra);
+        db.insert("twitter_extra", null, contentValues);
+        Log.i("InsertDB", "Extra Tweet Insertado.");
+
+        return true;
     }
 }

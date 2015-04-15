@@ -26,7 +26,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEvento>>{
+import thread.RespuestaAsyncTask;
+
+public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEvento>>
+{
     //FtpDownload ftpDownload;
 	final String JSON_ID = "id";
 	final String JSON_PROGRAMA = "programa";
@@ -46,12 +49,24 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
 
 	private HttpClient mHttpClient = new DefaultHttpClient();
 	private HttpPost mHttPost = new HttpPost("http://www.ofj.com.mx/App/prueba1.php");
-	Context contexto;
-    SharedPreferences sharedPreferences;
+	private Context contexto;
+    private SharedPreferences sharedPreferences;
+    private RespuestaAsyncTask respuestaAsyncTask;
+
 	public ObtenerEventos(Context contexto,SharedPreferences sharedPreferences){
 		this.contexto = contexto;
         this.sharedPreferences = sharedPreferences;
+        respuestaAsyncTask = null;
 	}
+
+    public ObtenerEventos(Context contexto,SharedPreferences sharedPreferences, RespuestaAsyncTask
+                          respuestaAsyncTask)
+    {
+        this.contexto           = contexto;
+        this.sharedPreferences  = sharedPreferences;
+        this.respuestaAsyncTask = respuestaAsyncTask;
+    }
+
 	@Override
 	protected ArrayList<ItemEvento> doInBackground(String... params) {
 		ArrayList<ItemEvento> eventos = new ArrayList<ItemEvento>();
@@ -104,65 +119,62 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
 		catch(JSONException e)
 		{
 			Log.e("JSON", "Error al leer el JSON\n" + e);
-            error = true;
+            return null;
 		}
 		catch(IOException e)
 		{
 			Log.e("HTTP", "Error con la conexi�n HTTP");
-            error = true;
+            return null;
         }
 		
 		Log.i("Eventos", "Comienza a guardar fechas");
 		
 		/// Se comienzan a guardar las fechas
 
+        try {
+            List<NameValuePair> mNameValuePairs = new ArrayList<NameValuePair>(1);
+            mNameValuePairs.add(new BasicNameValuePair("query", QUERY_FECHAS));
+            mHttPost.setEntity(new UrlEncodedFormEntity(mNameValuePairs));
 
-		try {
-			List<NameValuePair> mNameValuePairs = new ArrayList<NameValuePair>(1);
-			mNameValuePairs.add(new BasicNameValuePair("query", QUERY_FECHAS));
-			mHttPost.setEntity(new UrlEncodedFormEntity(mNameValuePairs));
+            HttpResponse response = mHttpClient.execute(mHttPost);
 
-			HttpResponse response = mHttpClient.execute(mHttPost);
+            HttpEntity entity = response.getEntity();
+            String resultado = EntityUtils.toString(entity,"UTF-8");
 
-			HttpEntity entity = response.getEntity();
-			String resultado = EntityUtils.toString(entity,"UTF-8");
-
-			//Log.i("JSON",resultado);
-			resultado = resultado.substring(9);
-			Log.i("JSON",resultado);
-			JSONObject jsonObject = new JSONObject(resultado);
-			JSONArray jsonArray = jsonObject.getJSONArray("data");
+            //Log.i("JSON",resultado);
+            resultado = resultado.substring(9);
+            Log.i("JSON",resultado);
+            JSONObject jsonObject = new JSONObject(resultado);
+            JSONArray jsonArray = jsonObject.getJSONArray("data");
             int longitud = jsonArray.length();
-			for(int i = 0; i < jsonArray.length(); i++)
-			{
+            for(int i = 0; i < jsonArray.length(); i++)
+            {
                 displayNotification(createBasicNotification("OFJ","Actualizando fechas",
                         i+1,longitud));
-				JSONObject jsonElement = jsonArray.getJSONObject(i);
+                JSONObject jsonElement = jsonArray.getJSONObject(i);
 
-				int id = jsonElement.getInt("id");
-				String fecha = jsonElement.getString("fecha");
-				String hora = jsonElement.getString("hora");
-				String minuto = jsonElement.getString("minuto");
-				int evento_id = jsonElement.getInt("evento_id");
+                int id = jsonElement.getInt("id");
+                String fecha = jsonElement.getString("fecha");
+                String hora = jsonElement.getString("hora");
+                String minuto = jsonElement.getString("minuto");
+                int evento_id = jsonElement.getInt("evento_id");
 
-				//Agregamos los valores al arreglo
-				mDB.insertFecha(id, fecha, hora, minuto, evento_id);
-			}
-		}
-		catch(JSONException e)
-		{
-			Log.e("JSON", "Error al leer el JSON\n" + e);
-            error = true;
-		}
-		catch(IOException e)
-		{
-			Log.e("HTTP", "Error con la conexi�n HTTP");
-            error = true;
-		}
+                //Agregamos los valores al arreglo
+                mDB.insertFecha(id, fecha, hora, minuto, evento_id);
+            }
+        }
+        catch(JSONException e)
+        {
+            Log.e("JSON", "Error al leer el JSON\n" + e);
+            return null;
+        }
+        catch(IOException e)
+        {
+            Log.e("HTTP", "Error con la conexi�n HTTP");
+            return null;
+        }
 
         //Se comienzan a guardar las localidades
-
-
 
 
         //Se comienza a guardar Localidades_eventos
@@ -199,26 +211,28 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
         catch(JSONException e)
         {
             Log.e("JSON", "Error al leer el JSON\n" + e);
-            error = true;
+            return null;
         }
         catch(IOException e)
         {
             Log.e("HTTP", "Error con la conexi�n HTTP");
-            error = true;
+            return null;
         }
 
-        if(error == false)
-        {
-            editor.putString("DatosInsertados","Insertados");
-        }
-        else
-        {
-            editor.putString("DatosInsertados","NoInsertados");
-
-        }
+        editor.putString("DatosInsertados","Insertados");
         editor.commit();
-		return eventos;
+        return eventos;
 	}
+
+    @Override
+    protected void onPostExecute(ArrayList<ItemEvento> resultado)
+    {
+        if(respuestaAsyncTask != null)
+        {
+            respuestaAsyncTask.procesoTerminado(resultado);
+        }
+    }
+
     private Notification createBasicNotification(String titulo, String contenido,int progress,
                                                  int total) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(contexto);

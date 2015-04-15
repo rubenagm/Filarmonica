@@ -24,6 +24,15 @@
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
+        <TextView
+            android:id="@+id/lblNoHayInformacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="?android:attr/textAppearanceLarge"
+            android:layout_centerInParent="true"
+            android:text="No hay información para mostrar. Verifica tu conexión a internet."
+            android:visibility="gone"/>
+
     </RelativeLayout>
 
     <!-- The navigation drawer -->

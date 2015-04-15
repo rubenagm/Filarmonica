@@ -42,7 +42,7 @@ public class SplashScreen extends ActionBarActivity {
         {
             @Override
             public void run() {
-                if(respuesta.equals("NoInsertados")){
+                if(!respuesta.equals("Insertados")){
                     //Verificamos la conexión a internet para la primera vez que se corre la app.
                     //Si no hay internet cierra la app desde la MainActivity.
                     if(ConexionInternet.verificarConexion(contexto))
@@ -52,8 +52,6 @@ public class SplashScreen extends ActionBarActivity {
                         startService(in);
                     }
                 }
-                //ObtenerEventos hilo = new ObtenerEventos(contexto,sharedPreferences);
-                //hilo.execute();
             }
         }).start();
         TimerTask task = new TimerTask() {
