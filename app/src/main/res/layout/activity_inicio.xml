@@ -84,8 +84,20 @@
                 android:textColor="#FFFFFF"
                 android:textSize="10sp"
                 android:layout_marginLeft="@dimen/margen_izquierdo_segundos"/>
-
         </LinearLayout>
+        <ImageView
+            android:id="@+id/tutorial_fondo_drawer"
+            android:scaleType="fitXY"
+            android:src="@drawable/fondo_tutorial"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+        <ImageView
+            android:id="@+id/hand_tutorial_drawer"
+            android:layout_centerVertical="true"
+            android:src="@drawable/hand"
+            android:layout_width="150dp"
+            android:layout_height="150dp" />
+
 	    
     </RelativeLayout>
 	

@@ -248,6 +248,6 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
     private void displayNotification(Notification notification) {
         NotificationManager notificationManager = (NotificationManager)contexto.
                 getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1 , notification);
+        notificationManager.notify(012345 , notification);
     }
 }
