@@ -2,19 +2,30 @@ package mx.com.filarmonica;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.DragEvent;
+import android.view.Gravity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +53,14 @@ import date.DateDifference;
 
 public class MainActivity extends Activity
 {
+    //Tutorial
+    ImageView imageViewHand = null;
+    static TranslateAnimation animation;
+    ImageView imageViewFondoDrawerTutorial = null;
+
+    //Drawer
+    DrawerLayout drawerLayout = null;
+    ActionBarDrawerToggle actionBarDrawerToggle = null;
 
     //Constants.
     private static final int SLEEP_SECOND = 1000;
@@ -71,6 +90,13 @@ public class MainActivity extends Activity
         //Obtenemos el contexto.
         contexto = MainActivity.this;
 
+        //Shared poreferences inicio
+        SharedPreferences shared = getSharedPreferences("Inicio",Context.MODE_PRIVATE);
+        String llave =shared.getString("Inicio","Primera");
+
+        //Bloqueat rotación de pantalla
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         //Trigger para salir de la aplicación en caso de que no haya datos insertados debido a la
         // conexión a internet.
         Intent intent = getIntent();
@@ -95,6 +121,11 @@ public class MainActivity extends Activity
                 alertDialog.show();
             }
         }
+        //Se inicializa el drawer para poder controlarlo
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        imageViewFondoDrawerTutorial = (ImageView) findViewById(R.id.tutorial_fondo_drawer);
+
 
 
         //Comprobamos la conexión.
@@ -125,6 +156,33 @@ public class MainActivity extends Activity
         list_view_drawer = (ListView) findViewById(R.id.drawer_listView);
         list_view_drawer.setAdapter(new ListViewAdapter(this));
 
+        //Se iniclializa el imageview
+        imageViewHand = (ImageView) findViewById(R.id.hand_tutorial_drawer);
+        ///Animación
+
+
+
+        if(llave.equals("Primera")){
+            animation = new TranslateAnimation(0, 500, 0, 0);
+            animation.setDuration(4000);
+            animation.setRepeatCount(Animation.INFINITE);
+            animation.setFillAfter(true);
+            imageViewHand.startAnimation(animation);
+
+            //escuchar para poder deshacer la animacion
+            drawerLayout.setDrawerListener(new RightMenuListener());
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString("Inicio","Segunda");
+            editor.commit();
+
+        }
+        else{
+            imageViewHand.setVisibility(View.GONE);
+            imageViewFondoDrawerTutorial.setVisibility(View.GONE);
+        }
+
+        ///
+
         //Ajustar el ListView al ancho de la pantalla
         DisplayMetrics display_metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
@@ -132,6 +190,8 @@ public class MainActivity extends Activity
         list_view_drawer.getLayoutParams().width = width;
         int height = display_metrics.heightPixels;
         list_view_drawer.getLayoutParams().height = height;
+
+
 
         /******************************* ListView Drawer *****************************/
 
@@ -157,6 +217,13 @@ public class MainActivity extends Activity
         }
     }//OnCreate
 
+
+    // Animación del hand
+
+
+
+
+    ////////
     /***************************************** CONEXIONES *******************************************/
     //Clase para acceder al JSON.
     private class ConexionRemotaProximoConcierto extends AsyncTask<String, Void, ArrayList<String>>
@@ -450,5 +517,31 @@ public class MainActivity extends Activity
         });
 
         thread.start();
+    }
+    private class RightMenuListener implements android.support.v4.widget.DrawerLayout.DrawerListener {
+        @Override
+        public void onDrawerSlide(View view, float v) {
+
+        }
+
+        @Override
+        public void onDrawerOpened(View view) {
+            imageViewHand.clearAnimation();
+            imageViewHand.setVisibility(View.GONE);
+            imageViewFondoDrawerTutorial.setVisibility(View.GONE);
+            NotificationManager notificationManager = (NotificationManager) contexto
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(012345);
+        }
+
+        @Override
+        public void onDrawerClosed(View view) {
+
+        }
+
+        @Override
+        public void onDrawerStateChanged(int i) {
+
+        }
     }
 }
