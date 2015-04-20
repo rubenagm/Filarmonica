@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.format.Time;
 import android.util.Log;
 
 import org.jsoup.Jsoup;
@@ -483,7 +484,8 @@ public class ConexionBD extends SQLiteOpenHelper{
         final int INDEX_COLUMNA_HORA   = 11;
         final int INDEX_COLUMNA_MINUTO = 12;
 
-        ArrayList<String> fecha = new ArrayList<>();
+        ArrayList<String> fecha  = new ArrayList<>();
+        ArrayList<String> fecha2 = new ArrayList<>();
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(SQL_PROXIMO_EVENTO, null);
@@ -492,13 +494,29 @@ public class ConexionBD extends SQLiteOpenHelper{
         fecha.add(cursor.getString(INDEX_COLUMNA_FECHA));
         fecha.add(cursor.getString(INDEX_COLUMNA_HORA) + ":" + cursor.getString(INDEX_COLUMNA_MINUTO));
 
+        cursor.moveToNext();
+        fecha2.add(cursor.getString(INDEX_COLUMNA_FECHA));
+        fecha2.add(cursor.getString(INDEX_COLUMNA_HORA) + ":" + cursor.getString(INDEX_COLUMNA_MINUTO));
+
+        Time now = new Time();
+        now.setToNow();
+
+
         if(fecha.isEmpty())
         {
             return null;
         }
         else
         {
-            return fecha;
+            int month = now.month + 1;
+            if(fecha.get(0).compareTo(now.year + "-" + month + "-" + now.monthDay) >= 0)
+            {
+                return fecha;
+            }
+            else
+            {
+                return fecha2;
+            }
         }
     }
 
