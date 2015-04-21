@@ -2,6 +2,7 @@ package mx.com.filarmonica;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -31,6 +32,7 @@ import java.util.concurrent.ExecutionException;
 
 import conexion.ConexionInternet;
 import tabs.SlidingTabLayout;
+import utilities.TabletManager;
 
 
 public class Noticias extends ActionBarActivity
@@ -73,11 +75,11 @@ public class Noticias extends ActionBarActivity
     //Progress bar de los hilos al obtener la información.
     private ProgressBar progressBar;
 
+    private boolean esTablet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-
-        //Dialogo
 
         ft = getSupportFragmentManager().beginTransaction();
         prev = getSupportFragmentManager().findFragmentByTag("dialog");
@@ -88,10 +90,17 @@ public class Noticias extends ActionBarActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabs);
-        getSupportActionBar().hide();
 
         //Obtenemos el contexto.
         contexto = getApplicationContext();
+        getSupportActionBar().hide();
+
+        //Comprobamos si es tablet y colocamos horizontalmente la Activity de ser así.
+        if(esTablet = TabletManager.esTablet(contexto))
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+
         //Obtenemos las referencias.
         mPager = (ViewPager) findViewById(R.id.pager);
         mTabs  = new SlidingTabLayout(contexto);
@@ -183,8 +192,16 @@ public class Noticias extends ActionBarActivity
         DisplayMetrics display_metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
         int width = display_metrics.widthPixels;
-        list_view_drawer.getLayoutParams().width = width;
         int height = display_metrics.heightPixels;
+
+        if(esTablet)
+        {
+            list_view_drawer.getLayoutParams().width  = width/4;
+        }
+        else
+        {
+            list_view_drawer.getLayoutParams().width  = width;
+        }
         list_view_drawer.getLayoutParams().height = height;
 
         /******************************* ListView Drawer *****************************/

@@ -2,6 +2,7 @@ package mx.com.filarmonica;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+
+import utilities.TabletManager;
 
 
 public class DetalleEvento extends ActionBarActivity {
@@ -39,11 +42,19 @@ public class DetalleEvento extends ActionBarActivity {
     //Variables del Drawer.
     private ListView list_view_drawer;
 
+    private boolean esTablet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detalle_evento);
         contexto = getApplicationContext();
+
+        //Comprobamos si es tablet y colocamos horizontalmente la Activity de ser así.
+        if(esTablet = TabletManager.esTablet(contexto))
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
 
         final Intent intent = getIntent();
         final String action = intent.getAction();
@@ -99,8 +110,16 @@ public class DetalleEvento extends ActionBarActivity {
         DisplayMetrics display_metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
         int width = display_metrics.widthPixels;
-        list_view_drawer.getLayoutParams().width = width;
         int height = display_metrics.heightPixels;
+
+        if(esTablet)
+        {
+            list_view_drawer.getLayoutParams().width  = width/4;
+        }
+        else
+        {
+            list_view_drawer.getLayoutParams().width  = width;
+        }
         list_view_drawer.getLayoutParams().height = height;
 
         /******************************* ListView Drawer *****************************/

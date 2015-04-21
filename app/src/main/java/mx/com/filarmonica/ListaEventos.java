@@ -2,6 +2,7 @@ package mx.com.filarmonica;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,15 +23,21 @@ import java.util.ArrayList;
 
 import conexion.ConexionInternet;
 import thread.RespuestaAsyncTask;
+import utilities.TabletManager;
 
 
 public class ListaEventos extends ActionBarActivity
 {
-    RecyclerView mRecyclerView;
-    Context contexto;
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    TextView lblNoHayInformacion;
-    ConexionBD db;
+    //Variables layout.
+    private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private TextView lblNoHayInformacion;
+
+    private Context contexto;
+
+    private ConexionBD db;
+
+    private boolean esTablet;
 
     //Variables del Drawer.
     private ListView list_view_drawer;
@@ -43,6 +50,12 @@ public class ListaEventos extends ActionBarActivity
 
         //Ocultamos el action bar.
         getSupportActionBar().hide();
+
+        //Comprobamos si es tablet y colocamos horizontalmente la Activity de ser así.
+        if(esTablet = TabletManager.esTablet(contexto))
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
 
         //Verificamos la conexión a internet.
         if(!ConexionInternet.verificarConexion(contexto))
@@ -60,8 +73,16 @@ public class ListaEventos extends ActionBarActivity
         DisplayMetrics display_metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
         int width = display_metrics.widthPixels;
-        list_view_drawer.getLayoutParams().width = width;
         int height = display_metrics.heightPixels;
+
+        if(esTablet)
+        {
+            list_view_drawer.getLayoutParams().width  = width/4;
+        }
+        else
+        {
+            list_view_drawer.getLayoutParams().width  = width;
+        }
         list_view_drawer.getLayoutParams().height = height;
 
         /******************************* ListView Drawer *****************************/

@@ -52,7 +52,7 @@
                     android:textColor="#c4302b"
                     android:layout_marginLeft="20dp"
                     android:textSize="16dp"
-                    android:text="EVENTO CULMINADO"
+                    android:text="EVENTO CONSUMADO"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="invisible"/>

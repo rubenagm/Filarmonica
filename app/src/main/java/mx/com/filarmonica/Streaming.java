@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -53,6 +54,7 @@ import java.util.concurrent.ExecutionException;
 
 import conexion.ConexionInternet;
 import tabs.SlidingTabLayout;
+import utilities.TabletManager;
 
 /**
  * Created by natafrank on 1/20/15.
@@ -105,6 +107,8 @@ public class Streaming extends ActionBarActivity
 
     //ListView del drawer.
     private ListView list_view_drawer;
+
+    private boolean esTablet;
 
     /******* Variables del reproductor de video. *******
      * */
@@ -160,6 +164,12 @@ public class Streaming extends ActionBarActivity
         //Ocultamos el ActionBar.
         getSupportActionBar().hide();
 
+        //Comprobamos si es tablet y colocamos horizontalmente la Activity de ser así.
+        if(esTablet = TabletManager.esTablet(contexto))
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+
         supportManager = getSupportFragmentManager();
 
         //Obtenemos las referencias.
@@ -186,8 +196,16 @@ public class Streaming extends ActionBarActivity
         DisplayMetrics display_metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
         int width = display_metrics.widthPixels;
-        list_view_drawer.getLayoutParams().width = width;
         int height = display_metrics.heightPixels;
+
+        if(esTablet)
+        {
+            list_view_drawer.getLayoutParams().width  = width/4;
+        }
+        else
+        {
+            list_view_drawer.getLayoutParams().width  = width;
+        }
         list_view_drawer.getLayoutParams().height = height;
         /******************************* ListView Drawer *****************************/
 

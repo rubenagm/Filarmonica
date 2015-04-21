@@ -1,9 +1,13 @@
 package mx.com.filarmonica;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.widget.ListView;
+
+import utilities.TabletManager;
 
 
 public class Patronato extends Activity
@@ -12,11 +16,24 @@ public class Patronato extends Activity
     //Variables del Drawer.
     private ListView list_view_drawer;
 
+    private boolean esTablet;
+
+    private Context contexto;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patronato);
+
+        //Obtenemos el contexto.
+        contexto = Patronato.this;
+
+        //Comprobamos si es tablet y colocamos horizontalmente la Activity de ser así.
+        if(esTablet = TabletManager.esTablet(contexto))
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
 
         /******************************* ListView Drawer *****************************/
         list_view_drawer = (ListView) findViewById(R.id.drawer_listView);
@@ -26,8 +43,16 @@ public class Patronato extends Activity
         DisplayMetrics display_metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
         int width = display_metrics.widthPixels;
-        list_view_drawer.getLayoutParams().width = width;
         int height = display_metrics.heightPixels;
+
+        if(esTablet)
+        {
+            list_view_drawer.getLayoutParams().width  = width/4;
+        }
+        else
+        {
+            list_view_drawer.getLayoutParams().width  = width;
+        }
         list_view_drawer.getLayoutParams().height = height;
         /******************************* ListView Drawer *****************************/
     }

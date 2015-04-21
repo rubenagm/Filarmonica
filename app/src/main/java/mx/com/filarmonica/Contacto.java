@@ -1,7 +1,9 @@
 package mx.com.filarmonica;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -11,6 +13,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.VideoView;
+
+import utilities.TabletManager;
 
 
 public class Contacto extends Activity
@@ -23,11 +27,23 @@ public class Contacto extends Activity
     //Variables del Layout.
     private ImageView btnEmail;
 
+    private boolean esTablet;
+    private Context contexto;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacto);
+
+        //Obtenemos el contexto.
+        contexto = Contacto.this;
+
+        //Comprobamos si es tablet y colocamos horizontalmente la Activity de ser así.
+        if(esTablet = TabletManager.esTablet(contexto))
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
 
         //Obtenemos las refererencias.
         videoView = (VideoView) findViewById(R.id.video_contacto);
@@ -69,8 +85,16 @@ public class Contacto extends Activity
         DisplayMetrics display_metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
         int width = display_metrics.widthPixels;
-        list_view_drawer.getLayoutParams().width = width;
         int height = display_metrics.heightPixels;
+
+        if(esTablet)
+        {
+            list_view_drawer.getLayoutParams().width  = width/4;
+        }
+        else
+        {
+            list_view_drawer.getLayoutParams().width  = width;
+        }
         list_view_drawer.getLayoutParams().height = height;
         /******************************* ListView Drawer *****************************/
     }

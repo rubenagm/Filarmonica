@@ -14,6 +14,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import conexion.ConexionInternet;
+import utilities.TabletManager;
 
 
 public class SplashScreen extends ActionBarActivity {
@@ -28,11 +29,17 @@ public class SplashScreen extends ActionBarActivity {
 
         progressDialog = new ProgressDialog(SplashScreen.this);
         progressDialog.setCancelable(false);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         contexto = getApplicationContext();
 
         getSupportActionBar().hide();
         setContentView(R.layout.splash_screen);
+
+        //Comprobamos si es tablet y colocamos horizontalmente la Activity de ser así.
+        if(TabletManager.esTablet(contexto))
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
 
         final SharedPreferences sharedPreferences = getSharedPreferences("Filarmonica",
                 Context.MODE_PRIVATE);

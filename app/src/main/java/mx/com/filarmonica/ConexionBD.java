@@ -508,7 +508,14 @@ public class ConexionBD extends SQLiteOpenHelper{
         }
         else
         {
-            int month = now.month + 1;
+            int monthInteger = now.month + 1;
+            String month = String.valueOf(monthInteger);
+
+            if(monthInteger < 10)
+            {
+                month = "0" + month;
+            }
+
             if(fecha.get(0).compareTo(now.year + "-" + month + "-" + now.monthDay) >= 0)
             {
                 return fecha;
