@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/layout_cerrar_dialogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:alpha=".5"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:layout_marginRight="20dp"
+            android:textSize="30sp"
+            android:layout_alignParentRight="true"
+            android:text="X"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:background="#E6E6E6"
+        android:id="@+id/relative_progress"
+        android:layout_width="fill_parent"
+        android:layout_height="350dp"
+        android:visibility="gone">
+        <ProgressBar
+            android:id="@+id/progress_cargando_imagen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            style="?android:attr/progressBarStyleLarge"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:scaleType="centerCrop"
+            android:id="@+id/dialogo_imagen_instagram"
+            android:src="@drawable/icon_buy"
+            android:layout_width="fill_parent"
+            android:layout_height="350dp" />
+        <ImageView
+            android:alpha=".5"
+            android:id="@+id/boton_imagen_anterior_instagram"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_hardware_keyboard_arrow_left"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+        <ImageView
+            android:id="@+id/boton_imagen_siguiente_instagram"
+            android:alpha=".5"
+            android:src="@drawable/ic_hardware_keyboard_arrow_right"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+        </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="@color/link"
+            android:id="@+id/dialogo_ver_en_instagram"
+            android:layout_alignParentRight="true"
+            android:text="Ver en Instagram"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <TextView
+        android:layout_marginTop="5dp"
+        android:textColor="#FFFFFF"
+        android:id="@+id/dialogo_informacion_instagram"
+        android:text="Informacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

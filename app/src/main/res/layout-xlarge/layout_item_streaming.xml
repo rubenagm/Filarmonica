@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/layout_item_streaming" xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="70dp">
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:textColor="#000000"
+        android:textSize="17sp"
+        android:id="@+id/reproductor_nombre_cancion"
+        android:text="Nombre de cancion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_marginLeft="20dp"
+        android:id="@+id/reproductor_director_cancion"
+        android:layout_marginTop="35dp"
+        android:text="Director"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_marginRight="20dp"
+        android:textSize="16sp"
+        android:layout_marginTop="35dp"
+        android:layout_alignParentRight="true"
+        android:id="@+id/reproductor_duracion_cancion"
+        android:text="Duracion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:alpha=".2"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_alignParentBottom="true"
+        android:background="#000000"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp" />
+
+</RelativeLayout>

@@ -1,0 +1,116 @@
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${relativePackage}.${activityClass}" >
+	
+    <!-- The main content view -->
+	<RelativeLayout 
+	    android:id="@+id/content_frame"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:background="@drawable/background_contador">
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/logo_filarmonica"
+            />
+
+	    <TextView
+	        android:id="@+id/lbl_contador_proximo_concierto"
+	        android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:textColor="#FFFFFF"
+	    	android:textSize="50sp"
+	    	android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margen_superior_contador"
+            android:layout_marginBottom="@dimen/margen_inferior_contador"
+            />
+
+	    <TextView
+            android:layout_marginBottom="@dimen/margen_inferior_proximo_concierto"
+	        android:id="@+id/lbl_proximo_concierto"
+	        android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:textColor="#FFFFFF"
+	    	android:text="@string/proximo_concierto"
+	    	android:textSize="22sp"
+	    	android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@+id/lbl_contador_proximo_concierto"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margen_superior_dhms"
+            android:orientation="horizontal"
+            android:layout_alignLeft="@id/lbl_contador_proximo_concierto">
+
+            <TextView
+                android:id="@+id/dias"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DÍAS"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:layout_marginLeft="@dimen/margen_izquierdo_dias"/>
+
+            <TextView
+                android:id="@+id/horas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HORAS"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:layout_marginLeft="@dimen/margen_izquierdo_horas"/>
+
+            <TextView
+                android:id="@+id/minutos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MINUTOS"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:layout_marginLeft="@dimen/margen_izquierdo_minutos"/>
+
+            <TextView
+                android:id="@+id/segundos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SEGUNDOS"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:layout_marginLeft="@dimen/margen_izquierdo_segundos"/>
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/tutorial_fondo_drawer"
+            android:scaleType="fitXY"
+            android:src="@drawable/fondo_tutorial"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+        <ImageView
+            android:id="@+id/hand_tutorial_drawer"
+            android:layout_centerVertical="true"
+            android:src="@drawable/hand"
+            android:layout_width="150dp"
+            android:layout_height="150dp" />
+
+	    
+    </RelativeLayout>
+	
+	<!-- The navigation drawer -->
+    <ListView
+        android:id="@+id/drawer_listView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:divider="#2E2E2E"
+        android:background="#424242"
+        android:textColor="#424242"
+        android:scrollbars="none"/>
+
+</android.support.v4.widget.DrawerLayout>

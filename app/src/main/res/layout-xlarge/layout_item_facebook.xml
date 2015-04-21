@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_margin="7dp">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/facebook_imagen"
+                    android:scaleType="centerCrop"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/marca_ofj"/>
+
+                <TextView
+                    android:id="@+id/facebook_usuario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_toRightOf="@id/facebook_imagen"
+                    android:text="@string/ofj"
+                    android:textColor="@color/link"/>
+
+                <TextView
+                    android:id="@+id/fecha_publicacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_below="@id/facebook_usuario"
+                    android:layout_toRightOf="@id/facebook_imagen"
+                    android:textSize="12sp"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/contenido_publicacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="4"
+                android:minLines="1"
+                android:textSize="13sp"/>
+            <RelativeLayout
+                android:layout_marginTop="8dp"
+                android:background="#E6E6E6"
+                android:id="@+id/relative_progress"
+                android:layout_width="fill_parent"
+                android:layout_height="200dp"
+                android:visibility="gone">
+                <ProgressBar
+                    android:id="@+id/progress_cargando_imagen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    style="?android:attr/progressBarStyleLarge"/>
+            </RelativeLayout>
+            <ImageView
+                android:layout_marginTop="8dp"
+                android:id="@+id/imagen_publicacion"
+                android:layout_width="fill_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"/>
+
+            <TextView
+                android:layout_marginTop="8dp"
+                android:id="@+id/ver_en_facebook"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ver_en_facebook"
+                android:gravity="right"
+                android:textColor="@color/link"/>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>
