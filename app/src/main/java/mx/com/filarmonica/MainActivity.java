@@ -9,22 +9,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.DragEvent;
-import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -58,10 +54,6 @@ public class MainActivity extends Activity
     static TranslateAnimation animation;
     ImageView imageViewFondoDrawerTutorial = null;
 
-    //Drawer
-    DrawerLayout drawerLayout = null;
-    ActionBarDrawerToggle actionBarDrawerToggle = null;
-
     //Constants.
     private static final int SLEEP_SECOND = 1000;
     private static final int TIEMPO_ESPERA_BUSQUEDA_PROXIMO_CONCIERTO = (1000 * 60 * 60) * 2;
@@ -69,6 +61,9 @@ public class MainActivity extends Activity
     //Contexto.
     private static Context contexto;
     private static ProgressDialog progressDialog;
+
+    //Variable para guardar si el dispositivo es tablet.
+    private boolean esTablet = false;
 
     //Variables del Drawer.
     private ListView list_view_drawer;
@@ -94,8 +89,13 @@ public class MainActivity extends Activity
         SharedPreferences shared = getSharedPreferences("Inicio",Context.MODE_PRIVATE);
         String llave =shared.getString("Inicio","Primera");
 
-        //Bloqueat rotación de pantalla
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //Trigger para poner la tablet en horizontal.
+        if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_XLARGE)
+            == Configuration.SCREENLAYOUT_SIZE_XLARGE)
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            esTablet = true;
+        }
 
         //Trigger para salir de la aplicación en caso de que no haya datos insertados debido a la
         // conexión a internet.
@@ -121,12 +121,7 @@ public class MainActivity extends Activity
                 alertDialog.show();
             }
         }
-        //Se inicializa el drawer para poder controlarlo
-
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         imageViewFondoDrawerTutorial = (ImageView) findViewById(R.id.tutorial_fondo_drawer);
-
-
 
         //Comprobamos la conexión.
         if(!ConexionInternet.verificarConexion(contexto))
@@ -160,7 +155,22 @@ public class MainActivity extends Activity
         imageViewHand = (ImageView) findViewById(R.id.hand_tutorial_drawer);
         ///Animación
 
+        //Ajustar el ListView al ancho de la pantalla
+        DisplayMetrics display_metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
+        int height = display_metrics.heightPixels;
+        int width = display_metrics.widthPixels;
 
+        //escuchar para poder deshacer la animacion
+        if(esTablet)
+        {
+            list_view_drawer.getLayoutParams().width  = width/4;
+        }
+        else
+        {
+            list_view_drawer.getLayoutParams().width  = width;
+        }
+        list_view_drawer.getLayoutParams().height = height;
 
         if(llave.equals("Primera")){
             animation = new TranslateAnimation(0, 500, 0, 0);
@@ -169,8 +179,12 @@ public class MainActivity extends Activity
             animation.setFillAfter(true);
             imageViewHand.startAnimation(animation);
 
-            //escuchar para poder deshacer la animacion
-            drawerLayout.setDrawerListener(new RightMenuListener());
+            if(!esTablet)
+            {
+                DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawerLayout.setDrawerListener(new RightMenuListener());
+            }
+
             SharedPreferences.Editor editor = shared.edit();
             editor.putString("Inicio","Segunda");
             editor.commit();
@@ -180,18 +194,6 @@ public class MainActivity extends Activity
             imageViewHand.setVisibility(View.GONE);
             imageViewFondoDrawerTutorial.setVisibility(View.GONE);
         }
-
-        ///
-
-        //Ajustar el ListView al ancho de la pantalla
-        DisplayMetrics display_metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
-        int width = display_metrics.widthPixels;
-        list_view_drawer.getLayoutParams().width = width;
-        int height = display_metrics.heightPixels;
-        list_view_drawer.getLayoutParams().height = height;
-
-
 
         /******************************* ListView Drawer *****************************/
 

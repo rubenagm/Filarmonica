@@ -2,6 +2,7 @@ package mx.com.filarmonica;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,10 +22,20 @@ public class ListViewAdapter extends BaseAdapter
     private final static int NUMERO_ELEMENTOS_LIST_VIEW = 1;
 
     private Activity activity;
+    private boolean esTablet;
 
     public ListViewAdapter(Activity activity)
     {
         this.activity = activity;
+        if((activity.getResources().getConfiguration().screenLayout & Configuration
+                .SCREENLAYOUT_SIZE_XLARGE) == Configuration.SCREENLAYOUT_SIZE_XLARGE)
+        {
+            esTablet = true;
+        }
+        else
+        {
+            esTablet = false;
+        }
     }
 
     @Override
@@ -66,6 +77,7 @@ public class ListViewAdapter extends BaseAdapter
         if(convertView == null)
         {
             view = new Fila();
+
             convertView = inflater.inflate(R.layout.item_drawer, parent, false);
 
             //Obtenemos las referencias.
@@ -81,7 +93,17 @@ public class ListViewAdapter extends BaseAdapter
             DisplayMetrics display_metrics = new DisplayMetrics();
             activity.getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
             final int height = display_metrics.heightPixels;
-            view.linearLayout.getLayoutParams().height = height;
+            final int width  = display_metrics.widthPixels;
+
+            if(esTablet)
+            {
+                view.linearLayout.getLayoutParams().width = width / 4;
+                view.linearLayout.getLayoutParams().height = height;
+            }
+            else
+            {
+                view.linearLayout.getLayoutParams().height = height;
+            }
 
             //Colocamos los ClickListeners.
             view.imgConciertos.setOnClickListener(new View.OnClickListener()
@@ -130,7 +152,6 @@ public class ListViewAdapter extends BaseAdapter
                         {
                             i = new Intent(activity, Patronato.class);
                         }
-
                         activity.startActivity(i);
                     }
 

@@ -22,29 +22,22 @@
         android:layout_weight="1"
         android:scaleType="fitXY"/>
 
-   <LinearLayout
+
+    <ImageView
+        android:id="@+id/icono_streaming"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@drawable/menu_streaming"
         android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/icono_streaming"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/menu_streaming"
-            android:layout_weight="1"
-            android:scaleType="fitXY"/>
+        android:scaleType="fitXY"/>
 
 
-       <ImageView
-           android:id="@+id/icono_contacto_patrocinadores"
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:background="@drawable/contacto_patrocinadores"
-           android:layout_weight="1"
-           android:scaleType="fitXY"/>
-
-    </LinearLayout>
+   <ImageView
+       android:id="@+id/icono_contacto_patrocinadores"
+       android:layout_width="match_parent"
+       android:layout_height="0dp"
+       android:background="@drawable/contacto_patrocinadores"
+       android:layout_weight="1"
+       android:scaleType="fitXY"/>
 
 </LinearLayout>

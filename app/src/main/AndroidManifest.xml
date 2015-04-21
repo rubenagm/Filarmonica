@@ -65,7 +65,8 @@
         </activity>
         <activity
             android:name="mx.com.filarmonica.MainActivity"
-            android:label="Splash" />
+            android:label="Splash"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="mx.com.filarmonica.Contacto"
             android:label="Contacto" />
