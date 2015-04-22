@@ -8,6 +8,8 @@
     <string name="ofj">Orquesta Filarmónica de Jalisco</string>
     <string name="ver_en_facebook">Ver en Facebook</string>
     <string name="en_concierto">En Concierto Ahora</string>
+    <string name="sin_conciertos">No hay conciertos próximos.</string>
+    <string name="click_actualizar">Click para actualizar.</string>
 
     <string name="title_activity_lista_eventos">Conciertos y Eventos</string>
     <string name="title_activity_detalle_evento">Filarmónica</string>

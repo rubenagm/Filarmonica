@@ -489,40 +489,49 @@ public class ConexionBD extends SQLiteOpenHelper{
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(SQL_PROXIMO_EVENTO, null);
-        cursor.moveToFirst();
 
-        fecha.add(cursor.getString(INDEX_COLUMNA_FECHA));
-        fecha.add(cursor.getString(INDEX_COLUMNA_HORA) + ":" + cursor.getString(INDEX_COLUMNA_MINUTO));
-
-        cursor.moveToNext();
-        fecha2.add(cursor.getString(INDEX_COLUMNA_FECHA));
-        fecha2.add(cursor.getString(INDEX_COLUMNA_HORA) + ":" + cursor.getString(INDEX_COLUMNA_MINUTO));
-
-        Time now = new Time();
-        now.setToNow();
-
-
-        if(fecha.isEmpty())
+        if(cursor.getCount() < 1)
         {
-            return null;
+            fecha.add("sin conciertos");
+            return fecha;
         }
         else
         {
-            int monthInteger = now.month + 1;
-            String month = String.valueOf(monthInteger);
+            cursor.moveToFirst();
 
-            if(monthInteger < 10)
-            {
-                month = "0" + month;
-            }
+            fecha.add(cursor.getString(INDEX_COLUMNA_FECHA));
+            fecha.add(cursor.getString(INDEX_COLUMNA_HORA) + ":" + cursor.getString(INDEX_COLUMNA_MINUTO));
 
-            if(fecha.get(0).compareTo(now.year + "-" + month + "-" + now.monthDay) >= 0)
+            cursor.moveToNext();
+            fecha2.add(cursor.getString(INDEX_COLUMNA_FECHA));
+            fecha2.add(cursor.getString(INDEX_COLUMNA_HORA) + ":" + cursor.getString(INDEX_COLUMNA_MINUTO));
+
+            Time now = new Time();
+            now.setToNow();
+
+
+            if(fecha.isEmpty())
             {
-                return fecha;
+                return null;
             }
             else
             {
-                return fecha2;
+                int monthInteger = now.month + 1;
+                String month = String.valueOf(monthInteger);
+
+                if(monthInteger < 10)
+                {
+                    month = "0" + month;
+                }
+
+                if(fecha.get(0).compareTo(now.year + "-" + month + "-" + now.monthDay) >= 0)
+                {
+                    return fecha;
+                }
+                else
+                {
+                    return fecha2;
+                }
             }
         }
     }

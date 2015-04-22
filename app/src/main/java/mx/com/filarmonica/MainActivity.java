@@ -393,8 +393,40 @@ public class MainActivity extends Activity
             }
             else
             {
-                Toast.makeText(contexto, "Verifica tu conexión a internet. Intensidad baja.", Toast.LENGTH_LONG).show();
-                cancel(true);
+                Toast.makeText(contexto, "Verifica tu conexión a internet. Intensidad baja.",
+                        Toast.LENGTH_LONG).show();
+
+                progressDialog.dismiss();
+                lblReloj.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                lblDias.setVisibility(View.GONE);
+                lblHoras.setVisibility(View.GONE);
+                lblMinutos.setVisibility(View.GONE);
+                lblSegundos.setVisibility(View.GONE);
+
+                lblProximoConcierto.setVisibility(View.VISIBLE);
+                lblProximoConcierto.setText(getText(R.string.sin_conciertos));
+
+                //Actualizar al presionar el TextView.
+                lblReloj.setText(getText(R.string.click_actualizar));
+                lblReloj.setClickable(true);
+                lblReloj.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        if(ConexionInternet.verificarConexion(contexto))
+                        {
+                            ConexionRemotaProximoConcierto json = new
+                                    ConexionRemotaProximoConcierto();
+                            json.execute("");
+                        }
+                        else
+                        {
+                            Toast.makeText(contexto, "Verifica tu conexión a internet.",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         }
     }
@@ -406,6 +438,7 @@ public class MainActivity extends Activity
         protected void onPreExecute()
         {
             super.onPreExecute();
+            lblReloj.setClickable(false);
             lblProximoConcierto.setVisibility(View.INVISIBLE);
             lblDias.setVisibility(View.INVISIBLE);
             lblHoras.setVisibility(View.INVISIBLE);
@@ -429,24 +462,61 @@ public class MainActivity extends Activity
         protected void onPostExecute(ArrayList<String> result)
         {
             super.onPostExecute(result);
+            if(result != null)
+            {
+                if(result.get(0).equals("sin conciertos"))
+                {
+                    progressDialog.dismiss();
+                    lblReloj.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                    lblDias.setVisibility(View.GONE);
+                    lblHoras.setVisibility(View.GONE);
+                    lblMinutos.setVisibility(View.GONE);
+                    lblSegundos.setVisibility(View.GONE);
+
+                    lblProximoConcierto.setVisibility(View.VISIBLE);
+                    lblProximoConcierto.setText(getText(R.string.sin_conciertos));
+
+                    //Actualizar al presionar el TextView.
+                    lblReloj.setText(getText(R.string.click_actualizar));
+                    lblReloj.setClickable(true);
+                    lblReloj.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            if(ConexionInternet.verificarConexion(contexto))
+                            {
+                                ConexionRemotaProximoConcierto json = new
+                                        ConexionRemotaProximoConcierto();
+                                json.execute("");
+                            }
+                            else
+                            {
+                                Toast.makeText(contexto, "Verifica tu conexión a internet.",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    progressDialog.dismiss();
+                    lblProximoConcierto.setVisibility(View.VISIBLE);
+                    lblDias.setVisibility(View.VISIBLE);
+                    lblHoras.setVisibility(View.VISIBLE);
+                    lblMinutos.setVisibility(View.VISIBLE);
+                    lblSegundos.setVisibility(View.VISIBLE);
+                    //Mandamos la fecha y la hora al parser.
+                    DateControl dateControl = new DateControl(result);
+                    DateDifference countdownTimer = dateControl.startCountdown();
+                    iniciarReloj(countdownTimer);
+                }
+            }
             //Si hubo error al obtener los datos de manera local, los obtenemos de manera remota.
-            if(result == null)
+            else
             {
                 ConexionRemotaProximoConcierto json = new ConexionRemotaProximoConcierto();
                 json.execute("");
-            }
-            else
-            {
-                progressDialog.dismiss();
-                lblProximoConcierto.setVisibility(View.VISIBLE);
-                lblDias.setVisibility(View.VISIBLE);
-                lblHoras.setVisibility(View.VISIBLE);
-                lblMinutos.setVisibility(View.VISIBLE);
-                lblSegundos.setVisibility(View.VISIBLE);
-                //Mandamos la fecha y la hora al parser.
-                DateControl dateControl = new DateControl(result);
-                DateDifference countdownTimer = dateControl.startCountdown();
-                iniciarReloj(countdownTimer);
             }
         }
     }
