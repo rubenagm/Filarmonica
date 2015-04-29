@@ -105,12 +105,15 @@ public class ListaEventos extends ActionBarActivity
 
                 if(respuesta.equals("Insertados"))
                 {
+                    /*
                     ArrayList<ItemEvento> lista = db.obtenerEventos();
                     RecyclerView.Adapter adapter = new AdapterListaEventos(contexto,lista);
                     lblNoHayInformacion = (TextView) findViewById(R.id.lblNoHayInformacion);
                     lblNoHayInformacion.setVisibility(View.INVISIBLE);
                     mRecyclerView.setAdapter(adapter);
-                    mSwipeRefreshLayout.setRefreshing(false);
+                    mSwipeRefreshLayout.setRefreshing(false);*/
+                    ActualizarBD actualizarBD = new ActualizarBD(contexto,mSwipeRefreshLayout,mRecyclerView);
+                    actualizarBD.execute();
                 }
                 else
                 {
@@ -207,20 +210,23 @@ public class ListaEventos extends ActionBarActivity
                 {
                     //Si el resultado es mayor que 0, concluimos que los eventos están en la
                     //base de datos, por lo que podremos obtenerlos.
-                    resultado = db.obtenerEventos();
-                    RecyclerView.Adapter adapter = new AdapterListaEventos(contexto, resultado);
-                    lblNoHayInformacion.setVisibility(View.INVISIBLE);
-                    recyclerView.setAdapter(adapter);
-                    swipeRefreshLayout.setRefreshing(false);
+                    //resultado = db.obtenerEventos();
+                    //RecyclerView.Adapter adapter = new AdapterListaEventos(contexto, resultado);
+                    //lblNoHayInformacion.setVisibility(View.INVISIBLE);
+                    //recyclerView.setAdapter(adapter);
+                    //swipeRefreshLayout.setRefreshing(false);
+
+                    ActualizarBD actualizarBD = new ActualizarBD(contexto,swipeRefreshLayout,recyclerView);
+                    actualizarBD.execute();
                 }
                 else
                 {
-                    swipeRefreshLayout.setRefreshing(false);
+                   // swipeRefreshLayout.setRefreshing(false);
                 }
             }
             else
             {
-                swipeRefreshLayout.setRefreshing(false);
+                //swipeRefreshLayout.setRefreshing(false);
             }
         }
     }

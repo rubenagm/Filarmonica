@@ -22,6 +22,9 @@ import java.util.StringTokenizer;
  * Created by macmini3cuceimobile on 2/27/15.
  */
 public class GetDataInstagram extends AsyncTask<Void,Void,ArrayList<ItemImagenInstagram>> {
+    //Url instagram
+    String URL_INSTAGRAM = "https://api.instagram.com/v1/users/1794297171/media/recent/?client_id=93b3b8b1257944829c9e4670cbcc819d"; //Nueva
+    //String URL_INSTAGRAM = "https://api.instagram.com/v1/users/239397258/media/recent/?client_id=93b3b8b1257944829c9e4670cbcc819d"; //Anterior
     Context contexto;
     public GetDataInstagram(Context contexto){
         this.contexto = contexto;
@@ -32,7 +35,7 @@ public class GetDataInstagram extends AsyncTask<Void,Void,ArrayList<ItemImagenIn
         ArrayList<ItemImagenInstagram> imagenes = new ArrayList<ItemImagenInstagram>();
         HttpClient httpclient = new DefaultHttpClient();
         httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
-        HttpGet request = new HttpGet("https://api.instagram.com/v1/users/239397258/media/recent/?client_id=93b3b8b1257944829c9e4670cbcc819d");
+        HttpGet request = new HttpGet(URL_INSTAGRAM);
         ConexionBD db = new ConexionBD(contexto);
         //Inicializar el ftp
         ftp = new FtpDownload();
