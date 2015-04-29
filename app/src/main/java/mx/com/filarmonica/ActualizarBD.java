@@ -5,6 +5,10 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
@@ -27,8 +31,9 @@ import java.util.List;
 /**
  * Created by macmini3cuceimobile on 21/01/15.
  */
-public class ActualizarBD extends AsyncTask<Void,Void,Void> {
+public class ActualizarBD extends AsyncTask<Void,Void,String> {
     //FtpDownload ftpDownload;
+    RecyclerView recyclerView = null;
     int idMayorEvento ;
     int idMayorNoticia;
     int idMayorLocalidadEvento;
@@ -51,13 +56,16 @@ public class ActualizarBD extends AsyncTask<Void,Void,Void> {
     private HttpClient mHttpClient = new DefaultHttpClient();
     private HttpPost mHttPost = new HttpPost("http://www.ofj.com.mx/App/prueba1.php");
     Context contexto;
+    SwipeRefreshLayout swipeRefreshLayout = null;
     ///METODO CONSTRUCTOR
-    public ActualizarBD(Context contexto){
+    public ActualizarBD(Context contexto,SwipeRefreshLayout swipeRefreshLayout,RecyclerView recyclerView){
+        this.recyclerView = recyclerView;
         this.contexto = contexto;
+        this.swipeRefreshLayout = swipeRefreshLayout;
     }
     //////
     @Override
-    protected Void doInBackground(Void... params) {
+    protected String doInBackground(Void... params) {
 
         ArrayList<ItemEvento> eventos = new ArrayList<ItemEvento>();
         db = new ConexionBD(contexto);
@@ -127,7 +135,6 @@ public class ActualizarBD extends AsyncTask<Void,Void,Void> {
             int longitud = jsonArray.length();
             for(int i = 0; i < jsonArray.length(); i++)
             {
-                displayNotification(createBasicNotification("OFJ","Actualizando fechas",i+1,longitud));
                 JSONObject jsonElement = jsonArray.getJSONObject(i);
 
                 int id = jsonElement.getInt("id");
@@ -169,12 +176,10 @@ public class ActualizarBD extends AsyncTask<Void,Void,Void> {
             for(int i = 0; i < jsonArray.length(); i++)
             {
                 JSONObject jsonElement = jsonArray.getJSONObject(i);
-                displayNotification(createBasicNotification("OFJ","Actualizando localidades",i+1,longitud));
                 int id = jsonElement.getInt("id");
                 String nombre = jsonElement.getString("nombre");
                 String costo = jsonElement.getString("costo");
                 int evento_id = jsonElement.getInt("evento_id");
-
                 db.insertLocalidadEvento(id,nombre,costo,evento_id);
 
             }
@@ -188,78 +193,25 @@ public class ActualizarBD extends AsyncTask<Void,Void,Void> {
             Log.e("HTTP", "Error con la conexi�n HTTP");
         }
 
-        //Se comienza a guardar las Noticias
-        try {
 
-            List<NameValuePair> mNameValuePairs = new ArrayList<NameValuePair>(1);
-            mNameValuePairs.add(new BasicNameValuePair("query", QUERY_NOTICIA + db.obtenerIdMayorNoticia()));
-            mHttPost.setEntity(new UrlEncodedFormEntity(mNameValuePairs));
 
-            HttpResponse response = mHttpClient.execute(mHttPost);
-
-            HttpEntity entity = response.getEntity();
-            String resultado = EntityUtils.toString(entity,"UTF-8");
-            //Log.i("JSON",resultado);
-            resultado = resultado.substring(9);
-            Log.i("JSON",resultado);
-            JSONObject jsonObject = new JSONObject(resultado);
-            JSONArray jsonArray = jsonObject.getJSONArray("data");
-            int longitud = jsonArray.length();
-            for(int i = 0; i < jsonArray.length(); i++)
-            {
-                JSONObject jsonElement = jsonArray.getJSONObject(i);
-                displayNotification(createBasicNotification("OFJ","Actualizando noticias",i+1,longitud));
-                int id = jsonElement.getInt("id");
-                //ftpDownload.descargarArchivo(2,id+"");
-                String titulo = jsonElement.getString("titulo");
-                String titulo_en = jsonElement.getString("titulo_en");
-                String contenido = jsonElement.getString("contenido");
-                String contenido_en = jsonElement.getString("contenido_en");
-                String fecha = jsonElement.getString("fecha");
-                String publicada = jsonElement.getString("publicada");
-                String fecha_creacion = jsonElement.getString("fecha_creacion");
-
-                db.insertNoticia(id,titulo,titulo_en,contenido,contenido_en,fecha,publicada,fecha_creacion);
-
-            }
-        }
-        catch(JSONException e)
-        {
-            Log.e("JSON", "Error al leer el JSON\n" + e);
-        }
-        catch(IOException e)
-        {
-            Log.e("HTTP", "Error con la conexi�n HTTP");
-        }
-        int mayorEvento = db.obtenerIdMayorEvento();
-        for(int x = db.obtenerIdMayorEvento();x>=0;x--){
-            displayNotification(createBasicNotification("OFJ","Descargando contenido multimedia",mayorEvento-x,mayorEvento));
-
-        }
-
-        int mayorNoticia = db.obtenerIdMayorNoticia();
-        for(int x = db.obtenerIdMayorNoticia();x>=0;x--){
-            displayNotification(createBasicNotification("OFJ","Descargando contenido multimedia",mayorNoticia-x,mayorNoticia));
-
-        }
 
 
         return null;
     }
-    private Notification createBasicNotification(String titulo, String contenido,int progress, int total) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(contexto);
-        Notification notification = builder
-                .setSmallIcon(mx.com.filarmonica.R.drawable.icon_buy)
-                .setContentTitle(titulo)
-                .setContentText(contenido)
-                .setProgress(total,progress,false)
-                .build();
 
-        return notification;
+    @Override
+    protected void onPostExecute(String params)
+    {
+        if(recyclerView != null)
+        {
+            RecyclerView.Adapter adapter = new AdapterListaEventos(contexto,db.obtenerEventos());
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(contexto));
+            recyclerView.setItemAnimator( new DefaultItemAnimator());
+            swipeRefreshLayout.setRefreshing(false);
+        }
     }
-    private void displayNotification(Notification notification) {
-        NotificationManager notificationManager = (NotificationManager)contexto.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1 , notification);
-    }
+
 
 }
