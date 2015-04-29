@@ -1,15 +1,18 @@
 package conexion;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +20,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.StringTokenizer;
+
+import mx.com.filarmonica.R;
 
 /**
  * Created by natafrank on 3/20/15.
@@ -27,14 +32,13 @@ public class DescargarImagen extends AsyncTask<String, Void, Boolean>
     private final static String URL_EVENTO  = "http://www.ofj.com.mx/img/uploads/events/655x308/";
 
     //Ruta donde se guardarán todas la imagenes.
-    private final static String RUTA_IMAGENES = Environment.getExternalStorageDirectory()
-            .getAbsolutePath() + "/Imagenes/";
+    private final static String RUTA_IMAGENES = "Imagenes";
 
     //Extensiones de control para las imágenes.
-    private final static String DIRECTORIO_EVENTOS   = "Eventos/";
-    private final static String DIRECTORIO_TWITTER   = "Twitter/";
-    private final static String DIRECTORIO_FACEBOOK  = "Facebook/";
-    private final static String DIRECTORIO_INSTAGRAM = "Instagram/";
+    private final static String DIRECTORIO_EVENTOS   = "Eventos";
+    private final static String DIRECTORIO_TWITTER   = "Twitter";
+    private final static String DIRECTORIO_FACEBOOK  = "Facebook";
+    private final static String DIRECTORIO_INSTAGRAM = "Instagram";
 
     private final static int CALIDAD_DE_COMPRESION        = 10;
     private final static int TIEMPO_ESPERA_REANUDAR_HILO = 60000;
@@ -56,6 +60,7 @@ public class DescargarImagen extends AsyncTask<String, Void, Boolean>
     private RelativeLayout progressBar;
     private ImageView imagen;
     private String archivo;
+    private File directorio;
 
     public DescargarImagen(int tipo, RelativeLayout progressBar, ImageView imagen, Context contexto)
     {
@@ -85,25 +90,25 @@ public class DescargarImagen extends AsyncTask<String, Void, Boolean>
             case TIPO_EVENTO:
             {
                 urlDescarga = URL_EVENTO + archivo + ".jpg";
-                archivo = DIRECTORIO_EVENTOS + archivo + ".png";
+                archivo = archivo + ".png";
                 break;
             }
             case TIPO_TWITTER:
             {
-                archivo = DIRECTORIO_TWITTER + nombreImagen(urlDescarga) + ".png";
+                archivo = nombreImagen(urlDescarga) + ".png";
                 break;
             }
             case TIPO_FACEBOOK:
             {
                 urlDescarga = urlDescarga.substring(0, urlDescarga.lastIndexOf('.'));
 
-                archivo = DIRECTORIO_FACEBOOK + nombreImagen(urlDescarga) + ".png";
+                archivo = nombreImagen(urlDescarga) + ".png";
 
                 break;
             }
             case TIPO_INSTAGRAM:
             {
-                archivo = DIRECTORIO_INSTAGRAM + nombreImagen(urlDescarga) + ".png";
+                archivo = nombreImagen(urlDescarga) + ".png";
                 break;
             }
             default:
@@ -123,15 +128,13 @@ public class DescargarImagen extends AsyncTask<String, Void, Boolean>
             InputStream input = connection.getInputStream();
             Bitmap bitmap = BitmapFactory.decodeStream(input);
 
-            //Verificamos el directorio donde se guardarán las imágenes.
-            File directorio = new File(RUTA_IMAGENES + getDirectorio());
-            if(!directorio.exists())
-            {
-                directorio.mkdirs();
-            }
+            //Obtenemos el directorio donde se guardarán las imágenes.
+            ContextWrapper contextWrapper = new ContextWrapper(contexto);
+            directorio = contextWrapper.getDir(RUTA_IMAGENES + getDirectorio(), Context
+                .MODE_PRIVATE);
 
             //Guardamos la imagen.
-            File archivoGuardar = new File(RUTA_IMAGENES + archivo);
+            File archivoGuardar = new File(directorio, archivo);
             FileOutputStream outputStream = new FileOutputStream(archivoGuardar);
             bitmap.compress(Bitmap.CompressFormat.PNG, CALIDAD_DE_COMPRESION, outputStream);
 
@@ -161,10 +164,21 @@ public class DescargarImagen extends AsyncTask<String, Void, Boolean>
         //Mostramos la imagen.
         if(Boolean.valueOf(resultado))
         {
-            Bitmap bitmap = BitmapFactory.decodeFile(RUTA_IMAGENES + archivo);
-            imagen.setImageBitmap(bitmap);
-            progressBar.setVisibility(View.GONE);
-            imagen.setVisibility(View.VISIBLE);
+            File archivoCargar = new File(directorio, archivo);
+            Bitmap bitmap = null;
+            try
+            {
+                bitmap = BitmapFactory.decodeStream(new FileInputStream(archivoCargar));
+                imagen.setImageBitmap(bitmap);
+                progressBar.setVisibility(View.GONE);
+                imagen.setVisibility(View.VISIBLE);
+            }
+            catch (FileNotFoundException e)
+            {
+                e.printStackTrace();
+                Toast.makeText(contexto, contexto.getText(R.string.error_imagen), Toast.
+                        LENGTH_SHORT).show();
+            }
         }
         else
         {

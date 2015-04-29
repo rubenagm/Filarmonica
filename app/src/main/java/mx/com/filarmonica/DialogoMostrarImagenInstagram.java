@@ -1,6 +1,7 @@
 package mx.com.filarmonica;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +18,11 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import conexion.DescargarImagen;
@@ -42,9 +45,6 @@ public class DialogoMostrarImagenInstagram extends DialogFragment  {
     //Botones de imagenes siguiente y anterior en instagram
     ImageView imageViewImagenSiguiente = null;
     ImageView imageViewImagenAnterior = null;
-    //Directorio
-    String DIRECTORIO = Environment.getExternalStorageDirectory().getAbsolutePath() +
-            "/Imagenes/Instagram/";
 
     private final static int IMAGEN_TIPO_INSTAGRAM = 4;
 
@@ -115,8 +115,12 @@ public class DialogoMostrarImagenInstagram extends DialogFragment  {
         String imagen = imagenes.get(position);
         if(imagen!= null){
 
-            String rutaAccesoImagen = DIRECTORIO + DescargarImagen.nombreImagenUrl(imagen) + ".png";
-            File archivoImagen = new File(rutaAccesoImagen);
+            ContextWrapper contextWrapper = new ContextWrapper(contexto);
+            File directorio = contextWrapper.getDir("Imagenes" + "Instagram",
+                    Context.MODE_PRIVATE);
+            File archivoImagen = new File(directorio, DescargarImagen.nombreImagenUrl(imagen)
+                    + ".png");
+
             if(!archivoImagen.exists())
             {
                 DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_INSTAGRAM,
@@ -125,8 +129,17 @@ public class DialogoMostrarImagenInstagram extends DialogFragment  {
             }
             else
             {
-                Bitmap bitmap = BitmapFactory.decodeFile(rutaAccesoImagen);
-                imageViewimagen.setImageBitmap(bitmap);
+                try
+                {
+                    Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(archivoImagen));
+                    imageViewimagen.setImageBitmap(bitmap);
+                }
+                catch (FileNotFoundException e)
+                {
+                    Toast.makeText(contexto, contexto.getText(R.string.error_imagen), Toast.
+                            LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -166,10 +179,15 @@ public class DialogoMostrarImagenInstagram extends DialogFragment  {
                     contador ++;
                     //se carga la imagen
                     String imagen = imagenes.get(contador);
-                    if(imagen!= null){
+                    if(imagen!= null)
+                    {
 
-                        String rutaAccesoImagen = DIRECTORIO + DescargarImagen.nombreImagenUrl(imagen) + ".png";
-                        File archivoImagen = new File(rutaAccesoImagen);
+                        ContextWrapper contextWrapper = new ContextWrapper(contexto);
+                        File directorio = contextWrapper.getDir("Imagenes" + "Instagram",
+                                Context.MODE_PRIVATE);
+                        File archivoImagen = new File(directorio, DescargarImagen.nombreImagenUrl(imagen)
+                                + ".png");
+
                         if(!archivoImagen.exists())
                         {
                             DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_INSTAGRAM,
@@ -178,8 +196,17 @@ public class DialogoMostrarImagenInstagram extends DialogFragment  {
                         }
                         else
                         {
-                            Bitmap bitmap = BitmapFactory.decodeFile(rutaAccesoImagen);
-                            imageViewimagen.setImageBitmap(bitmap);
+                            try
+                            {
+                                Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(archivoImagen));
+                                imageViewimagen.setImageBitmap(bitmap);
+                            }
+                            catch (FileNotFoundException e)
+                            {
+                                Toast.makeText(contexto, contexto.getText(R.string.error_imagen), Toast.
+                                        LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
@@ -203,8 +230,12 @@ public class DialogoMostrarImagenInstagram extends DialogFragment  {
                     String imagen = imagenes.get(contador);
                     if(imagen!= null){
 
-                        String rutaAccesoImagen = DIRECTORIO + DescargarImagen.nombreImagenUrl(imagen) + ".png";
-                        File archivoImagen = new File(rutaAccesoImagen);
+                        ContextWrapper contextWrapper = new ContextWrapper(contexto);
+                        File directorio = contextWrapper.getDir("Imagenes" + "Instagram",
+                                Context.MODE_PRIVATE);
+                        File archivoImagen = new File(directorio, DescargarImagen.nombreImagenUrl(imagen)
+                                + ".png");
+
                         if(!archivoImagen.exists())
                         {
                             DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_INSTAGRAM,
@@ -213,8 +244,17 @@ public class DialogoMostrarImagenInstagram extends DialogFragment  {
                         }
                         else
                         {
-                            Bitmap bitmap = BitmapFactory.decodeFile(rutaAccesoImagen);
-                            imageViewimagen.setImageBitmap(bitmap);
+                            try
+                            {
+                                Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(archivoImagen));
+                                imageViewimagen.setImageBitmap(bitmap);
+                            }
+                            catch (FileNotFoundException e)
+                            {
+                                Toast.makeText(contexto, contexto.getText(R.string.error_imagen), Toast.
+                                        LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }

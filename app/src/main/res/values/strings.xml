@@ -23,6 +23,9 @@
     <string name="conexion_requerida">Se necesita conexión a internet para configurar
         la aplicación por primera vez. Verifica tu conexión.</string>
 
+    <!-- Mensajes de Error. -->
+    <string name="error_imagen">Error al cargar la imagen.</string>
+
     <!-- Url ticketmaster -->
     <string name="ticketmaster">http://www.ticketmaster.com.mx/Orquesta-Filarmonica-de-Jalisco-boletos/artist/1179212?tm_link=artist_artistvenue_module</string>
     <string name="title_activity_patronato">Patronato</string>

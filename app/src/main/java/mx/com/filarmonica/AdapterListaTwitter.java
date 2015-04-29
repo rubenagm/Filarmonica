@@ -1,11 +1,11 @@
 package mx.com.filarmonica;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -14,8 +14,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import conexion.DescargarImagen;
@@ -28,8 +31,7 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
     private final static int IMAGEN_TIPO_TWITTER = 2;
 
     ArrayList<ItemTwitter> tweets;
-    String DIRECTORIO = Environment.getExternalStorageDirectory().getAbsolutePath() +
-            "/Imagenes/Twitter/";
+
     final String COLOR_INICIO = "<font color='#AD731C'>";
     final String COLOR_FIN = "</font>";
     Context contexto;
@@ -71,8 +73,11 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
         else
         {
             //Cargamos la imagen. Comprobamos si existe, sino la descargamos.
-            String rutaAccesoImagen = DIRECTORIO + DescargarImagen.nombreImagenUrl(imagen) + ".png";
-            File archivoImagen = new File(rutaAccesoImagen);
+            ContextWrapper contextWrapper = new ContextWrapper(contexto);
+            File directorio = contextWrapper.getDir("Imagenes" + "Twitter", Context.MODE_PRIVATE);
+            File archivoImagen = new File(directorio, DescargarImagen.nombreImagenUrl(imagen)
+                    + ".png");
+
             if(!archivoImagen.exists())
             {
                 DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_TWITTER,
@@ -81,8 +86,17 @@ public class AdapterListaTwitter extends RecyclerView.Adapter<AdapterListaTwitte
             }
             else
             {
-                Bitmap bitmap = BitmapFactory.decodeFile(rutaAccesoImagen);
-                viewHolder.imageViewImagenTwitter.setImageBitmap(bitmap);
+                try
+                {
+                    Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(archivoImagen));
+                    viewHolder.imageViewImagenTwitter.setImageBitmap(bitmap);
+                }
+                catch (FileNotFoundException e)
+                {
+                    Toast.makeText(contexto, contexto.getText(R.string.error_imagen), Toast.
+                            LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
             }
         }
         //Pintar links

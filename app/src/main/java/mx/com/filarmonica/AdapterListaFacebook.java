@@ -1,6 +1,7 @@
 package mx.com.filarmonica;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,8 +14,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import conexion.DescargarImagen;
@@ -78,10 +82,11 @@ public class AdapterListaFacebook extends RecyclerView.Adapter<AdapterListaFaceb
         viewHolder.textViewContenido.setText(publicacion.getContenido());
 
         //Cargamos la imagen. Comprobamos si existe, sino la descargamos.
-        String rutaAccesoImagen = DIRECTORIO + DescargarImagen.nombreImagenUrl(publicacion
-                .getUrlImagen()) + ".png";
+        ContextWrapper contextWrapper = new ContextWrapper(contexto);
+        File directorio = contextWrapper.getDir("Imagenes" + "Facebook", Context.MODE_PRIVATE);
+        File archivoImagen = new File(directorio, DescargarImagen.nombreImagenUrl(publicacion
+                .getUrlImagen()) + ".png");
         String imagen = publicacion.getUrlImagen();
-        File archivoImagen = new File(rutaAccesoImagen);
         if(!archivoImagen.exists())
         {
             DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_FACEBOOK,
@@ -90,8 +95,17 @@ public class AdapterListaFacebook extends RecyclerView.Adapter<AdapterListaFaceb
         }
         else
         {
-            Bitmap bitmap = BitmapFactory.decodeFile(rutaAccesoImagen);
-            viewHolder.imageViewImagenFacebook.setImageBitmap(bitmap);
+            try
+            {
+                Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(archivoImagen));
+                viewHolder.imageViewImagenFacebook.setImageBitmap(bitmap);
+            }
+            catch (FileNotFoundException e)
+            {
+                Toast.makeText(contexto, contexto.getText(R.string.error_imagen), Toast.
+                        LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
         }
 
         //Asignamos la url.

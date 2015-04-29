@@ -1,11 +1,11 @@
 package mx.com.filarmonica;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Time;
 import android.view.LayoutInflater;
@@ -14,8 +14,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.StringTokenizer;
@@ -33,8 +36,6 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
     //Clase View Holder
     Context contexto;
     ArrayList<ItemEvento> mEvento;
-    String DIRECTORIO = Environment.getExternalStorageDirectory().getAbsolutePath() +
-            "/Imagenes/Eventos/";
 
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -103,8 +104,10 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
         holder.textViewFechasEvento.setText(fechasString);
 
         //Cargamos la imagen. Comprobamos si existe, sino la descargamos.
-        String rutaAccesoImagen = DIRECTORIO + evento.getId() + ".png";
-        File archivoImagen = new File(rutaAccesoImagen);
+        ContextWrapper contextWrapper = new ContextWrapper(contexto);
+        File directorio = contextWrapper.getDir("Imagenes" + "Eventos", Context.MODE_PRIVATE);
+        File archivoImagen = new File(directorio, evento.getId() + ".png");
+
         if(!archivoImagen.exists())
         {
             DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_EVENTO,
@@ -113,8 +116,17 @@ public class AdapterListaEventos extends RecyclerView.Adapter<AdapterListaEvento
         }
         else
         {
-            Bitmap bitmap = BitmapFactory.decodeFile(rutaAccesoImagen);
-            holder.imageViewImagenEvento.setImageBitmap(bitmap);
+            try
+            {
+                Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(archivoImagen));
+                holder.imageViewImagenEvento.setImageBitmap(bitmap);
+            }
+            catch (FileNotFoundException e)
+            {
+                Toast.makeText(contexto, contexto.getText(R.string.error_imagen), Toast.
+                        LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
         }
 
         holder.textViewMasDetalles.setText("MÁS DETALLES"+"\n");
