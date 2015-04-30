@@ -12,6 +12,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import utilities.TabletManager;
@@ -26,15 +27,19 @@ public class Contacto extends Activity
 
     //Variables del Layout.
     private ImageView btnEmail;
+    private ImageView cuceiMobile;
 
     private boolean esTablet;
     private Context contexto;
+
+    private int numeroClicks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacto);
+        numeroClicks = 0;
 
         //Obtenemos el contexto.
         contexto = Contacto.this;
@@ -46,8 +51,9 @@ public class Contacto extends Activity
         }
 
         //Obtenemos las refererencias.
-        videoView = (VideoView) findViewById(R.id.video_contacto);
-        btnEmail  = (ImageView) findViewById(R.id.btn_email);
+        videoView   = (VideoView) findViewById(R.id.video_contacto);
+        btnEmail    = (ImageView) findViewById(R.id.btn_email);
+        cuceiMobile = (ImageView) findViewById(R.id.cucei_mobile);
 
         //Cargamos el video.
         videoView.setBackgroundColor(Color.WHITE);
@@ -74,6 +80,25 @@ public class Contacto extends Activity
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                         "mailto","info@ofj.com.mx", null));
                 startActivity(Intent.createChooser(emailIntent, "Enviar Correo..."));
+            }
+        });
+
+        //Easter egg.
+        cuceiMobile.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                numeroClicks++;
+
+                //Trigger easter egg.
+                if((numeroClicks % 5) == 0)
+                {
+                    Toast.makeText(contexto, "***** Desarrollado por: *****\n\n*** Android ***\n" +
+                            "Francisco Natanael Ortiz Martínez.\nRuben Guardado Maldonado." +
+                            "\n\n*** IOS ***\nIván Alatorre.\n\n\nDreams in Code.",
+                            Toast.LENGTH_LONG).show();
+                }
             }
         });
 

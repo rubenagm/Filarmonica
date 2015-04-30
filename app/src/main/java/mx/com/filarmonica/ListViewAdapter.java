@@ -3,6 +3,7 @@ package mx.com.filarmonica;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -148,7 +149,8 @@ public class ListViewAdapter extends BaseAdapter
                         }
                         else
                         {
-                            i = new Intent(activity, Patronato.class);
+                            i = new Intent(Intent.ACTION_VIEW);
+                            i.setData((Uri.parse("http://ofj.com.mx/orquesta/patrocinadores/")));
                         }
                         activity.startActivity(i);
                     }

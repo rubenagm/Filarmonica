@@ -1,13 +1,13 @@
 package mx.com.filarmonica;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.view.Menu;
@@ -16,7 +16,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -35,8 +39,7 @@ public class DetalleEvento extends ActionBarActivity {
     TextView textViewCostos;
     TextView textViewDescripcion;
     ImageView imageViewComprar;
-    String DIRECTORIO = Environment.getExternalStorageDirectory().getAbsolutePath() +
-            "/Imagenes/Eventos/";
+
     int idEvento;
 
     //Variables del Drawer.
@@ -153,9 +156,20 @@ public class DetalleEvento extends ActionBarActivity {
             costosString += "$ "+costos.get(x) +"\n";
         }
         textViewCostos.setText(costosString);
-        Bitmap bitmap = BitmapFactory.decodeFile(DIRECTORIO+mEvento.get(0).getId()+".png");
-        imageViewImagenEvento.setImageBitmap(bitmap);
-
+        ContextWrapper contextWrapper = new ContextWrapper(contexto);
+        File directorio = contextWrapper.getDir("Imagenes" + "Eventos", Context.MODE_PRIVATE);
+        File archivoImagen = new File(directorio, mEvento.get(0).getId()+".png");
+        try
+        {
+            Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(archivoImagen));
+            imageViewImagenEvento.setImageBitmap(bitmap);
+        }
+        catch (FileNotFoundException e)
+        {
+            Toast.makeText(contexto, contexto.getText(R.string.error_imagen), Toast.
+                    LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
     }
 
 
