@@ -202,14 +202,15 @@ public class MainActivity extends Activity
 
         if(!resultadoSharedPreferences.equals("NoInsertados"))
         {
+            Log.i("frank.frank", "Entró en la conexión local");
             ConexionLocalProximoConcierto conexionLocal = new ConexionLocalProximoConcierto();
             conexionLocal.execute("");
-            Log.i("frank.frank", "Entró en la conexión local");
         }
         else
         {
             if(ConexionInternet.verificarConexion(contexto))
             {
+                Log.i("frank.frank", "Entró en la conexión remota");
                 ConexionRemotaProximoConcierto json = new ConexionRemotaProximoConcierto();
                 json.execute("");
             }
@@ -306,6 +307,15 @@ public class MainActivity extends Activity
                     fechas[i]  = conciertosProximos[i].getString(JSON_FECHA);
                     horas[i]   = conciertosProximos[i].getString(JSON_HORA);
                     minutos[i] = conciertosProximos[i].getString(JSON_MINUTO);
+
+                    //trigger de seguridad para salir en caso de que solo se lea 1 concierto.
+                    if(jsonArray.length() < NUMERO_CONCIERTOS_A_LEER)
+                    {
+                        horas[0] = horas[0] + ":" + minutos[0];
+                        fecha.add(fechas[0]);
+                        fecha.add(horas[0]);
+                        return fecha;
+                    }
                 }
 
                 //Comprobamos cual será el siguiente concierto y lo añadimos al arreglo.
@@ -327,11 +337,13 @@ public class MainActivity extends Activity
                             horas[0] = horas[0] + ":" + minutos[0];
                             fecha.add(fechas[0]);
                             fecha.add(horas[0]);
+                            Log.i(TAG, "Agregado: " + fechas[0]);
                         }
                         else
                         {
                             //Validar mensaje de que se está actualmente en concierto.
                             fecha.add("tocandoAhora");
+                            Log.i(TAG, "Agregado: tocandoAhora");
                             return fecha;
                         }
                     }
@@ -342,6 +354,7 @@ public class MainActivity extends Activity
                         horas[1] = horas[1] + ":" + minutos[1];
                         fecha.add(fechas[1]);
                         fecha.add(horas[1]);
+                        Log.i(TAG, "Agregado: " + fechas[1]);
                     }
                 }
                 else
@@ -350,6 +363,7 @@ public class MainActivity extends Activity
                     horas[0] = horas[0] + ":" + minutos[0];
                     fecha.add(fechas[0]);
                     fecha.add(horas[0]);
+                    Log.i(TAG, "Agregado: " + fechas[0]);
                 }
             }
 
@@ -361,7 +375,7 @@ public class MainActivity extends Activity
             {
                 Log.e(TAG, "Error con la conexión HTTP");
             }
-
+            Log.i(TAG, "Fecha: " + fecha);
             return fecha;
         }
 

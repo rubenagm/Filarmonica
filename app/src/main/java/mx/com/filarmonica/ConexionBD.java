@@ -72,10 +72,6 @@ public class ConexionBD extends SQLiteOpenHelper{
     private final static String SQL_SELECT_TWITTER_USER   = "SELECT * FROM twitter_user WHERE ID = ";
     private final static String SQL_SELECT_TWITTER_LINK   = "SELECT * FROM twitter_link WHERE ID = ";
 
-    //DELETE
-    private final static String SQL_LIMPIAR_FACEBOOK = "TRUNCATE TABLE facebook;";
-    private final static String SQL_LIMPIAR_TWITTER  = "TRUNCATE TABLE twitter;";
-
     /*********************************** QUERYS NOTICIAS **********************************/
 
 
@@ -199,7 +195,7 @@ public class ConexionBD extends SQLiteOpenHelper{
         contentValues.put("publicada",publicada);
         contentValues.put("fecha_creacion",fecha_creacion);
 
-        db.insert("noticia",null,contentValues);
+        db.insert("noticia", null, contentValues);
         Log.i("Insert DB", "Noticia insertada");
         return true;
     }
@@ -277,8 +273,8 @@ public class ConexionBD extends SQLiteOpenHelper{
         contentValues.put("nombre",nombre);
         contentValues.put("costo",costo);
         contentValues.put("evento_id",id_evento);
-        db.insert("localidad_evento",null,contentValues);
-        Log.i("Insert DB","Localidad_evento Insertado");
+        db.insert("localidad_evento", null, contentValues);
+        Log.i("Insert DB", "Localidad_evento Insertado");
         return true;
     }
 	
@@ -352,7 +348,7 @@ public class ConexionBD extends SQLiteOpenHelper{
         contentValues.put("Texto",texto);
         contentValues.put("Link",link);
 
-        db.insert("Instagram",null,contentValues);
+        db.insert("Instagram", null, contentValues);
         Log.i("Instagram","Datos insertados");
     }
 
@@ -502,13 +498,15 @@ public class ConexionBD extends SQLiteOpenHelper{
             fecha.add(cursor.getString(INDEX_COLUMNA_FECHA));
             fecha.add(cursor.getString(INDEX_COLUMNA_HORA) + ":" + cursor.getString(INDEX_COLUMNA_MINUTO));
 
-            cursor.moveToNext();
-            fecha2.add(cursor.getString(INDEX_COLUMNA_FECHA));
-            fecha2.add(cursor.getString(INDEX_COLUMNA_HORA) + ":" + cursor.getString(INDEX_COLUMNA_MINUTO));
+            //Trigger para agregar el segundo concierto, si es que lo hubiese.
+            if(cursor.getCount() > 1)
+            {
+                fecha2.add(cursor.getString(INDEX_COLUMNA_FECHA));
+                fecha2.add(cursor.getString(INDEX_COLUMNA_HORA) + ":" + cursor.getString(INDEX_COLUMNA_MINUTO));
+            }
 
             Time now = new Time();
             now.setToNow();
-
 
             if(fecha.isEmpty())
             {

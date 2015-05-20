@@ -58,7 +58,7 @@ public class GetDataYouTube extends AsyncTask<Void,Void,ArrayList<ItemYoutube>>
         ArrayList<ItemYoutube> videos = new ArrayList<ItemYoutube>();
         HttpClient httpclient = new DefaultHttpClient();
         httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
-        HttpGet request = new HttpGet("http://gdata.youtube.com/feeds/api/videos?author=MonicaArtists&alt=json");
+        HttpGet request = new HttpGet("https://www.googleapis.com/youtube/v3/search?part=snippet&order=rating&type=video&videoEmbeddable=true&maxResults=20&channelId=UCN2VyhehLANsWvqByqSd8FA&key=AIzaSyDg28A9LySW4VqSUfmoWKB1xjhToLpbx1s");
         // HttpGet request = new HttpGet("http://gdata.youtube.com/feeds/api/users/mbbangalore/uploads?v=2&alt=jsonc");
         try
         {
@@ -68,14 +68,14 @@ public class GetDataYouTube extends AsyncTask<Void,Void,ArrayList<ItemYoutube>>
 
             JSONObject json = new JSONObject(responseString);
 
-            JSONArray jsonArray = json.getJSONObject("feed").getJSONArray("entry");
+            JSONArray jsonArray = json.getJSONArray("items");
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String id = jsonObject.getJSONObject("id").getString("$t");
-                String title = jsonObject.getJSONObject("title").getString("$t");
-                String contenido = jsonObject.getJSONObject("content").getString("$t");
-                String urlImagen = jsonObject.getJSONObject("media$group").getJSONArray("media$thumbnail").getJSONObject(0).getString("url");
-                String duracion = jsonObject.getJSONObject("media$group").getJSONArray("media$content").getJSONObject(0).getString("duration");
+                String id = jsonObject.getJSONObject("id").getString("videoId");
+                String title = jsonObject.getJSONObject("snippet").getString("title");
+                String contenido = jsonObject.getJSONObject("snippet").getString("description");
+                String urlImagen = jsonObject.getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("default").getString("url");
+                String duracion = "";
                 id = obtenerIdYoutube(id);
                 videos.add(new ItemYoutube(id,title,contenido,duracion,"","",urlImagen));
                 Log.i("Json", title + "\n" + urlImagen);

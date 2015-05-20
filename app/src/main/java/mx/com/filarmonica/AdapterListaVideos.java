@@ -58,10 +58,10 @@ public class AdapterListaVideos extends RecyclerView.Adapter<AdapterListaVideos.
                 youTubePlayer.loadVideo(videos.get(position).getUrlYouTube());
             }
         });
-        int minutos = Integer.parseInt(videos.get(position).getDuracion().toString())/60;
-        int segundos = Integer.parseInt(videos.get(position).getDuracion().toString())%60;
+        //int minutos = Integer.parseInt(videos.get(position).getDuracion().toString())/60;
+        //int segundos = Integer.parseInt(videos.get(position).getDuracion().toString())%60;
 
-        holder.textViewDuracion.setText(minutos+":"+segundos);
+        holder.textViewDuracion.setText("");
 
     }
 
