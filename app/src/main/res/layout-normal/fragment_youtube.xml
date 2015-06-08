@@ -13,10 +13,11 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:background="#E31836"
         >
         <TextView
+            android:fontFamily="sans-serif-light"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:id="@+id/titulo_video"
@@ -24,26 +25,59 @@
             android:layout_height="wrap_content"
             android:text="Necesitas de conexión a internet para poder ver los videos"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"/>
+            android:textSize="17sp"/>
         <ImageView
             android:id="@+id/boton_compartir"
             android:layout_marginTop="15dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
             android:alpha="0.8"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
             android:src="@drawable/icono_compartir"
             />
         <ImageView
             android:id="@+id/boton_mas_informacion"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:src="@drawable/icono_mas_informacion"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="22dp"
             android:alpha="0.4"
+            android:layout_marginBottom="15dp"
+            />
+    </RelativeLayout>
+    <!-- el cuadro que miestra la descripción, se oculta mediante código java en el fragent youtube-->
+    <RelativeLayout
+        android:id="@+id/layout_mas_informacion"
+        android:background="#E31836"
+        android:layout_width="fill_parent"
+        android:layout_height="65dp">
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <TextView
+                android:id="@+id/descripcion_video_youtube"
+                android:fontFamily="sans-serif-light"
+                android:alpha=".87"
+                android:textColor="#FFFFFF"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:text="Descripción"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content" />
+        </ScrollView>
+        <ImageView
+            android:id="@+id/boton_ocultar_informacion"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/icono_mas_informacion"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="22dp"
+            android:alpha="0.4"
+            android:rotation="180"
             android:layout_marginBottom="15dp"
             />
     </RelativeLayout>

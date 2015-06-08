@@ -27,13 +27,14 @@ public class AdapterListaVideos extends RecyclerView.Adapter<AdapterListaVideos.
     Context contexto;
     YouTubePlayer youTubePlayer;
     TextView textViewTituloVideo;
-
+    TextView textViewDescripcion;
     public AdapterListaVideos(Context contexto, ArrayList<ItemYoutube> videos,
-                                YouTubePlayer youTubePlayer, TextView textViewTituloVideo){
+                                YouTubePlayer youTubePlayer, TextView textViewTituloVideo,TextView textViewDescripcion){
         this.videos = videos;
         this.contexto = contexto;
         this.youTubePlayer = youTubePlayer;
         this.textViewTituloVideo = textViewTituloVideo;
+        this.textViewDescripcion = textViewDescripcion;
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -56,6 +57,9 @@ public class AdapterListaVideos extends RecyclerView.Adapter<AdapterListaVideos.
 
                 //Reproducir video de Youtube.
                 youTubePlayer.loadVideo(videos.get(position).getUrlYouTube());
+
+                //se coloca la descripcion
+                textViewDescripcion.setText(videos.get(position).getContenido());
             }
         });
         //int minutos = Integer.parseInt(videos.get(position).getDuracion().toString())/60;

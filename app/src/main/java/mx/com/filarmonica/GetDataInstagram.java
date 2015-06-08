@@ -57,9 +57,14 @@ public class GetDataInstagram extends AsyncTask<Void,Void,ArrayList<ItemImagenIn
             String[] link = new String[3];
             for(int x = 0; x<jsonArray.length();x++){
 
+                //Se colocan las imagenes con un contador ya que se apilan de a 3 imagenes(esto para poder ser mostradas en el apartado de instagram)
                 urlImagenNd[contador] = jsonArray.getJSONObject(x).getJSONObject("images").getJSONObject("low_resolution").getString("url");
                 urlImagenHd[contador] = jsonArray.getJSONObject(x).getJSONObject("images").getJSONObject("standard_resolution").getString("url");
-                texto[contador] = jsonArray.getJSONObject(x).getJSONObject("caption").getString("text");
+
+                //Se compara antes el campo caption, ya que en algunos casos no aparece pero aun así sigue habiendo información
+                if(!jsonArray.getJSONObject(x).isNull("caption")){
+                    texto[contador] = jsonArray.getJSONObject(x).getJSONObject("caption").getString("text");
+                }
                 link[contador] = jsonArray.getJSONObject(x).getString("link");
 
                 //ftp.descargarArchivo(4,urlImagenHd[contador]);

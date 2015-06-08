@@ -70,6 +70,7 @@ public class Streaming extends ActionBarActivity
     static final String DIA_NOCHE = "PM";
     static final int HORA_INICIO = 12; //Hora puesta en formato de 24hrs
     static final int HORA_FIN = 14; //Hora puesta en formato de 24hrs
+
     static final int MINUTOS_INICIO = 30;
     static String fechaProximoStreaming = "";
     static RelativeLayout layoutControlVolumenStreaming = null;
@@ -112,6 +113,8 @@ public class Streaming extends ActionBarActivity
 
     /******* Variables del reproductor de video. *******
      * */
+
+    static TextView textViewDescripcionVideo;
     //Reproductor.
     static VideoView videoPlayer;
 
@@ -163,6 +166,9 @@ public class Streaming extends ActionBarActivity
 
         //Ocultamos el ActionBar.
         getSupportActionBar().hide();
+
+        //se bloquea el giro de la pantalla
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         //Comprobamos si es tablet y colocamos horizontalmente la Activity de ser así.
         if(esTablet = TabletManager.esTablet(contexto))
@@ -547,7 +553,7 @@ public class Streaming extends ActionBarActivity
 
             //checar si la conexión con el servicio ya existe
             if(banderaConexion){
-                musicSrv.setItems(textViewTituloCancion,textViewDirector,textViewduracion);
+//                musicSrv.setItems(textViewTituloCancion,textViewDirector,textViewduracion);
                 //Si ya existe y se está reproduciendo
                 if(musicSrv != null){
 
@@ -582,6 +588,39 @@ public class Streaming extends ActionBarActivity
             //Inflamos el layout.
             layout = layoutInflater.inflate(mx.com.filarmonica.R.layout.fragment_youtube, viewGroup, false);
 
+            //Boton con el que se oculta la información adicional
+            ImageView botonOcultarInformacion = (ImageView) layout.findViewById(R.id.boton_ocultar_informacion);
+
+
+            //Se inicializa el textview de la descripcion del video
+            textViewDescripcionVideo = (TextView) layout.findViewById(R.id.descripcion_video_youtube);
+
+            //Se inicializa el cuadro de descripción del video
+            final RelativeLayout relativeLayoutCradoDescripcion = (RelativeLayout) layout.findViewById(R.id.layout_mas_informacion);
+
+            //Se oculta siempre al principio
+            relativeLayoutCradoDescripcion.setVisibility(View.GONE);
+
+            //Se inicializa el boton que abre el cuadro
+            final ImageView imageViewAbrirDescripcion = (ImageView) layout.findViewById(R.id.boton_mas_informacion);
+
+            //Cuando se preciona ys e muestra la uinformación
+            imageViewAbrirDescripcion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    relativeLayoutCradoDescripcion.setVisibility(View.VISIBLE);
+                    imageViewAbrirDescripcion.setVisibility(View.GONE);
+                }
+            });
+
+            //Cuando se presiona y se oculta la información
+            botonOcultarInformacion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    imageViewAbrirDescripcion.setVisibility(View.VISIBLE);
+                    relativeLayoutCradoDescripcion.setVisibility(View.GONE);
+                }
+            });
             //Obtenemos las referencias.
             textViewTituloVideo = (TextView) layout.findViewById(mx.com.filarmonica.R.id.titulo_video);
             mRecyclerView = (RecyclerView) layout.findViewById(mx.com.filarmonica.R.id.lista_videos);
@@ -593,7 +632,10 @@ public class Streaming extends ActionBarActivity
             fragmentTransaction.commit();
 
             //Colocamos el nombre del video.
-            if(listaVideos!=null  && listaVideos.size()>0)     textViewTituloVideo.setText(listaVideos.get(0).getTitulo());
+            if(listaVideos!=null  && listaVideos.size()>0) {
+                textViewTituloVideo.setText(listaVideos.get(0).getTitulo());
+                textViewDescripcionVideo.setText(listaVideos.get(0).getContenido());
+            }
 
             //Configuramos el RecyclerView.
             mRecyclerView.setLayoutManager(new LinearLayoutManager(contexto));
@@ -610,7 +652,7 @@ public class Streaming extends ActionBarActivity
         public void onInitializationSuccess(YouTubePlayer.Provider provider,
                                             YouTubePlayer youTubePlayer, boolean b)
         {
-            adapter = new AdapterListaVideos(contexto, listaVideos, youTubePlayer, textViewTituloVideo);
+            adapter = new AdapterListaVideos(contexto, listaVideos, youTubePlayer, textViewTituloVideo,textViewDescripcionVideo);
             mRecyclerView.setAdapter(adapter);
             if(!b)
             {
@@ -678,38 +720,20 @@ public class Streaming extends ActionBarActivity
         }
     }
 
-    @Override
-    public void onBackPressed()
-    {
-        Intent intent = new Intent(this, Streaming.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-// build notification
-// the addAction re-use the same intent to keep the example short
-        Notification n  = new Notification.Builder(this)
-                .setContentTitle("Reproduciendo")
-                .setContentText("Presiona para ir al preproductor")
-                .setSmallIcon(mx.com.filarmonica.R.drawable.reproductor_boton_play)
-                .setContentIntent(pIntent)
-                .setAutoCancel(true).build();
-
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        notificationManager.notify(ID_NOTIFICACION_MUSICA, n);
-        finish();
-        Intent i = new Intent(Streaming.this, MainActivity.class);
-        startActivity(i);
-    }
-
     static public boolean validarHoraStreaming(String hora){
 
         //En caso de ser el tiempo correcto se obtiene la hora
-        StringTokenizer token = new StringTokenizer(hora,":");
-        int horaActual =  Integer.parseInt(token.nextToken());
-        if(horaActual>=HORA_INICIO && horaActual<=HORA_FIN){
-            return true;
+        try{
+            StringTokenizer token = new StringTokenizer(hora,":");
+            int horaActual =  Integer.parseInt(token.nextToken());
+            int minutoActual = Integer.parseInt(token.nextToken());
+            //Se comprueba la hora, debe ser entre 12:30 y 14:30 hrs
+            if((horaActual>=HORA_INICIO && minutoActual>MINUTOS_INICIO) && (horaActual<=HORA_FIN && minutoActual<MINUTOS_INICIO)){
+                return true;
+            }
+        }
+        catch (Exception e){
+            //Si ocurre un error
         }
         return false;
     }
