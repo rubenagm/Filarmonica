@@ -1,6 +1,7 @@
 package mx.com.filarmonica;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -28,13 +29,16 @@ public class AdapterListaVideos extends RecyclerView.Adapter<AdapterListaVideos.
     YouTubePlayer youTubePlayer;
     TextView textViewTituloVideo;
     TextView textViewDescripcion;
+    ImageView imageViewCompartir;
     public AdapterListaVideos(Context contexto, ArrayList<ItemYoutube> videos,
-                                YouTubePlayer youTubePlayer, TextView textViewTituloVideo,TextView textViewDescripcion){
-        this.videos = videos;
-        this.contexto = contexto;
-        this.youTubePlayer = youTubePlayer;
-        this.textViewTituloVideo = textViewTituloVideo;
-        this.textViewDescripcion = textViewDescripcion;
+                                YouTubePlayer youTubePlayer, TextView textViewTituloVideo,
+                              TextView textViewDescripcion,ImageView imageViewCompartir){
+        this.videos                 = videos;
+        this.contexto               = contexto;
+        this.youTubePlayer          = youTubePlayer;
+        this.textViewTituloVideo    = textViewTituloVideo;
+        this.textViewDescripcion    = textViewDescripcion;
+        this.imageViewCompartir     = imageViewCompartir;
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -60,6 +64,22 @@ public class AdapterListaVideos extends RecyclerView.Adapter<AdapterListaVideos.
 
                 //se coloca la descripcion
                 textViewDescripcion.setText(videos.get(position).getContenido());
+            }
+        });
+
+        imageViewCompartir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String URL_VIDEO = "https://www.youtube.com/watch?v=";
+                Context contextoView = view.getContext();
+
+                String urlEfectiva = URL_VIDEO + videos.get(position).getUrlYouTube();
+
+                Intent compartir = new Intent();
+                compartir.setAction(Intent.ACTION_SEND);
+                compartir.putExtra(Intent.EXTRA_TEXT, urlEfectiva);
+                compartir.setType( "text/plain");
+                contextoView.startActivity(compartir);
             }
         });
         //int minutos = Integer.parseInt(videos.get(position).getDuracion().toString())/60;
