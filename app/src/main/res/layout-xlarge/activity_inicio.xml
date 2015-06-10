@@ -37,7 +37,7 @@
 	        android:layout_width="wrap_content"
 	    	android:layout_height="wrap_content"
 	    	android:textColor="#FFFFFF"
-	    	android:textSize="50sp"
+	    	android:textSize="@dimen/tam_texto_contador"
 	    	android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/margen_superior_contador"
             android:layout_marginBottom="@dimen/margen_inferior_contador"
@@ -50,7 +50,7 @@
 	    	android:layout_height="wrap_content"
 	    	android:textColor="#FFFFFF"
 	    	android:text="@string/proximo_concierto"
-	    	android:textSize="22sp"
+	    	android:textSize="@dimen/tam_texto_proximo_concierto"
 	    	android:layout_centerHorizontal="true"
             android:layout_alignBottom="@+id/lbl_contador_proximo_concierto"
             />

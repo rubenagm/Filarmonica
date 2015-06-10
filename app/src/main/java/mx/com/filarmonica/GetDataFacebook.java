@@ -31,15 +31,17 @@ public class GetDataFacebook extends AsyncTask<Void,Void,ArrayList<ItemFacebook>
     private RecyclerView recyclerView;
     private Context contexto;
     private SwipeRefreshLayout swipeRefreshLayout;
+    ArrayList<ItemFacebook> arrayFacebook;
 
     //Constructor que recibirá el contexto y el RecyclerView en donde se insertarán los estados
     // de Facebook.
     public GetDataFacebook(RecyclerView recyclerView, SwipeRefreshLayout swipeRefreshLayout,
-                          Context contexto)
+                          Context contexto, ArrayList<ItemFacebook> arrayFacebook)
     {
         this.recyclerView       = recyclerView;
         this.swipeRefreshLayout = swipeRefreshLayout;
         this.contexto           = contexto;
+        this.arrayFacebook      = arrayFacebook;
     }
 
     public GetDataFacebook(){}

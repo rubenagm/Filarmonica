@@ -172,42 +172,45 @@ public class DialogoMostrarImagenInstagram extends DialogFragment  {
             @Override
             public void onClick(View v) {
                  //se aumenta una posicion
-                if(contador>imagenes.size()-3){
+                if(contador>imagenes.size()-2){
                     contador = 0;
                 }
-                else{
-                    contador ++;
-                    //se carga la imagen
-                    String imagen = imagenes.get(contador);
-                    if(imagen!= null)
+                else
+                {
+                    contador++;
+                }
+                //se carga la imagen
+                String imagen = imagenes.get(contador);
+                if(imagen == null || imagen.equals(""))
+                {
+                    contador = 0;
+                    imagen = imagenes.get(contador);
+                }
+
+                ContextWrapper contextWrapper = new ContextWrapper(contexto);
+                File directorio = contextWrapper.getDir("Imagenes" + "Instagram",
+                        Context.MODE_PRIVATE);
+                File archivoImagen = new File(directorio, DescargarImagen.nombreImagenUrl(imagen)
+                        + ".png");
+
+                if(!archivoImagen.exists())
+                {
+                    DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_INSTAGRAM,
+                            progressCargandoImagen, imageViewimagen,contexto);
+                    descargarImagen.execute(imagen);
+                }
+                else
+                {
+                    try
                     {
-
-                        ContextWrapper contextWrapper = new ContextWrapper(contexto);
-                        File directorio = contextWrapper.getDir("Imagenes" + "Instagram",
-                                Context.MODE_PRIVATE);
-                        File archivoImagen = new File(directorio, DescargarImagen.nombreImagenUrl(imagen)
-                                + ".png");
-
-                        if(!archivoImagen.exists())
-                        {
-                            DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_INSTAGRAM,
-                                    progressCargandoImagen, imageViewimagen,contexto);
-                            descargarImagen.execute(imagen);
-                        }
-                        else
-                        {
-                            try
-                            {
-                                Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(archivoImagen));
-                                imageViewimagen.setImageBitmap(bitmap);
-                            }
-                            catch (FileNotFoundException e)
-                            {
-                                Toast.makeText(contexto, contexto.getText(R.string.error_imagen), Toast.
-                                        LENGTH_SHORT).show();
-                                e.printStackTrace();
-                            }
-                        }
+                        Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(archivoImagen));
+                        imageViewimagen.setImageBitmap(bitmap);
+                    }
+                    catch (FileNotFoundException e)
+                    {
+                        Toast.makeText(contexto, contexto.getText(R.string.error_imagen), Toast.
+                                LENGTH_SHORT).show();
+                        e.printStackTrace();
                     }
                 }
 
@@ -222,45 +225,54 @@ public class DialogoMostrarImagenInstagram extends DialogFragment  {
             public void onClick(View v) {
                 //se resta una posicion
                 if(contador<1){
-                    contador = imagenes.size()-2;
+                    contador = imagenes.size()-1;
                 }
-                else{
-                    contador --;
-                    //se carga la imagen
-                    String imagen = imagenes.get(contador);
-                    if(imagen!= null){
+                else
+                {
+                    contador--;
+                }
+                //se carga la imagen
+                String imagen = imagenes.get(contador);
 
-                        ContextWrapper contextWrapper = new ContextWrapper(contexto);
-                        File directorio = contextWrapper.getDir("Imagenes" + "Instagram",
-                                Context.MODE_PRIVATE);
-                        File archivoImagen = new File(directorio, DescargarImagen.nombreImagenUrl(imagen)
-                                + ".png");
 
-                        if(!archivoImagen.exists())
-                        {
-                            DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_INSTAGRAM,
-                                    progressCargandoImagen, imageViewimagen,contexto);
-                            descargarImagen.execute(imagen);
-                        }
-                        else
-                        {
-                            try
-                            {
-                                Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(archivoImagen));
-                                imageViewimagen.setImageBitmap(bitmap);
-                            }
-                            catch (FileNotFoundException e)
-                            {
-                                Toast.makeText(contexto, contexto.getText(R.string.error_imagen), Toast.
-                                        LENGTH_SHORT).show();
-                                e.printStackTrace();
-                            }
-                        }
+                if(imagen== null || imagen.equals(""))
+                {
+                    contador = imagenes.size();
+
+                    while(imagen== null || imagen.equals(""))
+                    {
+                        contador--;
+                        imagen = imagenes.get(contador);
                     }
                 }
 
-                textViewtexto.setText(texto.get(contador));
+                ContextWrapper contextWrapper = new ContextWrapper(contexto);
+                File directorio = contextWrapper.getDir("Imagenes" + "Instagram",
+                        Context.MODE_PRIVATE);
+                File archivoImagen = new File(directorio, DescargarImagen.nombreImagenUrl(imagen)
+                        + ".png");
 
+                if(!archivoImagen.exists())
+                {
+                    DescargarImagen descargarImagen = new DescargarImagen(IMAGEN_TIPO_INSTAGRAM,
+                            progressCargandoImagen, imageViewimagen,contexto);
+                    descargarImagen.execute(imagen);
+                }
+                else
+                {
+                    try
+                    {
+                        Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(archivoImagen));
+                        imageViewimagen.setImageBitmap(bitmap);
+                    }
+                    catch (FileNotFoundException e)
+                    {
+                        Toast.makeText(contexto, contexto.getText(R.string.error_imagen), Toast.
+                                LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
+                }
+                textViewtexto.setText(texto.get(contador));
             }
         });
         return v;

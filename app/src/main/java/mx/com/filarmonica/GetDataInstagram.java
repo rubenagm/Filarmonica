@@ -61,7 +61,7 @@ public class GetDataInstagram extends AsyncTask<Void,Void,ArrayList<ItemImagenIn
                 urlImagenNd[contador] = jsonArray.getJSONObject(x).getJSONObject("images").getJSONObject("low_resolution").getString("url");
                 urlImagenHd[contador] = jsonArray.getJSONObject(x).getJSONObject("images").getJSONObject("standard_resolution").getString("url");
 
-                //Se compara antes el campo caption, ya que en algunos casos no aparece pero aun así sigue habiendo información
+                //Se compara antes el campo caption, ya que en algunos casos no aparece pero aun asÃ­ sigue habiendo informaciÃ³n
                 if(!jsonArray.getJSONObject(x).isNull("caption")){
                     texto[contador] = jsonArray.getJSONObject(x).getJSONObject("caption").getString("text");
                 }

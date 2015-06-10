@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.webkit.WebView;
 import android.widget.ListView;
 
 import utilities.TabletManager;
@@ -15,6 +16,9 @@ public class Patronato extends Activity
 
     //Variables del Drawer.
     private ListView list_view_drawer;
+
+    private WebView webView;
+    private final static String URL_PATROCINADORES = "http://ofj.com.mx/orquesta/patrocinadores/";
 
     private boolean esTablet;
 
@@ -35,6 +39,8 @@ public class Patronato extends Activity
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
 
+        webView = (WebView) findViewById(R.id.web_view);
+        webView.loadUrl(URL_PATROCINADORES);
         /******************************* ListView Drawer *****************************/
         list_view_drawer = (ListView) findViewById(R.id.drawer_listView);
         list_view_drawer.setAdapter(new ListViewAdapter(this));

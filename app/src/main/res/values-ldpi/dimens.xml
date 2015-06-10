@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- DIMENSIONES DE MARGENES. -->
     <dimen name="margen_superior_dhms">187dp</dimen>
     <dimen name="margen_superior_contador">157dp</dimen>
     <dimen name="margen_inferior_contador">15dp</dimen>
@@ -9,5 +10,13 @@
     <dimen name="margen_izquierdo_horas">17dp</dimen>
     <dimen name="margen_izquierdo_minutos">15dp</dimen>
     <dimen name="margen_izquierdo_segundos">7dp</dimen>
+
+    <!-- DIMENSIONES DE TEXTO. -->
+    <dimen name="tam_texto_contador">50sp</dimen>
+    <dimen name="tam_texto_proximo_concierto">22sp</dimen>
+    <dimen name="tam_texto_dias">10sp</dimen>
+    <dimen name="tam_texto_horas">10sp</dimen>
+    <dimen name="tam_texto_minutos">10sp</dimen>
+    <dimen name="tam_texto_segundos">10sp</dimen>
 
 </resources>

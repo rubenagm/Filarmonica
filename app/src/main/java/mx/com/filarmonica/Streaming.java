@@ -75,6 +75,9 @@ public class Streaming extends ActionBarActivity
     static String fechaProximoStreaming = "";
     static RelativeLayout layoutControlVolumenStreaming = null;
     static SeekBar controlVolumenStreaming = null;
+    //DECLARACION DE VARIABLES DE YOUTUBE
+    static TextView textViewDescripcionVideo;
+    static ImageView imageViewCompartir;
 
     //Declaracion de controles para el reproductor
     static ImageButton botonPlay;
@@ -114,7 +117,7 @@ public class Streaming extends ActionBarActivity
     /******* Variables del reproductor de video. *******
      * */
 
-    static TextView textViewDescripcionVideo;
+
     //Reproductor.
     static VideoView videoPlayer;
 
@@ -588,6 +591,26 @@ public class Streaming extends ActionBarActivity
             //Inflamos el layout.
             layout = layoutInflater.inflate(mx.com.filarmonica.R.layout.fragment_youtube, viewGroup, false);
 
+            //Se crea el objeto que maneja el botón compartir
+            imageViewCompartir = (ImageView) layout.findViewById(R.id.boton_compartir);
+
+            //se le agrega la opción de compartir en facebook cuando sea presionado
+            imageViewCompartir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final String URL_VIDEO = "https://www.youtube.com/watch?v=";
+                    Context contextoView = view.getContext();
+
+                    String urlEfectiva = URL_VIDEO + listaVideos.get(0).getUrlYouTube();
+
+                    Intent compartir = new Intent();
+                    compartir.setAction(Intent.ACTION_SEND);
+                    compartir.putExtra(Intent.EXTRA_TEXT, urlEfectiva);
+                    compartir.setType( "text/plain");
+                    contextoView.startActivity(compartir);
+                }
+            });
+
             //Boton con el que se oculta la información adicional
             ImageView botonOcultarInformacion = (ImageView) layout.findViewById(R.id.boton_ocultar_informacion);
 
@@ -652,7 +675,7 @@ public class Streaming extends ActionBarActivity
         public void onInitializationSuccess(YouTubePlayer.Provider provider,
                                             YouTubePlayer youTubePlayer, boolean b)
         {
-            adapter = new AdapterListaVideos(contexto, listaVideos, youTubePlayer, textViewTituloVideo,textViewDescripcionVideo);
+            adapter = new AdapterListaVideos(contexto, listaVideos, youTubePlayer, textViewTituloVideo,textViewDescripcionVideo,imageViewCompartir);
             mRecyclerView.setAdapter(adapter);
             if(!b)
             {

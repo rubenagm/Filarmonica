@@ -20,6 +20,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,11 +41,10 @@ public class Noticias extends ActionBarActivity
     static DialogoMostrarImagenInstagram newFragment ;
     static FragmentTransaction ft;
     static Fragment prev;
-    /// Dialogo
 
-    ////
     private static Context contexto;
     private final static int NUMERO_TABS = 3;
+    private final static int TIEMPO_ESPERA_ACTUALIZACION = 1000 * 60 * 60;//Una hora.
 
     //Imágenes de las tabs al iniciar la activity.
     private static int[] imagenesTab =
@@ -292,15 +292,17 @@ public class Noticias extends ActionBarActivity
             RecyclerView.Adapter adapter = new AdapterListaTwitter(twitterArray,contexto);
             mRecyclerView.setAdapter(adapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(contexto));
-            mRecyclerView.setItemAnimator( new DefaultItemAnimator());
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-            //Actualizamos si es necesario.
             if(hayNoticiasEnBD && ConexionInternet.verificarConexion(contexto))
             {
                 GetDataTwitter twitterThread = new GetDataTwitter(mRecyclerView, mSwipeRefreshLayout,
                         contexto);
                 twitterThread.execute();
             }
+
+            UpdateTwitter updateTwitter = new UpdateTwitter(mRecyclerView, mSwipeRefreshLayout);
+            updateTwitter.start();
 
             //Configuramos el swipe.
             mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
@@ -324,6 +326,37 @@ public class Noticias extends ActionBarActivity
             });
 
             return layout;
+        }
+
+        class UpdateTwitter extends Thread
+        {
+            RecyclerView mRecyclerView;
+            SwipeRefreshLayout mSwipeRefreshLayout;
+
+            public UpdateTwitter(RecyclerView mRecyclerView, SwipeRefreshLayout mSwipeRefreshLayout)
+            {
+                this.mRecyclerView = mRecyclerView;
+                this.mSwipeRefreshLayout = mSwipeRefreshLayout;
+            }
+
+            @Override
+            public void run()
+            {
+                while(true)
+                {
+                    try
+                    {
+                        sleep(TIEMPO_ESPERA_ACTUALIZACION);
+                        Log.i("frank.frank", "Actualizando twitter");
+                        GetDataTwitter t = new GetDataTwitter(mRecyclerView, mSwipeRefreshLayout,
+                                contexto);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
     }//Fragment de Noticias.
 
@@ -357,16 +390,18 @@ public class Noticias extends ActionBarActivity
 
             //Configuramos el RecyclerView.
             mRecyclerView.setLayoutManager(new LinearLayoutManager(contexto));
-            mRecyclerView.setAdapter(new AdapterListaFacebook(facebookArray,contexto));
+            mRecyclerView.setAdapter(new AdapterListaFacebook(facebookArray, contexto));
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-            //Actualizamos, si es necesario.
             if(hayNoticiasEnBD && ConexionInternet.verificarConexion(contexto))
             {
                 GetDataFacebook facebookThread = new GetDataFacebook(mRecyclerView, mSwipeRefreshLayout,
-                        contexto);
+                        contexto, facebookArray);
                 facebookThread.execute();
             }
+
+            UpdateFacebook updateFacebook = new UpdateFacebook(mRecyclerView, mSwipeRefreshLayout);
+            updateFacebook.start();
 
             //Configuramos el swipe.
             mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
@@ -374,13 +409,13 @@ public class Noticias extends ActionBarActivity
                 @Override
                 public void onRefresh()
                 {
-                    if(ConexionInternet.verificarConexion(contexto))
+                    if (ConexionInternet.verificarConexion(contexto))
                     {
-                        GetDataFacebook facebookThread = new GetDataFacebook(mRecyclerView, mSwipeRefreshLayout,
-                                contexto);
+                        GetDataFacebook facebookThread = new GetDataFacebook(mRecyclerView,
+                                mSwipeRefreshLayout, contexto, facebookArray);
                         facebookThread.execute();
-                    }
-                    else
+
+                    } else
                     {
                         Toast.makeText(contexto, "No hay conexión a Internet.", Toast.LENGTH_SHORT)
                                 .show();
@@ -390,6 +425,37 @@ public class Noticias extends ActionBarActivity
             });
 
             return layout;
+        }
+
+        class UpdateFacebook extends Thread
+        {
+            RecyclerView mRecyclerView;
+            SwipeRefreshLayout mSwipeRefreshLayout;
+
+            public UpdateFacebook(RecyclerView mRecyclerView, SwipeRefreshLayout mSwipeRefreshLayout)
+            {
+                this.mRecyclerView = mRecyclerView;
+                this.mSwipeRefreshLayout = mSwipeRefreshLayout;
+            }
+
+            @Override
+            public void run()
+            {
+                while(true)
+                {
+                    try
+                    {
+                        sleep(TIEMPO_ESPERA_ACTUALIZACION);
+                        Log.i("frank.frank", "Actualizando facebook");
+                        GetDataFacebook f = new GetDataFacebook(mRecyclerView, mSwipeRefreshLayout,
+                                contexto, facebookArray);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
     }//Fragment de Facebook
 

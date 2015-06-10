@@ -7,7 +7,7 @@
     <FrameLayout
         android:id="@+id/youtubeFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="380dp" >
 
     </FrameLayout>
 
@@ -44,6 +44,39 @@
             android:layout_alignParentBottom="true"
             android:layout_marginRight="22dp"
             android:alpha="0.4"
+            android:layout_marginBottom="15dp"
+            />
+    </RelativeLayout>
+    <!-- el cuadro que miestra la descripción, se oculta mediante código java en el fragent youtube-->
+    <RelativeLayout
+        android:id="@+id/layout_mas_informacion"
+        android:background="#E31836"
+        android:layout_width="fill_parent"
+        android:layout_height="65dp">
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <TextView
+                android:id="@+id/descripcion_video_youtube"
+                android:fontFamily="sans-serif-light"
+                android:alpha=".87"
+                android:textColor="#FFFFFF"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:text="Descripción"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content" />
+        </ScrollView>
+        <ImageView
+            android:id="@+id/boton_ocultar_informacion"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/icono_mas_informacion"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="22dp"
+            android:alpha="0.4"
+            android:rotation="180"
             android:layout_marginBottom="15dp"
             />
     </RelativeLayout>

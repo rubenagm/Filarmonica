@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- MEDIDAS IMÁGENES -->
+    <dimen name="tam_icono_contacto">50dp</dimen>
+
+    <!-- MEDIDAS LETRA -->
+    <dimen name="tam_fuente_encabezado">25sp</dimen>
+    <dimen name="tam_fuente_semi_encabezado">22sp</dimen>
+    <dimen name="tam_fuente_texto">20sp</dimen>
+
+</resources>

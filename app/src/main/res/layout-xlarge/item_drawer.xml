@@ -29,7 +29,7 @@
         android:layout_height="0dp"
         android:background="@drawable/menu_streaming"
         android:layout_weight="1"
-        android:scaleType="fitXY"/>
+        android:scaleType="centerCrop"/>
 
 
    <ImageView
@@ -38,6 +38,6 @@
        android:layout_height="0dp"
        android:background="@drawable/contacto_patrocinadores"
        android:layout_weight="1"
-       android:scaleType="fitXY"/>
+       android:scaleType="centerCrop"/>
 
 </LinearLayout>

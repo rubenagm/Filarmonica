@@ -64,8 +64,8 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/tam_icono_contacto"
+                    android:layout_height="@dimen/tam_icono_contacto"
                     android:background="@drawable/mail_icon"/>
 
                 <LinearLayout
@@ -78,21 +78,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Escríbenos"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/tam_fuente_encabezado"
                     android:textStyle="bold"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="info@ofj.com.mx"
-                        android:textSize="10sp"/>
+                        android:textSize="@dimen/tam_fuente_texto"/>
 
                 </LinearLayout>
 
                 <ImageView
                     android:id="@+id/btn_email"
-                    android:layout_width="55dp"
-                    android:layout_height="55dp"
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
                     android:background="@drawable/red_mail_icon"/>
             </LinearLayout>
             <!--Escribenos-->
@@ -106,8 +106,8 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/tam_icono_contacto"
+                    android:layout_height="@dimen/tam_icono_contacto"
                     android:background="@drawable/group_icon"/>
 
                 <LinearLayout
@@ -120,7 +120,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Síguenos en redes sociales"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/tam_fuente_encabezado"
                         android:textStyle="bold"/>
 
                     <TextView
@@ -128,28 +128,28 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Facebook"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/tam_fuente_semi_encabezado"
                         android:textStyle="bold"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="fb.com/OrquestaFilarmonicaJalisco"
-                        android:textSize="12sp"/>
+                        android:textSize="@dimen/tam_fuente_texto"/>
 
                     <TextView
                     android:layout_marginTop="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Twitter"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/tam_fuente_semi_encabezado"
                     android:textStyle="bold"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="twitter.com/OFilarmonicaJal"
-                        android:textSize="12sp"/>
+                        android:textSize="@dimen/tam_fuente_texto"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -171,8 +171,8 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/tam_icono_contacto"
+                    android:layout_height="@dimen/tam_icono_contacto"
                     android:background="@drawable/buy_icon"/>
 
                 <LinearLayout
@@ -185,7 +185,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Boletos en:"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/tam_fuente_encabezado"
                         android:textStyle="bold"/>
 
                     <TextView
@@ -194,19 +194,19 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Taquillas del Teatro Degollado"
-                        android:textSize="14sp"/>
+                        android:textSize="@dimen/tam_fuente_semi_encabezado"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="10:00 a 22:00 hrs."
-                        android:textSize="12sp"/>
+                        android:textSize="@dimen/tam_fuente_texto"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Tel. 36144773"
-                        android:textSize="12sp"/>
+                        android:textSize="@dimen/tam_fuente_texto"/>
 
                     <TextView
                         android:textStyle="bold"
@@ -214,19 +214,19 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="ticketmaster"
-                        android:textSize="14sp"/>
+                        android:textSize="@dimen/tam_fuente_semi_encabezado"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="ticketmaster.com.mx"
-                        android:textSize="12sp"/>
+                        android:textSize="@dimen/tam_fuente_texto"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Tel. 3818 3800"
-                        android:textSize="12sp"/>
+                        android:textSize="@dimen/tam_fuente_texto"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -241,8 +241,8 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/tam_icono_contacto"
+                    android:layout_height="@dimen/tam_icono_contacto"
                     android:background="@drawable/phone_icon"/>
 
                 <LinearLayout
@@ -255,7 +255,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Más informes:"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/tam_fuente_encabezado"
                         android:textStyle="bold"/>
 
                     <TextView
@@ -264,32 +264,32 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Oficinas OFJ"
-                        android:textSize="14sp"/>
+                        android:textSize="@dimen/tam_fuente_semi_encabezado"/>
 
                     <TextView
                         android:layout_marginTop="4dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="9:00 a 15:00 hrs."
-                        android:textSize="12sp"/>
+                        android:textSize="@dimen/tam_fuente_texto"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Tel. 3030 9772"
-                        android:textSize="12sp"/>
+                        android:textSize="@dimen/tam_fuente_texto"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="       3030 9774"
-                        android:textSize="12sp"/>
+                        android:textSize="@dimen/tam_fuente_texto"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="       3030 9773"
-                        android:textSize="12sp"/>
+                        android:textSize="@dimen/tam_fuente_texto"/>
                 </LinearLayout>
             </LinearLayout>
             <!--Más informes:-->
@@ -310,12 +310,12 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/tam_icono_contacto"
+                    android:layout_height="@dimen/tam_icono_contacto"
                     android:background="@drawable/info_icon"/>
 
                 <LinearLayout
-                    android:layout_width="200dp"
+                    android:layout_width="400dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginLeft="20dp">
@@ -324,13 +324,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Desarrollado por:"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/tam_fuente_encabezado"
                         android:textStyle="bold"/>
 
                     <ImageView
+                        android:id="@+id/cucei_mobile"
                         android:layout_marginTop="3dp"
-                        android:layout_width="120dp"
-                        android:layout_height="60dp"
+                        android:layout_width="320dp"
+                        android:layout_height="160dp"
                         android:background="@drawable/cuceimobile_logo"/>
 
                     <TextView
@@ -338,19 +339,19 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="cuceiMobile"
-                        android:textSize="14sp"/>
+                        android:textSize="@dimen/tam_fuente_semi_encabezado"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Tel. 1378 5900 Ext.27363"
-                        android:textSize="12sp"
+                        android:textSize="@dimen/tam_fuente_texto"
                         android:layout_marginBottom="50dp"/>
                 </LinearLayout>
 
                 <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="85dp"
+                    android:layout_width="100dp"
+                    android:layout_height="125dp"
                     android:background="@drawable/udg"/>
 
             </LinearLayout>
