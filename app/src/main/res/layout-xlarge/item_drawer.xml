@@ -5,14 +5,28 @@
     android:orientation="vertical"
     android:layout_gravity="start"
     android:id="@+id/linear_layout_drawer">
-    
-    <ImageView
-        android:id="@+id/icono_conciertos"
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@drawable/menu_concierto"
-        android:layout_weight="1"
-        android:scaleType="fitXY"/>
+        android:layout_height="1dp"
+        android:layout_weight="1">
+        <ImageView
+            android:id="@+id/icono_conciertos"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/menu_concierto"
+            android:layout_weight="1"
+            android:scaleType="fitXY"/>
+
+        <ImageView
+            android:id="@+id/letra_conciertos"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/letras_concierto"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:visibility="invisible"/>
+    </FrameLayout>
     
    	<ImageView
         android:id="@+id/icono_noticias"

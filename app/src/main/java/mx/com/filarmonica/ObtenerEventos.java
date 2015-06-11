@@ -229,7 +229,7 @@ public class ObtenerEventos extends AsyncTask<String, integer, ArrayList<ItemEve
     {
         if(respuestaAsyncTask != null)
         {
-            respuestaAsyncTask.procesoTerminado(resultado);
+            respuestaAsyncTask.respuesta(resultado);
         }
     }
 

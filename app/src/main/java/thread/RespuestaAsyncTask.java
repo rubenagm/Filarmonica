@@ -7,5 +7,5 @@ import java.util.ArrayList;
  */
 public interface RespuestaAsyncTask
 {
-    void procesoTerminado(ArrayList resultado);
+    void respuesta(ArrayList resultado);
 }

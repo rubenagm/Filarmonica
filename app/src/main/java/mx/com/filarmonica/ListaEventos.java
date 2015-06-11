@@ -202,7 +202,7 @@ public class ListaEventos extends ActionBarActivity
         }
 
         @Override
-        public void procesoTerminado(ArrayList resultado)
+        public void respuesta(ArrayList resultado)
         {
             if(resultado !=null)
             {

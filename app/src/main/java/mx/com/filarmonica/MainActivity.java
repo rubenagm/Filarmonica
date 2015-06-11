@@ -5,11 +5,15 @@ import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -22,6 +26,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,16 +43,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import conexion.ActualizarImagen;
 import conexion.ConexionInternet;
+import conexion.DescargarImagen;
 import date.DateControl;
 import date.DateDifference;
+import thread.RespuestaAsyncTask;
 import utilities.TabletManager;
 
-public class MainActivity extends Activity
+public class MainActivity extends Activity implements RespuestaAsyncTask
 {
     //Tutorial
     ImageView imageViewHand = null;
@@ -76,6 +87,8 @@ public class MainActivity extends Activity
     private TextView lblMinutos;
     private TextView lblSegundos;
 
+    public final static String KEY_APLICACION = "Filarmonica";
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -84,6 +97,31 @@ public class MainActivity extends Activity
 
         //Obtenemos el contexto.
         contexto = MainActivity.this;
+
+        //Cargamos la portada.
+        ContextWrapper contextWrapper = new ContextWrapper(contexto);
+        File directorio = contextWrapper.getDir(DescargarImagen.RUTA_IMAGENES + DescargarImagen
+                .DIRECTORIO_WEB_SERVICE, Context.MODE_PRIVATE);
+        File archivoImagen = new File(directorio, "portada.jpg");
+        if(archivoImagen.exists())
+        {
+            try
+            {
+                Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(archivoImagen));
+                BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
+                RelativeLayout fondo = (RelativeLayout) findViewById(R.id.content_frame);
+                fondo.setBackground(bitmapDrawable);
+
+            }
+            catch (FileNotFoundException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        //Buscamos actualzación de imagen de portada y menú.
+        ActualizarImagen actualizarImagen = new ActualizarImagen(contexto, this);
+        actualizarImagen.verificarActualzacion();
 
         //Shared poreferences inicio
         SharedPreferences shared = getSharedPreferences("Inicio",Context.MODE_PRIVATE);
@@ -196,7 +234,7 @@ public class MainActivity extends Activity
 
         //Obtenemos el próximo concierto.
         //Buscamos en la base de datos local, sino accedemos a la base de datos remota.
-        SharedPreferences sharedPreferences = getSharedPreferences("Filarmonica",
+        SharedPreferences sharedPreferences = getSharedPreferences(KEY_APLICACION,
             Context.MODE_PRIVATE);
         String resultadoSharedPreferences = sharedPreferences.getString("DatosInsertados", "NoInsertados");
 
@@ -217,13 +255,39 @@ public class MainActivity extends Activity
         }
     }//OnCreate
 
+    //Respuesta a actualizar imagen.
+    @Override
+    public void respuesta(ArrayList resultados)
+    {
+        final int INDICE_RETORNO = 0;
+        final int INDICE_JSON = 1;
+        final int ERROR_ACTULIZAR         = -1;
+        final int NO_HAY_ACTUALZIACIONES  = 0;
+        final int HAY_ACTUALIZACIONES     = 1;
 
-    // Animación del hand
+        switch((Integer) resultados.get(INDICE_RETORNO))
+        {
+            case HAY_ACTUALIZACIONES:
+                final int PORTADA = 0;
+                final int MENU = 1;
+                DescargarImagen descargarPortada = new DescargarImagen(contexto, PORTADA,
+                        (Integer) resultados.get(INDICE_JSON));
+                DescargarImagen descargarMenu = new DescargarImagen(contexto, MENU,
+                        (Integer) resultados.get(INDICE_JSON));
+                descargarPortada.execute("http://ofj.com.mx/App/subidas/portada.jpg");
+                descargarMenu.execute("http://ofj.com.mx/App/subidas/menu.jpg");
+                break;
+            case NO_HAY_ACTUALZIACIONES:
+                Log.i("frank.frank", "No hay actualizaciones de imágenes.");
+                break;
+            case ERROR_ACTULIZAR:
+                Log.e("frank.frank", "Error al intetar actualizar imagen de portada.");
+                break;
+            default:
+                Log.i("frank.frank", "Valor inesperado al intetar actualizar imagen de portada.");
+        }
+    }
 
-
-
-
-    ////////
     /***************************************** CONEXIONES *******************************************/
     //Clase para acceder al JSON.
     private class ConexionRemotaProximoConcierto extends AsyncTask<String, Void, ArrayList<String>>
@@ -627,4 +691,6 @@ public class MainActivity extends Activity
 
         }
     }
+
+
 }

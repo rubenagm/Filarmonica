@@ -1,8 +1,13 @@
 package mx.com.filarmonica;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -11,6 +16,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+import conexion.DescargarImagen;
 
 /**
  * Created by natafrank on 3/5/15.
@@ -59,6 +70,7 @@ public class ListViewAdapter extends BaseAdapter
     public static class Fila
     {
         ImageView imgConciertos;
+        ImageView letrasConcierto;
         ImageView imgNoticias;
         ImageView imgStreaming;
         ImageView imgContactoPatrocinadores;
@@ -88,6 +100,27 @@ public class ListViewAdapter extends BaseAdapter
             view.imgNoticias   = (ImageView) convertView.findViewById(R.id.icono_noticias);
 
             view.linearLayout  = (LinearLayout) convertView.findViewById(R.id.linear_layout_drawer);
+
+            //Cargamos la imagen dinámica del menú.
+            ContextWrapper contextWrapper = new ContextWrapper(activity);
+            File directorio = contextWrapper.getDir(DescargarImagen.RUTA_IMAGENES + DescargarImagen
+                    .DIRECTORIO_WEB_SERVICE, Context.MODE_PRIVATE);
+            File archivoImagen = new File(directorio, "menu.jpg");
+            if(archivoImagen.exists())
+            {
+                try
+                {
+                    Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(archivoImagen));
+                    BitmapDrawable bitmapDrawable = new BitmapDrawable(activity.getResources(), bitmap);
+                    view.imgConciertos.setBackground(bitmapDrawable);
+                    view.letrasConcierto = (ImageView) convertView.findViewById(R.id.letra_conciertos);
+                    view.letrasConcierto.setVisibility(View.VISIBLE);
+                }
+                catch (FileNotFoundException e)
+                {
+                    e.printStackTrace();
+                }
+            }
 
             //Colocamos la altura del linear layout.
             DisplayMetrics display_metrics = new DisplayMetrics();
