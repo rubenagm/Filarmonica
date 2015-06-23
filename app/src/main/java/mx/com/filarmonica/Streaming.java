@@ -97,6 +97,7 @@ public class Streaming extends ActionBarActivity
     static public AudioManager audioManager = null;
     static public RelativeLayout layoutVolumen = null;
     static public ImageButton botonMostrarControlVolumen = null;
+    static public GetDataMp3 getDataMp3 = new GetDataMp3();
     //Contexto
     private static Context contexto;
 
@@ -162,7 +163,14 @@ public class Streaming extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(mx.com.filarmonica.R.layout.activity_tabs);
         //
-
+        getDataMp3.execute();
+        try {
+            canciones = getDataMp3.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         audioManager =(AudioManager) getSystemService(Context.AUDIO_SERVICE);
         //Obtenemos el contexto.
         contexto = getApplicationContext();
@@ -712,6 +720,7 @@ public class Streaming extends ActionBarActivity
             musicSrv.setItems(textViewTituloCancion,textViewDirector,textViewduracion);
             musicBound = true;
             //Cuando la conexión se realiza, se manda el objeto del servicio para que pueda ser utilizado por la lista de canciones
+
             adapterStreaming = new AdapterListaStreaming(contexto,canciones,musicSrv,botonPlay);
             mRecyclerViewStreaming.setAdapter(adapterStreaming);
         }
@@ -728,11 +737,6 @@ public class Streaming extends ActionBarActivity
         super.onStart();
 
         if(playIntent==null){
-            //Agregar las canciones a la lista
-            canciones.add(new ItemStreamingMusica(1,"Bruckner Symphony No.4","Marco Parisotto","14:48","http://ofj.com.mx/App/mp3/1.mp3"));
-            canciones.add(new ItemStreamingMusica(2,"Beatles Suite","Marco Parisotto","6:26","http://ofj.com.mx/App/mp3/2.mp3"));
-            canciones.add(new ItemStreamingMusica(3,"Brahms Symphony No.1 mvt 1","Marco Parisotto","13:15","http://ofj.com.mx/App/mp3/3.mp3"));
-            canciones.add(new ItemStreamingMusica(4,"Tchaikovsky Serenade","Marco Parisotto","17:19","http://ofj.com.mx/App/mp3/4.mp3"));
             playIntent = new Intent(Streaming.this, ServicioMusica.class);
             bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
             startService(playIntent);
