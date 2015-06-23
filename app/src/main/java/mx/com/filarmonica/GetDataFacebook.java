@@ -51,7 +51,10 @@ public class GetDataFacebook extends AsyncTask<Void,Void,ArrayList<ItemFacebook>
         ArrayList<ItemFacebook> publicaciones = new ArrayList<ItemFacebook>();
         HttpClient httpclient = new DefaultHttpClient();
         httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
-        HttpGet request = new HttpGet("http://graph.facebook.com/208358432538534/photos/");
+        HttpGet request = new HttpGet("https://graph.facebook.com/208358432538534/photos/" +
+                "feed?access_token=CAAL9NzDszg0BAHuHsB22GraYSgRiKUyoILz7JZAVHb8ZBkF1GuOGgoY0J" +
+                "IjAt4aZB4jqnyJrcHtxz0Tfu6Xp5zynnelTryUKo66YdwZAjisYgc1ZA55pIB45iMjuD5ANmtOLe3r" +
+                "JdXUsH5ElRXUsR8mFvZCCbogJ8xIBlDtshz1sX5n22CXffaFI2buQ3JN9609hXBuZA2mZAY66yltaP6dd");
         // HttpGet request = new HttpGet("http://gdata.youtube.com/feeds/api/users/mbbangalore/uploads?v=2&alt=jsonc");
         try
         {
