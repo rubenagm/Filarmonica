@@ -163,7 +163,9 @@ public class Streaming extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(mx.com.filarmonica.R.layout.activity_tabs);
         //
-        getDataMp3.execute();
+        Log.i("LOG Hilo MP3", getDataMp3.getStatus().toString());
+        if(getDataMp3.getStatus().toString() == "PENDING") getDataMp3.execute();
+        Log.i("LOG Hilo MP3", getDataMp3.getStatus().toString());
         try {
             canciones = getDataMp3.get();
         } catch (InterruptedException e) {
