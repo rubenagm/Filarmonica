@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
@@ -86,6 +87,9 @@ public class MainActivity extends Activity implements RespuestaAsyncTask
     private TextView lblHoras;
     private TextView lblMinutos;
     private TextView lblSegundos;
+    private RelativeLayout contentFrame;
+    private ImageView handMensaje;
+    private TextView mensajeFlash;
 
     public final static String KEY_APLICACION = "Filarmonica";
 
@@ -173,15 +177,65 @@ public class MainActivity extends Activity implements RespuestaAsyncTask
         lblHoras            = (TextView) findViewById(R.id.horas);
         lblMinutos          = (TextView) findViewById(R.id.minutos);
         lblSegundos         = (TextView) findViewById(R.id.segundos);
+        contentFrame        = (RelativeLayout) findViewById(R.id.content_frame);
+        mensajeFlash        = (TextView) findViewById(R.id.mensaje_flash);
+        handMensaje         = (ImageView) findViewById(R.id.hand_mensaje);
 
         //Colocamos la fuente al contador.
-        Typeface roboto = Typeface.createFromAsset(getAssets(), "fonts/Roboto/Roboto-Light.ttf");
+        AssetManager assetManager = getAssets();
+        Typeface roboto = Typeface.createFromAsset(assetManager, "fonts/Roboto/Roboto-Light.ttf");
+        Typeface robotoBold = Typeface.createFromAsset(assetManager, "fonts/Roboto/Roboto-Bold.ttf");
         lblReloj.setTypeface(roboto);
         lblProximoConcierto.setTypeface(roboto);
         lblDias.setTypeface(roboto);
         lblHoras.setTypeface(roboto);
         lblMinutos.setTypeface(roboto);
         lblSegundos.setTypeface(roboto);
+        mensajeFlash.setTypeface(robotoBold);
+
+        //Mostramos el flash cuando se de click en la pantalla.
+        contentFrame.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                new Thread()
+                {
+                    @Override
+                    public void run()
+                    {
+                        contentFrame.setClickable(false);
+                        runOnUiThread(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                handMensaje.setVisibility(View.VISIBLE);
+                                mensajeFlash.setVisibility(View.VISIBLE);
+                            }
+                        });
+                        try
+                        {
+                            sleep(3000);
+                        }
+                        catch (InterruptedException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        runOnUiThread(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                handMensaje.setVisibility(View.INVISIBLE);
+                                mensajeFlash.setVisibility(View.INVISIBLE);
+                            }
+                        });
+                        contentFrame.setClickable(true);
+                    }
+                }.start();
+            }
+        });
 
         /******************************* ListView Drawer *****************************/
         list_view_drawer = (ListView) findViewById(R.id.drawer_listView);

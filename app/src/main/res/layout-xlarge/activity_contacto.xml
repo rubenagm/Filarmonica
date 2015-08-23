@@ -86,6 +86,11 @@
                         android:layout_height="wrap_content"
                         android:text="info@ofj.com.mx"
                         android:textSize="@dimen/tam_fuente_texto"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="patronatoofjac@gmail.com"
+                        android:textSize="@dimen/tam_fuente_texto"/>
 
                 </LinearLayout>
 

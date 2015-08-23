@@ -98,6 +98,33 @@
             android:layout_width="150dp"
             android:layout_height="150dp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:background="#44000000">
+            <ImageView
+                android:id="@+id/hand_mensaje"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/hand_mensaje"
+                android:layout_alignParentBottom="true"
+                android:visibility="invisible"
+                android:layout_marginLeft="20dp"/>
+            <TextView
+                android:id="@+id/mensaje_flash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Deslice hacia la derecha\n para acceder al menú."
+                android:textColor="#FFFFFF"
+                android:layout_alignParentBottom="true"
+                android:textSize="17sp"
+                android:layout_centerHorizontal="true"
+                android:visibility="invisible"
+                android:layout_marginTop="20dp"/>
+        </LinearLayout>
+
 	    
     </RelativeLayout>
 	

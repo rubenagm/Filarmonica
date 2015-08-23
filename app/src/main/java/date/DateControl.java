@@ -16,20 +16,36 @@ public class DateControl
     private TextView lblClock;
     private String date;
     private String hour;
+    private int dateYear = 0;
+    private int dateMonth = 0;
+    private int dateDay = 0;
+    private int hourHour = 0;
+    private int hourMinute = 0;
 
     public DateControl(ArrayList<String> dateHourArray)
     {
         date = dateHourArray.get(0);
         hour = dateHourArray.get(1);
+        tokenizeDate();
+        tokenizeHour();
     }
 
     public DateDifference startCountdown()
     {
-        int dateYear = 0;
-        int dateMonth = 0;
-        int dateDay = 0;
-        int hourHour = 0;
-        int hourMinute = 0;
+        //Create actual date.
+        Time now = new Time();
+        now.setToNow();
+        Date actualDate = new Date(now.year, now.month + 1, now.monthDay, now.hour, now.minute,
+               now.second);
+
+        //Create next concert's date.
+        Date goalDate = new Date(dateYear, dateMonth, dateDay, hourHour, hourMinute, 0);
+
+        return actualDate.getDateDifference(goalDate);
+    }
+
+    private void tokenizeDate()
+    {
         int i = 0;
 
         //Tokenize the date.
@@ -56,9 +72,12 @@ public class DateControl
             }
             i++;
         }
+    }
 
+    private void tokenizeHour()
+    {
         //Tokenize the hour.
-        i = 0;
+        int i = 0;
         StringTokenizer hourTokenizer = new StringTokenizer(hour, ":");
         while(hourTokenizer.hasMoreTokens())
         {
@@ -77,16 +96,20 @@ public class DateControl
             }
             i++;
         }
+    }
 
-        //Create actual date.
-        Time now = new Time();
-        now.setToNow();
-        Date actualDate = new Date(now.year, now.month + 1, now.monthDay, now.hour, now.minute,
-               now.second);
+    public int getDateYear()
+    {
+        return dateYear;
+    }
 
-        //Create next concert's date.
-        Date goalDate = new Date(dateYear, dateMonth, dateDay, hourHour, hourMinute, 0);
+    public int getDateMonth()
+    {
+        return dateMonth;
+    }
 
-        return actualDate.getDateDifference(goalDate);
+    public int getDateDay()
+    {
+        return dateDay;
     }
 }

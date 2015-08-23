@@ -11,6 +11,9 @@ import android.util.Log;
 import org.jsoup.Jsoup;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+
+import date.DateControl;
 
 public class ConexionBD extends SQLiteOpenHelper{
 	private static String DATABASE_NAME = "prueba";
@@ -50,7 +53,7 @@ public class ConexionBD extends SQLiteOpenHelper{
 	private static String SQL_DELETE_DATOS_FECHAS = "DELETE FROM fecha";
 	private static String SQL_SELECT_FECHA_EVENTOS = "SELECT * FROM fecha WHERE evento_id = ";
     private static final String SQL_PROXIMO_EVENTO = "SELECT * FROM evento as e JOIN fecha as f ON"
-            + " e.id=f.evento_id WHERE f.fecha >= date('now' , '-1 days') ORDER BY f.fecha ASC LIMIT 2";
+            + " e.id=f.evento_id WHERE f.fecha >= date('now') ORDER BY f.fecha ASC";
 
     /*********************************** QUERYS NOTICIAS **********************************/
     //CREATE
@@ -234,7 +237,7 @@ public class ConexionBD extends SQLiteOpenHelper{
             res.moveToNext();
         }
 
-        Log.i("SELECT DB","Obtenidas las noticias");
+        Log.i("SELECT DB", "Obtenidas las noticias");
         return noticias;
     }
 
@@ -261,8 +264,8 @@ public class ConexionBD extends SQLiteOpenHelper{
         contentValues.put("nombre",nombre);
         contentValues.put("costo",costo);
         contentValues.put("sede_id",id_sede);
-        db.insert("localidad",null,contentValues);
-        Log.i("Insert DB","Localidad insertada");
+        db.insert("localidad", null, contentValues);
+        Log.i("Insert DB", "Localidad insertada");
         return true;
     }
 
@@ -474,6 +477,11 @@ public class ConexionBD extends SQLiteOpenHelper{
         return evento;
     }
 
+    /**
+     * Obtiene la fecha del próximo concierto de streaming.
+     * El día de streaming es el domingo y la hora habitual es 12:30pm.
+     * @return
+     */
     public ArrayList<String> obtenerFechaProximoEvento()
     {
         final int INDEX_COLUMNA_FECHA  = 10;
@@ -481,55 +489,64 @@ public class ConexionBD extends SQLiteOpenHelper{
         final int INDEX_COLUMNA_MINUTO = 12;
 
         ArrayList<String> fecha  = new ArrayList<>();
-        ArrayList<String> fecha2 = new ArrayList<>();
+        ArrayList<String> sinConciertos = new ArrayList<>();
+        sinConciertos.add("sin conciertos");
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(SQL_PROXIMO_EVENTO, null);
 
         if(cursor.getCount() < 1)
         {
-            fecha.add("sin conciertos");
-            return fecha;
+            return sinConciertos;
         }
         else
         {
+            Calendar creadorFecha = Calendar.getInstance();
+            DateControl obtenedorFecha;
+            boolean eventoEncontrado = false;
             cursor.moveToFirst();
 
-            fecha.add(cursor.getString(INDEX_COLUMNA_FECHA));
-            fecha.add(cursor.getString(INDEX_COLUMNA_HORA) + ":" + cursor.getString(INDEX_COLUMNA_MINUTO));
-
-            //Trigger para agregar el segundo concierto, si es que lo hubiese.
-            if(cursor.getCount() > 1)
+            while (!eventoEncontrado && !cursor.isAfterLast())
             {
-                fecha2.add(cursor.getString(INDEX_COLUMNA_FECHA));
-                fecha2.add(cursor.getString(INDEX_COLUMNA_HORA) + ":" + cursor.getString(INDEX_COLUMNA_MINUTO));
+                fecha.add(cursor.getString(INDEX_COLUMNA_FECHA));
+                fecha.add(cursor.getString(INDEX_COLUMNA_HORA) + ":" + cursor.getString
+                        (INDEX_COLUMNA_MINUTO));
+                obtenedorFecha = new DateControl(fecha);
+                creadorFecha.set(obtenedorFecha.getDateYear(), obtenedorFecha.getDateMonth(),
+                        obtenedorFecha.getDateDay());
+                if (creadorFecha.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
+                {
+                    eventoEncontrado = true;
+                    break;
+                }
+                cursor.moveToNext();
             }
 
-            Time now = new Time();
-            now.setToNow();
+            if(eventoEncontrado)
+            {
+                Time now = new Time();
+                now.setToNow();
 
-            if(fecha.isEmpty())
-            {
-                return null;
-            }
-            else
-            {
                 int monthInteger = now.month + 1;
                 String month = String.valueOf(monthInteger);
 
-                if(monthInteger < 10)
+                if (monthInteger < 10)
                 {
                     month = "0" + month;
                 }
 
-                if(fecha.get(0).compareTo(now.year + "-" + month + "-" + now.monthDay) >= 0)
+                if (fecha.get(0).compareTo(now.year + "-" + month + "-" + now.monthDay) >= 0)
                 {
                     return fecha;
                 }
                 else
                 {
-                    return fecha2;
+                    return sinConciertos;
                 }
+            }
+            else
+            {
+                return sinConciertos;
             }
         }
     }
